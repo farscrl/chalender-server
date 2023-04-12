@@ -1,0 +1,70 @@
+server:
+  port: 8082
+
+spring:
+  security:
+    oauth2:
+      resource-server:
+        jwt:
+          issuer-uri: http://localhost:8083/auth/realms/chalender
+          jwk-set-uri: http://localhost:8083/auth/realms/chalender/protocol/openid-connect/certs
+      client:
+        registration:
+          google:
+            clientId: <your-client-id>
+            clientSecret: <your-client-secret>
+          facebook:
+            clientId: <your-client-id>
+            clientSecret: <your-client-secret>
+          github:
+            clientId: <your-client-id>
+            clientSecret: <your-client-secret>
+          linkedin:
+            clientId: <your-client-id>
+            clientSecret: <your-client-secret>
+            client-authentication-method: post
+            authorization-grant-type: authorization_code
+            scope: r_liteprofile, r_emailaddress
+            redirect-uri: qqq/login/oauth2/code/qqq
+            client-name: Linkedin
+            provider: linkedin
+
+        provider:
+          facebook:
+            user-info-uri: https://graph.facebook.com/me?fields=id,name,email,picture
+          linkedin:
+            authorization-uri: https://www.linkedin.com/oauth/v2/authorization
+            token-uri: https://www.linkedin.com/oauth/v2/accessToken
+            user-info-uri: https://api.linkedin.com/v2/me
+            user-name-attribute: id
+
+  data:
+    mongodb:
+      host: localhost
+      authentication-database: admin
+      port: 27500
+      username: rootuser
+      password: rootpass
+      database: chalender
+
+linkedin:
+  email-address-uri: https://api.linkedin.com/v2/emailAddress?q=members&projection=(elements*(handle~))
+  
+app:
+  auth:
+    tokenSecret: 926D96C90030DD58429D2751AC1BDBBC
+    tokenExpirationMsec: 864000000
+  # After successfully authenticating with the OAuth2 Provider,
+  # we'll be generating an auth token for the user and sending the token to the
+  # redirectUri mentioned by the frontend client in the /oauth2/authorization request.
+  # We're not using cookies because they won't work well in mobile clients.
+  oauth2:
+    authorizedRedirectUris: http://localhost:8084/oauth2/redirect,myandroidapp://oauth2/redirect,myiosapp://oauth2/redirect
+  # For detailed logging during development
+  #logging.level.com=TRACE
+logging:
+  level:
+    org:
+      springframework: INFO
+
+
