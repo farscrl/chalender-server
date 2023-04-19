@@ -2,10 +2,11 @@ package ch.chalender.api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
-@SpringBootApplication(scanBasePackages = "ch.chalender.api")
+@SpringBootApplication(scanBasePackages = "ch.chalender.api", exclude = { ThymeleafAutoConfiguration.class })
 public class ApiApplication extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {

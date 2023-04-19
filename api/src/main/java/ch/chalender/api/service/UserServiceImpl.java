@@ -11,6 +11,7 @@ import ch.chalender.api.repository.UserRepository;
 import ch.chalender.api.security.oauth2.user.OAuth2UserInfo;
 import ch.chalender.api.security.oauth2.user.OAuth2UserInfoFactory;
 import ch.chalender.api.util.GeneralUtils;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
@@ -18,6 +19,7 @@ import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 @Service
@@ -27,6 +29,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private EmailService emailService;
 
     @Override
     public User registerNewUser(final SignUpRequest signUpRequest) throws UserAlreadyExistAuthenticationException {
@@ -40,6 +45,15 @@ public class UserServiceImpl implements UserService {
         user.setCreatedDate(now);
         user.setModifiedDate(now);
         user = userRepository.save(user);
+
+        try {
+            emailService.sendAccountConfirmationEmail(user.getEmail());
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+
         return user;
     }
 
