@@ -1,0 +1,12 @@
+Confirm your account
+
+Welcome to chalender.ch, [( ${name} )]!
+
+Your account has been created on our platform; here is your login information
+Email address: [( ${email} )]
+
+To confirm the validity of your email address, please click on the link below
+Email address: [( ${url} )]
+
+ Regards,
+The AwesomeApp Team

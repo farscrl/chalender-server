@@ -46,6 +46,20 @@ spring:
       username: rootuser
       password: rootpass
       database: chalender
+  mail:
+    default-encoding: UTF-8
+    host: sandbox.smtp.mailtrap.io
+    username: d752a421681d36
+    password: fd539a29686cb0
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    protocol: smtp
+    test-connection: false
 
 linkedin:
   email-address-uri: https://api.linkedin.com/v2/emailAddress?q=members&projection=(elements*(handle~))
