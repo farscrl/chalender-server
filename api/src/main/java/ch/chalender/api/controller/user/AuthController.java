@@ -1,10 +1,11 @@
-package ch.chalender.api.controller;
+package ch.chalender.api.controller.user;
 
 import ch.chalender.api.dto.*;
 import ch.chalender.api.exception.UserAlreadyExistAuthenticationException;
 import ch.chalender.api.security.jwt.TokenProvider;
 import ch.chalender.api.service.UserService;
 import ch.chalender.api.util.GeneralUtils;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,8 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/user/auth")
+@Tag(name = "Authorization", description = "User authorization and generation")
 public class AuthController {
     @Autowired
     AuthenticationManager authenticationManager;

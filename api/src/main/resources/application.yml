@@ -81,4 +81,6 @@ logging:
     org:
       springframework: INFO
 
-
+springdoc:
+  pathsToMatch: /api/all/**, /api/user/**
+  swagger-ui:
