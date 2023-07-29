@@ -2,6 +2,7 @@ package ch.chalender.api.security.jwt;
 
 import ch.chalender.api.config.AppProperties;
 import ch.chalender.api.dto.LocalUser;
+import ch.chalender.api.dto.UserInfo;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,14 +21,20 @@ public class TokenProvider {
         this.appProperties = appProperties;
     }
 
-    public String createToken(Authentication authentication) {
-        LocalUser userPrincipal = (LocalUser) authentication.getPrincipal();
-
+    public String createToken(Authentication authentication, UserInfo userInfo) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + appProperties.getAuth().getTokenExpirationMsec());
 
-        return Jwts.builder().setSubject(userPrincipal.getUser().getId()).setIssuedAt(new Date()).setExpiration(expiryDate)
-                .signWith(SignatureAlgorithm.HS512, appProperties.getAuth().getTokenSecret()).compact();
+        Claims claims = Jwts.claims().setSubject(userInfo.getId());
+        claims.put("displayName",userInfo.getDisplayName());
+        claims.put("email",userInfo.getEmail());
+        claims.put("roles",userInfo.getRoles());
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(new Date()).setExpiration(expiryDate)
+                .signWith(SignatureAlgorithm.HS512, appProperties.getAuth().getTokenSecret())
+                .compact();
     }
 
     public String getUserIdFromToken(String token) {
