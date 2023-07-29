@@ -35,9 +35,10 @@ public class AuthController {
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = tokenProvider.createToken(authentication);
         LocalUser localUser = (LocalUser) authentication.getPrincipal();
-        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, GeneralUtils.buildUserInfo(localUser)));
+        UserInfo userInfo = GeneralUtils.buildUserInfo(localUser);
+        String jwt = tokenProvider.createToken(authentication, userInfo);
+        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, userInfo));
     }
 
     @PostMapping("/signup")
