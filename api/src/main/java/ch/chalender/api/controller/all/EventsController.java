@@ -30,11 +30,11 @@ public class EventsController {
     @GetMapping("")
     public ResponseEntity<List<EventDto>> listAllEvents() {
         List<Event> events = eventsService.getPublicEvents(new EventFilter());
-        return ResponseEntity.ok(EventConverter.toEventDtoList(modelMapper, events, EventConverter.EventVersionSelection.DRAFT)); // TODO: select correct
+        return ResponseEntity.ok(EventConverter.toEventDtoList(modelMapper, events, EventConverter.EventVersionSelection.CURRENTLY_PUBLISHED));
     }
 
     @PostMapping("")
-    public ResponseEntity<EventDto> createEvent(@Valid @RequestBody Event eventToCreate) {
+    public ResponseEntity<Event> createEvent(@Valid @RequestBody Event eventToCreate) {
         if (eventToCreate.getId() != null) {
             return ResponseEntity.badRequest().build();
         }
@@ -59,6 +59,6 @@ public class EventsController {
         }
 
         Event event = eventsService.createEvent(eventToCreate);
-        return ResponseEntity.ok(EventConverter.toEventDto(modelMapper, event, EventConverter.EventVersionSelection.DRAFT)); // todo: select published
+        return ResponseEntity.ok(event);
     }
 }
