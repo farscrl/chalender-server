@@ -12,6 +12,7 @@ public class Event {
 
     private EventVersion currentlyPublished;
     private EventVersion draft;
+    private EventVersion inReview;
     private EventVersion lastReviewed;
 
     private List<EventVersion> versions;

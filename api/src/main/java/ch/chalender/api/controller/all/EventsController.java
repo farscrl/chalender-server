@@ -30,13 +30,35 @@ public class EventsController {
     @GetMapping("")
     public ResponseEntity<List<EventDto>> listAllEvents() {
         List<Event> events = eventsService.getPublicEvents(new EventFilter());
-        return ResponseEntity.ok(EventConverter.toEventDtoList(modelMapper, events));
+        return ResponseEntity.ok(EventConverter.toEventDtoList(modelMapper, events, EventConverter.EventVersionSelection.DRAFT)); // TODO: select correct
     }
 
     @PostMapping("")
-    public ResponseEntity<EventDto> createEvent(@Valid @RequestBody EventDto eventDto) {
-        Event eventToCreate = EventConverter.toEvent(modelMapper, eventDto);
+    public ResponseEntity<EventDto> createEvent(@Valid @RequestBody Event eventToCreate) {
+        if (eventToCreate.getId() != null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        if (!eventToCreate.getVersions().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        if (eventToCreate.getCurrentlyPublished() != null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        if (eventToCreate.getLastReviewed() != null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        if (
+                (eventToCreate.getDraft() == null && eventToCreate.getInReview() == null) ||
+                (eventToCreate.getDraft() != null && eventToCreate.getInReview() != null)
+        ) {
+            return ResponseEntity.badRequest().build();
+        }
+
         Event event = eventsService.createEvent(eventToCreate);
-        return ResponseEntity.ok(EventConverter.toEventDto(modelMapper, event));
+        return ResponseEntity.ok(EventConverter.toEventDto(modelMapper, event, EventConverter.EventVersionSelection.DRAFT)); // todo: select published
     }
 }

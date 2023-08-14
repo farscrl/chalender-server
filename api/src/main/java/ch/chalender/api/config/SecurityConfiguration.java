@@ -62,7 +62,7 @@ public class SecurityConfiguration {
                 .authenticationEntryPoint(new RestAuthenticationEntryPoint())
                 .and()
                 .authorizeRequests()
-                .requestMatchers("/", "/error", "/api/user/all", "/api/user/auth/**", "/oauth2/**").permitAll()
+                .requestMatchers("/", "/error", "/api/**", "/api/user/auth/**", "/oauth2/**").permitAll()
                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 .anyRequest()
                 .authenticated()

@@ -2,10 +2,14 @@ package ch.chalender.api.model;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Data
 public class EventOccurrences {
-    private LocalDateTime start;
-    private LocalDateTime end;
+    private LocalDate date;
+    private LocalTime start;
+    private LocalTime end;
+    private boolean isAllDay = false;
+    private boolean isCancelled = false;
 }
