@@ -10,10 +10,22 @@ import java.util.List;
 public class Event {
     private String id;
 
-    private EventVersion currentlyPublished;
     private EventVersion draft;
-    private EventVersion inReview;
-    private EventVersion lastReviewed;
+    private EventVersion currentlyPublished;
+    private EventVersion waitingForReview;
 
     private List<EventVersion> versions;
+
+    public EventStatus getEventStatus() {
+        if (draft != null) {
+            return EventStatus.DRAFT;
+        }
+        if (waitingForReview != null && currentlyPublished == null) {
+            return EventStatus.IN_REVIEW;
+        }
+        if (currentlyPublished != null && waitingForReview != null) {
+            return EventStatus.NEW_MODIFICATION;
+        }
+        return EventStatus.PUBLISHED;
+    }
 }
