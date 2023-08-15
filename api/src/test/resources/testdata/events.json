@@ -1,13 +1,13 @@
 [
   {
     "_class": "ch.chalender.api.model.Event",
-    "draft": {
+    "currentlyPublished": {
       "title": "Test-Event 1"
     }
   },
   {
     "_class": "ch.chalender.api.model.Event",
-    "draft": {
+    "currentlyPublished": {
       "title": "Test-Event 2"
     }
   }
