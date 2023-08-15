@@ -12,7 +12,7 @@ public class EventVersion {
       private String description;
       private String location;
       private String address;
-      private List<EventOccurrences> occurrences = new ArrayList<>();
+      private List<EventOccurrence> occurrences = new ArrayList<>();
       private List<EventRegion> regions = new ArrayList<>();
       private List<Image> images = new ArrayList<>();
       private List<EventLanguage> eventLanguages = new ArrayList<>();
@@ -20,4 +20,6 @@ public class EventVersion {
       private boolean acceptTerms;
       private String organiser;
       private String pricing;
+      private String link;
+      private String contact;
 }
