@@ -33,6 +33,12 @@ public class EventsController {
         return ResponseEntity.ok(EventConverter.toEventDtoList(modelMapper, events, EventConverter.EventVersionSelection.CURRENTLY_PUBLISHED));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<EventDto> getEvent(@PathVariable String id) {
+        Event event = eventsService.getEvent(id);
+        return ResponseEntity.ok(EventConverter.toEventDto(modelMapper, event, EventConverter.EventVersionSelection.CURRENTLY_PUBLISHED));
+    }
+
     @PostMapping("")
     public ResponseEntity<Event> createEvent(@Valid @RequestBody Event eventToCreate) {
         if (eventToCreate.getId() != null) {
