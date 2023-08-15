@@ -53,13 +53,9 @@ public class EventsController {
             return ResponseEntity.badRequest().build();
         }
 
-        if (eventToCreate.getLastReviewed() != null) {
-            return ResponseEntity.badRequest().build();
-        }
-
         if (
-                (eventToCreate.getDraft() == null && eventToCreate.getInReview() == null) ||
-                (eventToCreate.getDraft() != null && eventToCreate.getInReview() != null)
+                (eventToCreate.getDraft() == null && eventToCreate.getWaitingForReview() == null) ||
+                (eventToCreate.getDraft() != null && eventToCreate.getWaitingForReview() != null)
         ) {
             return ResponseEntity.badRequest().build();
         }

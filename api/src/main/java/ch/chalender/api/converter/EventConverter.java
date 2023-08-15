@@ -11,28 +11,21 @@ import java.util.stream.Collectors;
 
 public class EventConverter {
 
-    public static Event toEvent(ModelMapper modelMapper, EventDto eventDto) {
-        EventVersion eventVersion = modelMapper.map(eventDto, EventVersion.class);
-        Event event = new Event();
-        event.setDraft(eventVersion);
-
-        return event;
-    }
-
     public static EventDto toEventDto(ModelMapper modelMapper, Event event, EventVersionSelection eventVersionSelection) {
         EventVersion eventVersion = null;
         if (eventVersionSelection == EventVersionSelection.CURRENTLY_PUBLISHED) {
             eventVersion = event.getCurrentlyPublished();
         } else if (eventVersionSelection == EventVersionSelection.DRAFT) {
             eventVersion = event.getDraft();
-        } else if (eventVersionSelection == EventVersionSelection.LAST_REVIEWED) {
-            eventVersion = event.getLastReviewed();
+        } else if (eventVersionSelection == EventVersionSelection.WAITING_FOR_REVIEW) {
+            eventVersion = event.getWaitingForReview();
         }
         if (eventVersion == null) {
             return null;
         }
         EventDto eventDto = modelMapper.map(eventVersion, EventDto.class);
         eventDto.setId(event.getId());
+        eventDto.setStatus(event.getEventStatus());
 
         return eventDto;
     }
@@ -47,6 +40,6 @@ public class EventConverter {
     public enum EventVersionSelection {
         CURRENTLY_PUBLISHED,
         DRAFT,
-        LAST_REVIEWED
+        WAITING_FOR_REVIEW
     }
 }

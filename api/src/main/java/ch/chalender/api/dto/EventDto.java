@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 public class EventDto {
     private String id;
-    private String status;
+    private EventStatus status;
 
     private String title;
     private List<EventGenre> genres = new ArrayList<>();
