@@ -1,8 +1,10 @@
 package ch.chalender.api.controller.all;
 
 import ch.chalender.api.model.EventGenre;
+import ch.chalender.api.model.EventLanguage;
 import ch.chalender.api.model.EventRegion;
 import ch.chalender.api.repository.EventGenresRepository;
+import ch.chalender.api.repository.EventLanguagesRepository;
 import ch.chalender.api.repository.EventRegionsRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +28,9 @@ public class StaticDataController {
     @Autowired
     private EventRegionsRepository eventRegionsRepository;
 
+    @Autowired
+    private EventLanguagesRepository eventLanguagesRepository;
+
     @GetMapping("/genres")
     public ResponseEntity<List<EventGenre>> listGenres() {
         List<EventGenre> genres = eventGenresRepository.findByIsHiddenIsFalse(false);
@@ -37,6 +42,14 @@ public class StaticDataController {
     @GetMapping("/regions")
     public ResponseEntity<List<EventRegion>> listRegions() {
         List<EventRegion> regions = eventRegionsRepository.findByIsHiddenIsFalse(false);
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(60, TimeUnit.SECONDS)) // TODO: set to 1 day
+                .body(regions);
+    }
+
+    @GetMapping("/languages")
+    public ResponseEntity<List<EventLanguage>> listLanguages() {
+        List<EventLanguage> regions = eventLanguagesRepository.findByIsHiddenIsFalse(false);
         return ResponseEntity.ok()
                 .cacheControl(CacheControl.maxAge(60, TimeUnit.SECONDS)) // TODO: set to 1 day
                 .body(regions);

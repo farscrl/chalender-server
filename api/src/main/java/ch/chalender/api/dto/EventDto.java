@@ -19,4 +19,9 @@ public class EventDto {
     private List<EventOccurrences> occurrences = new ArrayList<>();
     private List<EventRegion> regions = new ArrayList<>();
     private List<Image> images = new ArrayList<>();
+    private List<EventLanguage> eventLanguages = new ArrayList<>();
+    private boolean onlineOnly;
+    private boolean acceptTerms;
+    private String organiser;
+    private String pricing;
 }
