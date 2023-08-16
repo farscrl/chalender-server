@@ -45,6 +45,7 @@ public class EventFixtures {
         ev1.setRegions(getRegions("5"));
         ev1.setEventLanguages(eventLanguages("de,rm,it"));
         ev1.setOnlineOnly(false);
+        ev1.setLink("https://www.flurincaviezel.ch/");
         events.add(createEvent(ev1, CURRENTLY_PUBLISHED));
 
         EventVersion ev2 = new EventVersion();
@@ -57,6 +58,7 @@ public class EventFixtures {
         ev2.setRegions(getRegions("9"));
         ev2.setEventLanguages(eventLanguages("rm,de"));
         ev2.setOnlineOnly(false);
+        ev2.setLink(null);
         events.add(createEvent(ev2, CURRENTLY_PUBLISHED));
 
         EventVersion ev3 = new EventVersion();
@@ -69,6 +71,7 @@ public class EventFixtures {
         ev3.setRegions(getRegions("2"));
         ev3.setEventLanguages(eventLanguages("rm,de"));
         ev3.setOnlineOnly(false);
+        ev3.setLink("http://museum-trun.ch/");
         events.add(createEvent(ev3, CURRENTLY_PUBLISHED));
 
         EventVersion ev4 = new EventVersion();
@@ -81,6 +84,7 @@ public class EventFixtures {
         ev4.setRegions(getRegions("5"));
         ev4.setEventLanguages(eventLanguages("rm"));
         ev4.setOnlineOnly(false);
+        ev4.setLink("http://www.liarumantscha.ch/");
         events.add(createEvent(ev4, CURRENTLY_PUBLISHED));
 
         EventVersion ev5 = new EventVersion();
@@ -93,6 +97,7 @@ public class EventFixtures {
         ev5.setRegions(getRegions("7,8"));
         ev5.setEventLanguages(eventLanguages("rm"));
         ev5.setOnlineOnly(false);
+        ev5.setLink(null);
         events.add(createEvent(ev5, CURRENTLY_PUBLISHED));
 
         EventVersion ev6 = new EventVersion();
@@ -105,6 +110,7 @@ public class EventFixtures {
         ev6.setRegions(getRegions("4"));
         ev6.setEventLanguages(eventLanguages("rm"));
         ev6.setOnlineOnly(false);
+        ev6.setLink("http://www.san-nicla.ch/");
         events.add(createEvent(ev6, CURRENTLY_PUBLISHED));
 
         EventVersion ev7 = new EventVersion();
@@ -117,6 +123,7 @@ public class EventFixtures {
         ev7.setRegions(getRegions("1"));
         ev7.setEventLanguages(eventLanguages("rm,de"));
         ev7.setOnlineOnly(false);
+        ev7.setLink("http://museum-trun.ch/");
         events.add(createEvent(ev7, CURRENTLY_PUBLISHED));
 
         EventVersion ev8 = new EventVersion();
@@ -129,6 +136,7 @@ public class EventFixtures {
         ev8.setRegions(getRegions("5"));
         ev8.setEventLanguages(eventLanguages("rm"));
         ev8.setOnlineOnly(false);
+        ev8.setLink("https://www.postremise.ch/events/hasi-farinelli-2/form");
         events.add(createEvent(ev8, CURRENTLY_PUBLISHED));
 
         EventVersion ev9 = new EventVersion();
@@ -141,6 +149,7 @@ public class EventFixtures {
         ev9.setRegions(getRegions("5"));
         ev9.setEventLanguages(eventLanguages("rm"));
         ev9.setOnlineOnly(false);
+        ev9.setLink(null);
         events.add(createEvent(ev9, CURRENTLY_PUBLISHED));
 
         EventVersion ev10 = new EventVersion();
@@ -153,6 +162,7 @@ public class EventFixtures {
         ev10.setRegions(getRegions("1"));
         ev10.setEventLanguages(eventLanguages("rm,de"));
         ev10.setOnlineOnly(false);
+        ev10.setLink("http://cularta.ch/");
         events.add(createEvent(ev10, CURRENTLY_PUBLISHED));
 
         EventVersion ev11 = new EventVersion();
@@ -165,6 +175,7 @@ public class EventFixtures {
         ev11.setRegions(getRegions("1"));
         ev11.setEventLanguages(eventLanguages("de"));
         ev11.setOnlineOnly(false);
+        ev11.setLink("https://pinapalau.bandcamp.com/track/closer");
         events.add(createEvent(ev11, CURRENTLY_PUBLISHED));
 
         EventVersion ev12 = new EventVersion();
@@ -177,6 +188,7 @@ public class EventFixtures {
         ev12.setRegions(getRegions("5"));
         ev12.setEventLanguages(eventLanguages("rm,de,it"));
         ev12.setOnlineOnly(false);
+        ev12.setLink(null);
         events.add(createEvent(ev12, CURRENTLY_PUBLISHED));
 
         EventVersion ev13 = new EventVersion();
@@ -189,6 +201,7 @@ public class EventFixtures {
         ev13.setRegions(getRegions("4"));
         ev13.setEventLanguages(eventLanguages("rm"));
         ev13.setOnlineOnly(false);
+        ev13.setLink("https://www.udg.ch");
         events.add(createEvent(ev13, CURRENTLY_PUBLISHED));
 
         EventVersion ev14 = new EventVersion();
@@ -201,6 +214,7 @@ public class EventFixtures {
         ev14.setRegions(getRegions("7"));
         ev14.setEventLanguages(eventLanguages("rm"));
         ev14.setOnlineOnly(false);
+        ev14.setLink(null);
         events.add(createEvent(ev14, CURRENTLY_PUBLISHED));
 
         EventVersion ev15 = new EventVersion();
@@ -213,6 +227,7 @@ public class EventFixtures {
         ev15.setRegions(getRegions("7"));
         ev15.setEventLanguages(eventLanguages("rm"));
         ev15.setOnlineOnly(false);
+        ev15.setLink("www.allegrawinti.ch");
         events.add(createEvent(ev15, CURRENTLY_PUBLISHED));
 
         EventVersion ev16 = new EventVersion();
@@ -225,6 +240,7 @@ public class EventFixtures {
         ev16.setRegions(getRegions("1"));
         ev16.setEventLanguages(eventLanguages("rm,de"));
         ev16.setOnlineOnly(false);
+        ev16.setLink("http://www.encarden.ch/");
         events.add(createEvent(ev16, CURRENTLY_PUBLISHED));
 
         return events;
