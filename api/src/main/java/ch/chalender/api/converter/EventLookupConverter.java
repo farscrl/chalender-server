@@ -34,6 +34,7 @@ public class EventLookupConverter {
             eventLookup.setEnd(occurrence.getEnd());
             eventLookup.setAllDay(occurrence.isAllDay());
             eventLookup.setCancelled(occurrence.isCancelled());
+            eventLookup.setEventId(event.getId().toString());
             eventLookups.add(eventLookup);
         });
 

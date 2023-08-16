@@ -11,13 +11,13 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.modelmapper.ModelMapper;
 
 @Slf4j
 @RestController
@@ -43,6 +43,11 @@ public class EventsController {
     @GetMapping("/{id}")
     public ResponseEntity<EventDto> getEvent(@PathVariable String id) {
         Event event = eventsService.getEvent(id);
+
+        if (event == null) {
+            return ResponseEntity.notFound().build();
+        }
+
         return ResponseEntity.ok(EventConverter.toEventDto(modelMapper, event, EventConverter.EventVersionSelection.CURRENTLY_PUBLISHED));
     }
 
