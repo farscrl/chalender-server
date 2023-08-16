@@ -17,15 +17,18 @@ public class Event {
     private List<EventVersion> versions;
 
     public EventStatus getEventStatus() {
-        if (draft != null) {
+        if (draft != null && currentlyPublished == null && waitingForReview == null) {
             return EventStatus.DRAFT;
         }
-        if (waitingForReview != null && currentlyPublished == null) {
+        if (waitingForReview != null && currentlyPublished == null && draft == null) {
             return EventStatus.IN_REVIEW;
         }
-        if (currentlyPublished != null && waitingForReview != null) {
+        if (currentlyPublished != null && waitingForReview != null && draft == null) {
             return EventStatus.NEW_MODIFICATION;
         }
-        return EventStatus.PUBLISHED;
+        if (currentlyPublished != null && waitingForReview == null && draft == null) {
+            return EventStatus.PUBLISHED;
+        }
+        return EventStatus.INVALID;
     }
 }
