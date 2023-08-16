@@ -6,6 +6,7 @@ import ch.chalender.api.model.EventLookup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -42,7 +43,7 @@ public class EventLookupsDalImpl implements EventLookupsDal {
             );
         }
 
-        Query query = new Query(criteria);
+        Query query = new Query(criteria).with(pageable).with(Sort.by(Sort.Direction.ASC, "date", "start"));
         List<EventLookup> events = mongoTemplate.find(query, EventLookup.class);
 
         return PageableExecutionUtils.getPage(
