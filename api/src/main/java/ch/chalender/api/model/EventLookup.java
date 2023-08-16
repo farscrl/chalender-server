@@ -1,6 +1,7 @@
 package ch.chalender.api.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -14,6 +15,7 @@ import java.util.List;
 @Document("events_lookup")
 @Data
 public class EventLookup {
+    @JsonIgnore
     private String id;
 
     @Indexed

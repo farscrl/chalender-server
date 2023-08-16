@@ -12,6 +12,10 @@ import java.util.stream.Collectors;
 public class EventConverter {
 
     public static EventDto toEventDto(ModelMapper modelMapper, Event event, EventVersionSelection eventVersionSelection) {
+        if (event == null) {
+            return null;
+        }
+
         EventVersion eventVersion = null;
         if (eventVersionSelection == EventVersionSelection.CURRENTLY_PUBLISHED) {
             eventVersion = event.getCurrentlyPublished();
