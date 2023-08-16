@@ -5,6 +5,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
 
-public interface EventRegionsRepository extends MongoRepository<EventRegion, String> {
+public interface EventRegionsRepository extends MongoRepository<EventRegion, Integer> {
     List<EventRegion> findByIsHiddenIsFalse(boolean hidden);
 }

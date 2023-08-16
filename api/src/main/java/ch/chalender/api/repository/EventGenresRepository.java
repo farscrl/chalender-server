@@ -5,6 +5,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
 
-public interface EventGenresRepository extends MongoRepository<EventGenre, String> {
+public interface EventGenresRepository extends MongoRepository<EventGenre, Integer> {
     List<EventGenre> findByIsHiddenIsFalse(boolean hidden);
 }
