@@ -4,16 +4,20 @@ import ch.chalender.api.converter.EventConverter;
 import ch.chalender.api.dto.EventDto;
 import ch.chalender.api.model.Event;
 import ch.chalender.api.model.EventFilter;
+import ch.chalender.api.model.EventLookup;
+import ch.chalender.api.service.EventLookupService;
 import ch.chalender.api.service.EventsService;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.modelmapper.ModelMapper;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -27,10 +31,13 @@ public class EventsController {
     @Autowired
     private EventsService eventsService;
 
+    @Autowired
+    private EventLookupService eventLookupService;
+
     @GetMapping("")
-    public ResponseEntity<List<EventDto>> listAllEvents() {
-        List<Event> events = eventsService.getPublicEvents(new EventFilter());
-        return ResponseEntity.ok(EventConverter.toEventDtoList(modelMapper, events, EventConverter.EventVersionSelection.CURRENTLY_PUBLISHED));
+    @PageableAsQueryParam
+    public ResponseEntity<Page<EventLookup>> listAllEvents(EventFilter eventFilter, @Parameter(hidden = true) Pageable pageable ) {
+        return ResponseEntity.ok(eventLookupService.getAllEvents(eventFilter, pageable));
     }
 
     @GetMapping("/{id}")
