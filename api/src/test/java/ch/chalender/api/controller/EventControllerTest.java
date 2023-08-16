@@ -22,6 +22,6 @@ public class EventControllerTest extends MongoDbBaseTest {
         this.mockMvc.perform(get("/api/events"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()", is(2)));
+                .andExpect(jsonPath("$.content.length()", is(16)));
     }
 }
