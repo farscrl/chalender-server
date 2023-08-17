@@ -1,12 +1,12 @@
-Confirm your account
+Confermar tia adressa dad e-mail
 
-Welcome to chalender.ch, [( ${name} )]!
+Bainvegni sin chalender.ch, [( ${name} )]!
 
-Your account has been created on our platform; here is your login information
-Email address: [( ${email} )]
+Tes conto è vegnì creà cun suandantas infurmaziuns d'annunzia:
+Adressa dad e-mail: [( ${email} )]
 
-To confirm the validity of your email address, please click on the link below
-Email address: [( ${url} )]
+Per confermar tia adressa dad e-mail, stos ti cliccar sin il link sutvart.
+Confermar l'adressa: [( ${url} )]
 
- Regards,
-The AwesomeApp Team
+Cun chars salids,
+il team da chalender.ch

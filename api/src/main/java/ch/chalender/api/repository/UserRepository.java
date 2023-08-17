@@ -10,6 +10,8 @@ public interface UserRepository extends MongoRepository<User, String> {
 
     User findByEmailConfirmationCode(String code);
 
+    User findByPasswordResetToken(String token);
+
     boolean existsByEmail(String email);
 
     public long count();

@@ -64,4 +64,24 @@ public class AuthController {
             return ResponseEntity.badRequest().body(new ApiResponse(false, "Invalid email confirmation code"));
         }
     }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(String email) {
+        boolean valid = userService.resetPassword(email);
+        if (valid) {
+            return ResponseEntity.ok().body(new ApiResponse(true, "Password reset successfully"));
+        } else {
+            return ResponseEntity.badRequest().body(new ApiResponse(false, "Error during password reset"));
+        }
+    }
+
+    @PostMapping("/redefine-password")
+    public ResponseEntity<?> redefinePassword(String token, String password) {
+        boolean valid = userService.redefinePassword(token, password);
+        if (valid) {
+            return ResponseEntity.ok().body(new ApiResponse(true, "Password reset successfully"));
+        } else {
+            return ResponseEntity.badRequest().body(new ApiResponse(false, "Error during password reset"));
+        }
+    }
 }
