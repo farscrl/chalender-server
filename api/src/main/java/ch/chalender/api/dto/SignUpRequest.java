@@ -1,13 +1,11 @@
 package ch.chalender.api.dto;
 
-import ch.chalender.api.validator.PasswordMatches;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@PasswordMatches
 @NoArgsConstructor
 public class SignUpRequest {
     private String userID;
@@ -22,11 +20,8 @@ public class SignUpRequest {
 
     private SocialProvider socialProvider;
 
-    @Size(min = 6, message = "{Size.userDto.password}")
+    @Size(min = 8, message = "{Size.userDto.password}")
     private String password;
-
-    @NotEmpty
-    private String matchingPassword;
 
     public SignUpRequest(String providerUserId, String displayName, String email, String password, SocialProvider socialProvider) {
         this.providerUserId = providerUserId;

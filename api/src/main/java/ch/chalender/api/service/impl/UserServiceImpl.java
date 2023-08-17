@@ -1,4 +1,4 @@
-package ch.chalender.api.service;
+package ch.chalender.api.service.impl;
 
 import ch.chalender.api.dto.LocalUser;
 import ch.chalender.api.dto.Role;
@@ -10,8 +10,11 @@ import ch.chalender.api.model.User;
 import ch.chalender.api.repository.UserRepository;
 import ch.chalender.api.security.oauth2.user.OAuth2UserInfo;
 import ch.chalender.api.security.oauth2.user.OAuth2UserInfoFactory;
+import ch.chalender.api.service.EmailService;
+import ch.chalender.api.service.UserService;
 import ch.chalender.api.util.GeneralUtils;
 import jakarta.mail.MessagingException;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
@@ -20,7 +23,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.io.UnsupportedEncodingException;
-import java.util.*;
+import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -40,24 +46,30 @@ public class UserServiceImpl implements UserService {
         } else if (userRepository.existsByEmail(signUpRequest.getEmail())) {
             throw new UserAlreadyExistAuthenticationException("User with email id " + signUpRequest.getEmail() + " already exist");
         }
-        User user = buildUser(signUpRequest);
-        Date now = Calendar.getInstance().getTime();
-        user.setCreatedDate(now);
-        user.setModifiedDate(now);
+        User user = buildNewlyRegistratedUser(signUpRequest);
         user = userRepository.save(user);
 
         try {
-            emailService.sendAccountConfirmationEmail(user.getEmail());
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
-        } catch (UnsupportedEncodingException e) {
+            emailService.sendAccountConfirmationEmail(user.getEmail(), user.getDisplayName(), user.getEmailConfirmationCode());
+        } catch (MessagingException | UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
 
         return user;
     }
 
-    private User buildUser(final SignUpRequest formDTO) {
+    @Override
+    public boolean confirmEmailCode(String code) {
+        User user = userRepository.findByEmailConfirmationCode(code);
+        if (user == null) {
+            return false;
+        }
+        user.setEnabled(true);
+        userRepository.save(user);
+        return true;
+    }
+
+    private User buildNewlyRegistratedUser(final SignUpRequest formDTO) {
         User user = new User();
         user.setDisplayName(formDTO.getDisplayName());
         user.setEmail(formDTO.getEmail());
@@ -66,8 +78,11 @@ public class UserServiceImpl implements UserService {
         roles.add(Role.ROLE_USER);
         user.setRoles(roles);
         user.setProvider(formDTO.getSocialProvider().getProviderType());
-        user.setEnabled(true);
+        user.setEnabled(false);
         user.setProviderUserId(formDTO.getProviderUserId());
+        user.setCreatedDate(Calendar.getInstance().getTime());
+        user.setModifiedDate(Calendar.getInstance().getTime());
+        user.setEmailConfirmationCode(RandomStringUtils.randomAlphanumeric(32));
         return user;
     }
 

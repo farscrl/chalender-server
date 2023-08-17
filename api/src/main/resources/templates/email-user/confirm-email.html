@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title th:remove="all">Registration confirmation</title>
+    <title th:remove="all">Confermar tia adressa dad e-mail</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <style type="text/css">
         body {
@@ -21,25 +21,25 @@
     </style>
 </head>
 <body>
-<h1>Confirm your account</h1>
-<div>Welcome to Chalender <b th:text="${name}">name</b> !</div>
 <p>
-    Your account has been created on our platform; here is your login information
+    <img src="images/logo.png" data-th-src="|cid:logo|" height="80" />
+</p>
+<h1>Confermar tes conto</h1>
+<div>Bainvegni sin chalender.ch, <b th:text="${name}">name</b>!</div>
+<p>
+    Tes conto è vegnì creà cun suandantas infurmaziuns d'annunzia:
     <br/><br/>
-    Email address : <b th:text="${email}">email</b><br/>
-    <br/>
-    To confirm the validity of your email address, please click on the link below
+    Adressa dad e-mail: <b th:text="${email}">email</b>
+    <br/><br/><br/><br/>
+    Per confermar tia adressa dad e-mail, stos ti cliccar sin il link sutvart.
 </p>
 <p style="text-align: left;">
-    <a class="link" href="#" th:href="${url}">Confirm my account</a>
+    <a class="link" href="#" th:href="${url}">Confermar l'adressa</a>
 </p>
 <br>
 <p>
-    <img src="images/logo.png" data-th-src="|cid:springLogo|" height="80" />
-</p>
-<p>
-    Regards, <br />
-    &emsp; <em>The AwesomeApp Team</em>
+    Cun chars salids,<br />
+    il team da chalender.ch
 </p>
 </body>
 </html>

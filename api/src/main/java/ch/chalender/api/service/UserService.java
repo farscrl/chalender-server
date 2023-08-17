@@ -13,6 +13,8 @@ import java.util.Optional;
 public interface UserService {
     public User registerNewUser(SignUpRequest signUpRequest) throws UserAlreadyExistAuthenticationException;
 
+    public boolean confirmEmailCode(String code);
+
     User findUserByEmail(String email);
 
     Optional<User> findUserById(String id);

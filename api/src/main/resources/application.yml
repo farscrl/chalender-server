@@ -84,3 +84,5 @@ logging:
 springdoc:
   pathsToMatch: /api/all/**, /api/user/**
   swagger-ui:
+chalender:
+  appUrl: http://localhost:4200
