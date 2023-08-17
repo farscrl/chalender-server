@@ -32,4 +32,6 @@ public class User {
     private String provider;
 
     private Set<Role> roles;
+
+    private String emailConfirmationCode;
 }

@@ -15,7 +15,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
@@ -50,5 +53,15 @@ public class AuthController {
             return new ResponseEntity<>(new ApiResponse(false, "Email Address already in use!"), HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok().body(new ApiResponse(true, "User registered successfully"));
+    }
+
+    @PostMapping("/confirm-email")
+    public ResponseEntity<?> confirmEmail(String code) {
+        boolean valid = userService.confirmEmailCode(code);
+        if (valid) {
+            return ResponseEntity.ok().body(new ApiResponse(true, "Email confirmed successfully"));
+        } else {
+            return ResponseEntity.badRequest().body(new ApiResponse(false, "Invalid email confirmation code"));
+        }
     }
 }
