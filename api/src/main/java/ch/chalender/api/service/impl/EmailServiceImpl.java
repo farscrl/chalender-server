@@ -63,4 +63,36 @@ public class EmailServiceImpl implements EmailService {
 
         mailSender.send(mimeMessage);
     }
+
+    @Override
+    public void sendPasswordResetEmail(String emailAddress, String name, String passwordResetToken) throws MessagingException, UnsupportedEncodingException {
+        String passwordResetUrl = appUrl + "/u/confirm-password?token=" + passwordResetToken;
+        String mailFrom = "no-reply@chalender.ch";
+        String mailFromName = "chalender.ch";
+
+        final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
+        final MimeMessageHelper email;
+        email = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
+        email.setTo(emailAddress);
+        email.setSubject("Redefinir tes pled-clav");
+        email.setFrom(new InternetAddress(mailFrom, mailFromName));
+
+        final Context ctx = new Context(LocaleContextHolder.getLocale());
+        ctx.setVariable("email", emailAddress);
+        ctx.setVariable("name", name);
+        ctx.setVariable("logo", LOGO_PATH);
+        ctx.setVariable("url", passwordResetUrl);
+
+        final String textContent = this.templateEngine.process("email-user/reset-password-email.txt", ctx);
+        final String htmlContent = this.templateEngine.process("email-user/reset-password-email.html", ctx);
+
+        email.setText(textContent, htmlContent);
+
+        ClassPathResource clr = new ClassPathResource(LOGO_PATH);
+
+        email.addInline("logo", clr, PNG_MIME);
+
+        mailSender.send(mimeMessage);
+    }
 }

@@ -34,4 +34,6 @@ public class User {
     private Set<Role> roles;
 
     private String emailConfirmationCode;
+
+    private String passwordResetToken;
 }

@@ -15,6 +15,8 @@ import ch.chalender.api.service.UserService;
 import ch.chalender.api.util.GeneralUtils;
 import jakarta.mail.MessagingException;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
@@ -30,6 +32,8 @@ import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
+    Log LOG = LogFactory.getLog(UserServiceImpl.class);
+
     @Autowired
     private UserRepository userRepository;
 
@@ -65,6 +69,39 @@ public class UserServiceImpl implements UserService {
             return false;
         }
         user.setEnabled(true);
+        userRepository.save(user);
+        return true;
+    }
+
+    @Override
+    public boolean resetPassword(String email) {
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            return false;
+        }
+
+        String passwordToken = RandomStringUtils.randomAlphanumeric(32);
+        user.setPasswordResetToken(passwordToken);
+        userRepository.save(user);
+
+        try {
+            emailService.sendPasswordResetEmail(user.getEmail(), user.getDisplayName(), passwordToken);
+        } catch (MessagingException | UnsupportedEncodingException e) {
+            LOG.error(e);
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean redefinePassword(String token, String password) {
+        User user = userRepository.findByPasswordResetToken(token);
+        if (user == null) {
+            return false;
+        }
+
+        user.setPassword(passwordEncoder.encode(password));
+        user.setPasswordResetToken(null);
         userRepository.save(user);
         return true;
     }

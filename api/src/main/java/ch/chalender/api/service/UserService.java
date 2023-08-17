@@ -14,6 +14,10 @@ public interface UserService {
     public User registerNewUser(SignUpRequest signUpRequest) throws UserAlreadyExistAuthenticationException;
 
     public boolean confirmEmailCode(String code);
+    
+    public boolean resetPassword(String email);
+
+    public boolean redefinePassword(String token, String password);
 
     User findUserByEmail(String email);
 
