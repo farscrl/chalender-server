@@ -11,7 +11,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -32,6 +35,7 @@ public class StaticDataController {
     private EventLanguagesRepository eventLanguagesRepository;
 
     @GetMapping("/genres")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<List<EventGenre>> listGenres() {
         List<EventGenre> genres = eventGenresRepository.findByIsHiddenIsFalse(false);
         return ResponseEntity.ok()
@@ -40,6 +44,7 @@ public class StaticDataController {
     }
 
     @GetMapping("/regions")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<List<EventRegion>> listRegions() {
         List<EventRegion> regions = eventRegionsRepository.findByIsHiddenIsFalse(false);
         return ResponseEntity.ok()
@@ -48,6 +53,7 @@ public class StaticDataController {
     }
 
     @GetMapping("/languages")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<List<EventLanguage>> listLanguages() {
         List<EventLanguage> regions = eventLanguagesRepository.findByIsHiddenIsFalse(false);
         return ResponseEntity.ok()

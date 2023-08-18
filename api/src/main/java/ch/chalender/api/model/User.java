@@ -23,6 +23,8 @@ public class User {
 
     private String displayName;
 
+    private String organisation;
+
     protected Date createdDate;
 
     protected Date modifiedDate;

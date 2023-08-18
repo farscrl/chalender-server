@@ -5,8 +5,8 @@ import ch.chalender.api.dto.UserInfo;
 import ch.chalender.api.exception.BadRequestException;
 import ch.chalender.api.security.jwt.TokenProvider;
 import ch.chalender.api.util.CookieUtils;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +61,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
 
         // TODO: generate correct user info
-        UserInfo userInfo = new UserInfo("", "", "", null);
+        UserInfo userInfo = new UserInfo("", "", "", "",null);
         String token = tokenProvider.createToken(authentication, userInfo);
 
         return UriComponentsBuilder.fromUriString(targetUrl).queryParam("token", token).build().toUriString();
