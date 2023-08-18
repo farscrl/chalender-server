@@ -17,10 +17,11 @@ import java.util.Locale;
 @Configuration
 @EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {
-    private final long MAX_AGE_SECS = 3600;
 
+    /** disable CORS for all requests */
     @Override
     public void addCorsMappings(CorsRegistry registry) {
+        long MAX_AGE_SECS = 3600;
         registry.addMapping("/**")
                 .allowedOriginPatterns("*")
                 .allowedMethods("HEAD", "OPTIONS", "GET", "POST", "PUT", "PATCH", "DELETE")

@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -36,11 +37,13 @@ public class EventsController {
 
     @GetMapping("")
     @PageableAsQueryParam
+    @PreAuthorize("permitAll()")
     public ResponseEntity<Page<EventLookup>> listAllEvents(EventFilter eventFilter, @Parameter(hidden = true) Pageable pageable ) {
         return ResponseEntity.ok(eventLookupService.getAllEvents(eventFilter, pageable));
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<EventDto> getEvent(@PathVariable String id) {
         Event event = eventsService.getEvent(id);
 
@@ -52,6 +55,7 @@ public class EventsController {
     }
 
     @PostMapping("")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<Event> createEvent(@Valid @RequestBody Event eventToCreate) {
         if (eventToCreate.getId() != null) {
             return ResponseEntity.badRequest().build();

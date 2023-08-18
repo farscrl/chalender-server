@@ -1,9 +1,6 @@
 package ch.chalender.api.service.impl;
 
-import ch.chalender.api.dto.LocalUser;
-import ch.chalender.api.dto.Role;
-import ch.chalender.api.dto.SignUpRequest;
-import ch.chalender.api.dto.SocialProvider;
+import ch.chalender.api.dto.*;
 import ch.chalender.api.exception.OAuth2AuthenticationProcessingException;
 import ch.chalender.api.exception.UserAlreadyExistAuthenticationException;
 import ch.chalender.api.model.User;
@@ -106,9 +103,27 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
+    @Override
+    public User updateProfile(User user, UpdateProfileRequest updateProfileRequest) {
+        user.setDisplayName(updateProfileRequest.getDisplayName());
+        user.setOrganisation(updateProfileRequest.getOrganisation());
+        return userRepository.save(user);
+    }
+
+    @Override
+    public boolean updatePassword(User user, UpdatePasswordRequest updatePasswordRequest) {
+        if (!passwordEncoder.matches(updatePasswordRequest.getCurrentPassword(), user.getPassword())) {
+            return false;
+        }
+        user.setPassword(passwordEncoder.encode(updatePasswordRequest.getNewPassword()));
+        userRepository.save(user);
+        return true;
+    }
+
     private User buildNewlyRegistratedUser(final SignUpRequest formDTO) {
         User user = new User();
         user.setDisplayName(formDTO.getDisplayName());
+        user.setOrganisation(formDTO.getOrganisation());
         user.setEmail(formDTO.getEmail());
         user.setPassword(passwordEncoder.encode(formDTO.getPassword()));
         final HashSet<Role> roles = new HashSet<Role>();

@@ -1,7 +1,9 @@
 package ch.chalender.api.controller.user;
 
+import ch.chalender.api.config.CurrentUser;
 import ch.chalender.api.dto.*;
 import ch.chalender.api.exception.UserAlreadyExistAuthenticationException;
+import ch.chalender.api.model.User;
 import ch.chalender.api.security.jwt.TokenProvider;
 import ch.chalender.api.service.UserService;
 import ch.chalender.api.util.GeneralUtils;
@@ -11,14 +13,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -35,6 +35,7 @@ public class AuthController {
     TokenProvider tokenProvider;
 
     @PostMapping("/signin")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -45,6 +46,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
         try {
             userService.registerNewUser(signUpRequest);
@@ -56,6 +58,7 @@ public class AuthController {
     }
 
     @PostMapping("/confirm-email")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<?> confirmEmail(String code) {
         boolean valid = userService.confirmEmailCode(code);
         if (valid) {
@@ -66,6 +69,7 @@ public class AuthController {
     }
 
     @PostMapping("/reset-password")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<?> resetPassword(String email) {
         boolean valid = userService.resetPassword(email);
         if (valid) {
@@ -76,6 +80,7 @@ public class AuthController {
     }
 
     @PostMapping("/redefine-password")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<?> redefinePassword(String token, String password) {
         boolean valid = userService.redefinePassword(token, password);
         if (valid) {
@@ -83,5 +88,31 @@ public class AuthController {
         } else {
             return ResponseEntity.badRequest().body(new ApiResponse(false, "Error during password reset"));
         }
+    }
+
+    @PostMapping("/change-password")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> changePassword(@Valid @RequestBody UpdatePasswordRequest updatePasswordRequest, @CurrentUser LocalUser localUser) {
+        User user = localUser.getUser();
+        boolean success = userService.updatePassword(user, updatePasswordRequest);
+        if (success) {
+            return ResponseEntity.ok().body(new ApiResponse(true, "Password changed successfully"));
+        } else {
+            return ResponseEntity.badRequest().body(new ApiResponse(false, "Error during password change"));
+        }
+    }
+
+    @GetMapping("/profile")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> getMyProfile(@CurrentUser LocalUser user) {
+        return ResponseEntity.ok(GeneralUtils.buildUserInfo(user));
+    }
+
+    @PostMapping("/profile")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> setMyProfile(@Valid @RequestBody UpdateProfileRequest updateProfileRequest, @CurrentUser LocalUser localUser) {
+        User user = localUser.getUser();
+        user = userService.updateProfile(user, updateProfileRequest);
+        return ResponseEntity.ok(user);
     }
 }

@@ -18,6 +18,8 @@ public class SignUpRequest {
     @NotEmpty
     private String email;
 
+    private String organisation;
+
     private SocialProvider socialProvider;
 
     @Size(min = 8, message = "{Size.userDto.password}")
