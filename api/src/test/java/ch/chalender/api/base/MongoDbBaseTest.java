@@ -13,9 +13,13 @@ import java.io.IOException;
 public class MongoDbBaseTest {
 
     @BeforeAll
-    public static void beforeAll(@Autowired FixturesController fixturesController) throws IOException {
+    public static void beforeAll(@Autowired FixturesService fixturesService) throws IOException {
+        //mongoDbContainer.start();
         System.out.println("Loading fixtures for test...");
-        fixturesController.loadEventFixtures();
+        fixturesService.loadEventGenreFixtures();
+        fixturesService.loadEventRegionFixtures();
+        fixturesService.loadEventLanguagesFixtures();
+        fixturesService.loadEventFixtures();
         System.out.println("Loaded fixtures for test.");
     }
 }

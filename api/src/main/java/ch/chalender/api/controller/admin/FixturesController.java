@@ -1,16 +1,12 @@
 package ch.chalender.api.controller.admin;
 
 import ch.chalender.api.dto.EventDto;
-import ch.chalender.api.fixtures.EventFixtures;
-import ch.chalender.api.repository.EventGenresRepository;
-import ch.chalender.api.repository.EventLanguagesRepository;
-import ch.chalender.api.repository.EventRegionsRepository;
-import ch.chalender.api.repository.EventsRepository;
-import ch.chalender.api.service.EventLookupService;
-import ch.chalender.api.service.EventsService;
+import ch.chalender.api.model.EventGenre;
+import ch.chalender.api.model.EventLanguage;
+import ch.chalender.api.model.EventRegion;
+import ch.chalender.api.service.FixturesService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,37 +25,29 @@ import java.util.List;
 public class FixturesController {
 
     @Autowired
-    private ModelMapper modelMapper;
+    private FixturesService fixturesService;
 
-    @Autowired
-    private EventsService eventsService;
-
-    @Autowired
-    private EventRegionsRepository eventRegionsRepository;
-
-    @Autowired
-    private EventGenresRepository eventGenresRepository;
-
-    @Autowired
-    private EventLanguagesRepository eventLanguagesRepository;
-
-    @Autowired
-    private EventsRepository eventsRepository;
-
-    @Autowired
-    private EventFixtures eventFixtures;
-
-    @Autowired
-    private EventLookupService eventLookupService;
-
-    @GetMapping("/events")
-    public ResponseEntity<List<EventDto>> loadEventFixtures() throws IOException {
-        eventsRepository.deleteAll();
-        eventsRepository.saveAll(eventFixtures.getEvents());
-        eventLookupService.recreateAllEventLookupData();
-
+    @GetMapping("/genres")
+    public ResponseEntity<List<EventGenre>> loadGenresFixtures() throws IOException {
+        fixturesService.loadEventGenreFixtures();
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/regions")
+    public ResponseEntity<List<EventRegion>> loadRegionsFixtures() throws IOException {
+        fixturesService.loadEventRegionFixtures();
+        return ResponseEntity.ok().build();
+    }
 
+    @GetMapping("/languages")
+    public ResponseEntity<List<EventLanguage>> loadLanguagesFixtures() throws IOException {
+        fixturesService.loadEventLanguagesFixtures();
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/events")
+    public ResponseEntity<List<EventDto>> loadEventFixtures() throws IOException {
+        fixturesService.loadEventFixtures();
+        return ResponseEntity.ok().build();
+    }
 }
