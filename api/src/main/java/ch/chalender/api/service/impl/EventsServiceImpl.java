@@ -1,6 +1,7 @@
 package ch.chalender.api.service.impl;
 
 import ch.chalender.api.model.Event;
+import ch.chalender.api.model.EventFilter;
 import ch.chalender.api.model.User;
 import ch.chalender.api.repository.EventsRepository;
 import ch.chalender.api.service.EventsService;
@@ -26,7 +27,35 @@ public class EventsServiceImpl implements EventsService {
     }
 
     @Override
+    public Page<Event> listAllEvents(EventFilter filter, Pageable pageable) {
+        return eventsRepository.findAll(pageable);
+    }
+    @Override
     public Page<Event> listAllEventsByUser(User user, Pageable pageable) {
         return eventsRepository.findByOwnerEmail(user.getEmail(), pageable);
+    }
+
+    @Override
+    public Event acceptChanges(String id) {
+        Event event = eventsRepository.findById(id).orElse(null);
+
+        if (event == null) {
+            return null;
+        }
+
+        event.setCurrentlyPublished(event.getWaitingForReview());
+        return eventsRepository.save(event);
+    }
+
+    @Override
+    public Event refuseChanges(String id) {
+        Event event = eventsRepository.findById(id).orElse(null);
+
+        if (event == null) {
+            return null;
+        }
+
+        event.setWaitingForReview(null);
+        return eventsRepository.save(event);
     }
 }

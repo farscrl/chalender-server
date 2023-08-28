@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
+@PreAuthorize("hasRole('USER')")
 @RequestMapping("/api/user/events")
 public class UserEventsController {
 
@@ -28,7 +29,6 @@ public class UserEventsController {
 
     @GetMapping("")
     @PageableAsQueryParam
-    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Page<Event>> listAllEvents(EventFilter eventFilter, @Parameter(hidden = true) Pageable pageable, @CurrentUser LocalUser localUser) {
         User user = localUser.getUser();
         return ResponseEntity.ok(eventsService.listAllEventsByUser(user, pageable));
