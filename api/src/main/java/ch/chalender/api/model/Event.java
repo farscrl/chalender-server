@@ -1,6 +1,7 @@
 package ch.chalender.api.model;
 
 import lombok.Data;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
@@ -15,6 +16,11 @@ public class Event {
     private EventVersion waitingForReview;
 
     private List<EventVersion> versions;
+
+    private String ownerEmail;
+
+    @Transient
+    private String contactEmail;
 
     public EventStatus getEventStatus() {
         if (draft != null && currentlyPublished == null && waitingForReview == null) {

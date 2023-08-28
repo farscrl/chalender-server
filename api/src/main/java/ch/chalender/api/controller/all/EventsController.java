@@ -1,7 +1,9 @@
 package ch.chalender.api.controller.all;
 
+import ch.chalender.api.config.CurrentUser;
 import ch.chalender.api.converter.EventConverter;
 import ch.chalender.api.dto.EventDto;
+import ch.chalender.api.dto.LocalUser;
 import ch.chalender.api.model.Event;
 import ch.chalender.api.model.EventFilter;
 import ch.chalender.api.model.EventLookup;
@@ -56,12 +58,14 @@ public class EventsController {
 
     @PostMapping("")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<Event> createEvent(@Valid @RequestBody Event eventToCreate) {
+    public ResponseEntity<Event> createEvent(@Valid @RequestBody Event eventToCreate, @CurrentUser LocalUser localUser) {
+
+
         if (eventToCreate.getId() != null) {
             return ResponseEntity.badRequest().build();
         }
 
-        if (!eventToCreate.getVersions().isEmpty()) {
+        if (eventToCreate.getVersions() != null && !eventToCreate.getVersions().isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
 
@@ -74,6 +78,15 @@ public class EventsController {
                 (eventToCreate.getDraft() != null && eventToCreate.getWaitingForReview() != null)
         ) {
             return ResponseEntity.badRequest().build();
+        }
+
+        if (localUser != null) {
+            eventToCreate.setOwnerEmail(localUser.getEmail());
+        } else {
+            if (eventToCreate.getContactEmail() == null) {
+                return ResponseEntity.badRequest().build();
+            }
+            eventToCreate.setOwnerEmail(eventToCreate.getContactEmail());
         }
 
         Event event = eventsService.createEvent(eventToCreate);
