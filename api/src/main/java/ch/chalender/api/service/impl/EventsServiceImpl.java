@@ -1,24 +1,19 @@
 package ch.chalender.api.service.impl;
 
 import ch.chalender.api.model.Event;
-import ch.chalender.api.model.EventFilter;
+import ch.chalender.api.model.User;
 import ch.chalender.api.repository.EventsRepository;
 import ch.chalender.api.service.EventsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class EventsServiceImpl implements EventsService {
 
     @Autowired
     private EventsRepository eventsRepository;
-
-    @Override
-    public List<Event> getPublicEvents(EventFilter filter) {
-        return eventsRepository.findAll();
-    }
 
     @Override
     public Event createEvent(Event event) {
@@ -28,5 +23,10 @@ public class EventsServiceImpl implements EventsService {
     @Override
     public Event getEvent(String id) {
         return eventsRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public Page<Event> listAllEventsByUser(User user, Pageable pageable) {
+        return eventsRepository.findByOwnerEmail(user.getEmail(), pageable);
     }
 }

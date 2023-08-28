@@ -1,19 +1,21 @@
 package ch.chalender.api.service.impl;
 
+import ch.chalender.api.dto.Role;
 import ch.chalender.api.fixtures.EventFixtures;
 import ch.chalender.api.model.EventGenre;
 import ch.chalender.api.model.EventLanguage;
 import ch.chalender.api.model.EventRegion;
-import ch.chalender.api.repository.EventGenresRepository;
-import ch.chalender.api.repository.EventLanguagesRepository;
-import ch.chalender.api.repository.EventRegionsRepository;
-import ch.chalender.api.repository.EventsRepository;
+import ch.chalender.api.model.User;
+import ch.chalender.api.repository.*;
 import ch.chalender.api.service.EventLookupService;
 import ch.chalender.api.service.FixturesService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -21,6 +23,9 @@ public class FixturesServiceImpl implements FixturesService  {
 
     @Autowired
     private EventGenresRepository genresRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private EventRegionsRepository regionsRepository;
@@ -37,6 +42,44 @@ public class FixturesServiceImpl implements FixturesService  {
     @Autowired
     private EventLookupService eventLookupService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+
+    @Override
+    public void loadUserFixtures() {
+        User user1 = userRepository.findByEmail("user1@chalender.ch");
+        if (user1 == null) {
+            user1 = getUser("Utilisader", "1", "user1@chalender.ch");
+        } else {
+            String id = user1.getId();
+            user1 = getUser("Utilisader", "1", "user1@chalender.ch");
+            user1.setId(id);
+        }
+        userRepository.save(user1);
+
+        User user2 = userRepository.findByEmail("user2@chalender.ch");
+        if (user2 == null) {
+            user2 = getUser("Utilisader", "2", "user2@chalender.ch");
+        } else {
+            String id = user2.getId();
+            user2 = getUser("Utilisader", "2", "user2@chalender.ch");
+            user2.setId(id);
+        }
+        userRepository.save(user2);
+
+        User user3 = userRepository.findByEmail("user3@chalender.ch");
+        if (user3 == null) {
+            user3 = getUser("Utilisader", "3", "user3@chalender.ch");
+        } else {
+            String id = user3.getId();
+            user3 = getUser("Utilisader", "3", "user3@chalender.ch");
+            user3.setId(id);
+        }
+        userRepository.save(user3);
+    }
+
+    @Override
     public void loadEventGenreFixtures() {
         List<EventGenre> genres = new ArrayList<>(List.of(
                 new EventGenre(1, "concert", 1, false),
@@ -57,7 +100,7 @@ public class FixturesServiceImpl implements FixturesService  {
         genresRepository.saveAll(genres);
     }
 
-
+    @Override
     public void loadEventRegionFixtures() {
         List<EventRegion> regions = new ArrayList<>(List.of(
                 new EventRegion(1, "Surselva", 1, false),
@@ -79,7 +122,7 @@ public class FixturesServiceImpl implements FixturesService  {
         regionsRepository.saveAll(regions);
     }
 
-
+    @Override
     public void loadEventLanguagesFixtures() {
         List<EventLanguage> languages = new ArrayList<>(List.of(
                 new EventLanguage("rm", "rumantsch", 1, false),
@@ -100,5 +143,23 @@ public class FixturesServiceImpl implements FixturesService  {
         eventsRepository.deleteAll();
         eventsRepository.saveAll(eventFixtures.getEvents());
         eventLookupService.recreateAllEventLookupData();
+    }
+
+    private User getUser(String firstName, String lastName, String email) {
+        User user = new User();
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setOrganisation(null);
+        user.setEmail(email);
+        user.setPassword(passwordEncoder.encode("testtest"));
+        final HashSet<Role> roles = new HashSet<Role>();
+        roles.add(Role.ROLE_USER);
+        user.setRoles(roles);
+        user.setProvider("local");
+        user.setEnabled(true);
+        user.setProviderUserId(null);
+        user.setCreatedDate(Calendar.getInstance().getTime());
+        user.setModifiedDate(Calendar.getInstance().getTime());
+        return user;
     }
 }
