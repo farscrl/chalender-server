@@ -59,8 +59,6 @@ public class EventsController {
     @PostMapping("")
     @PreAuthorize("permitAll()")
     public ResponseEntity<Event> createEvent(@Valid @RequestBody Event eventToCreate, @CurrentUser LocalUser localUser) {
-
-
         if (eventToCreate.getId() != null) {
             return ResponseEntity.badRequest().build();
         }

@@ -1,7 +1,6 @@
 package ch.chalender.api.security.jwt;
 
 import ch.chalender.api.config.AppProperties;
-import ch.chalender.api.dto.LocalUser;
 import ch.chalender.api.dto.UserInfo;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
@@ -26,9 +25,11 @@ public class TokenProvider {
         Date expiryDate = new Date(now.getTime() + appProperties.getAuth().getTokenExpirationMsec());
 
         Claims claims = Jwts.claims().setSubject(userInfo.getId());
-        claims.put("displayName",userInfo.getDisplayName());
-        claims.put("email",userInfo.getEmail());
-        claims.put("roles",userInfo.getRoles());
+        claims.put("displayName", userInfo.getFirstName() + " " + userInfo.getLastName());
+        claims.put("firstName", userInfo.getFirstName());
+        claims.put("lastName", userInfo.getLastName());
+        claims.put("email", userInfo.getEmail());
+        claims.put("roles", userInfo.getRoles());
 
         return Jwts.builder()
                 .setClaims(claims)

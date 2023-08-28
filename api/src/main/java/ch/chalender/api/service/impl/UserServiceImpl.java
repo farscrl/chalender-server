@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
         user = userRepository.save(user);
 
         try {
-            emailService.sendAccountConfirmationEmail(user.getEmail(), user.getDisplayName(), user.getEmailConfirmationCode());
+            emailService.sendAccountConfirmationEmail(user.getEmail(), user.getFirstName(), user.getEmailConfirmationCode());
         } catch (MessagingException | UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
 
         try {
-            emailService.sendPasswordResetEmail(user.getEmail(), user.getDisplayName(), passwordToken);
+            emailService.sendPasswordResetEmail(user.getEmail(), user.getFirstName(), passwordToken);
         } catch (MessagingException | UnsupportedEncodingException e) {
             LOG.error(e);
             return false;
@@ -105,7 +105,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateProfile(User user, UpdateProfileRequest updateProfileRequest) {
-        user.setDisplayName(updateProfileRequest.getDisplayName());
+        user.setFirstName(updateProfileRequest.getFirstName());
+        user.setLastName(updateProfileRequest.getLastName());
         user.setOrganisation(updateProfileRequest.getOrganisation());
         return userRepository.save(user);
     }
@@ -122,7 +123,8 @@ public class UserServiceImpl implements UserService {
 
     private User buildNewlyRegistratedUser(final SignUpRequest formDTO) {
         User user = new User();
-        user.setDisplayName(formDTO.getDisplayName());
+        user.setFirstName(formDTO.getFirstName());
+        user.setLastName(formDTO.getLastName());
         user.setOrganisation(formDTO.getOrganisation());
         user.setEmail(formDTO.getEmail());
         user.setPassword(passwordEncoder.encode(formDTO.getPassword()));
@@ -167,12 +169,12 @@ public class UserServiceImpl implements UserService {
     }
 
     private User updateExistingUser(User existingUser, OAuth2UserInfo oAuth2UserInfo) {
-        existingUser.setDisplayName(oAuth2UserInfo.getName());
+        existingUser.setFirstName(oAuth2UserInfo.getName());
         return userRepository.save(existingUser);
     }
 
     private SignUpRequest toUserRegistrationObject(String registrationId, OAuth2UserInfo oAuth2UserInfo) {
-        return SignUpRequest.getBuilder().addProviderUserID(oAuth2UserInfo.getId()).addDisplayName(oAuth2UserInfo.getName()).addEmail(oAuth2UserInfo.getEmail())
+        return SignUpRequest.getBuilder().addProviderUserID(oAuth2UserInfo.getId()).addFirstName(oAuth2UserInfo.getName()).addEmail(oAuth2UserInfo.getEmail())
                 .addSocialProvider(GeneralUtils.toSocialProvider(registrationId)).addPassword("changeit").build();
     }
 

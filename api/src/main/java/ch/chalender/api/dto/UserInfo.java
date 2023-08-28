@@ -6,12 +6,13 @@ import java.util.List;
 
 @Value
 public class UserInfo {
-    private String id, organisation, displayName, email;
+    private String id, organisation, firstName, lastName, email;
     private List<String> roles;
 
-    public UserInfo(String id, String displayName, String organisation, String email, List<String> roles) {
+    public UserInfo(String id, String firstName, String lastName, String organisation, String email, List<String> roles) {
         this.id = id;
-        this.displayName = displayName;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.organisation = organisation;
         this.email = email;
         this.roles = roles;

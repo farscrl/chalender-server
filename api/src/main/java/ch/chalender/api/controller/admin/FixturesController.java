@@ -4,6 +4,7 @@ import ch.chalender.api.dto.EventDto;
 import ch.chalender.api.model.EventGenre;
 import ch.chalender.api.model.EventLanguage;
 import ch.chalender.api.model.EventRegion;
+import ch.chalender.api.model.User;
 import ch.chalender.api.service.FixturesService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,12 @@ public class FixturesController {
 
     @Autowired
     private FixturesService fixturesService;
+
+    @GetMapping("/users")
+    public ResponseEntity<List<User>> loadUserFixtures() throws IOException {
+        fixturesService.loadUserFixtures();
+        return ResponseEntity.ok().build();
+    }
 
     @GetMapping("/genres")
     public ResponseEntity<List<EventGenre>> loadGenresFixtures() throws IOException {

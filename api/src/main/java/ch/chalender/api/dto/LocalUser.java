@@ -45,7 +45,7 @@ public class LocalUser  extends org.springframework.security.core.userdetails.Us
 
     @Override
     public String getName() {
-        return this.user.getDisplayName();
+        return this.user.getFirstName() + " " + this.user.getLastName();
     }
 
     @Override

@@ -21,7 +21,9 @@ public class User {
 
     private boolean enabled;
 
-    private String displayName;
+    private String firstName;
+
+    private String lastName;
 
     private String organisation;
 
