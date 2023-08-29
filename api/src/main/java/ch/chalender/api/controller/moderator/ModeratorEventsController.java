@@ -4,17 +4,18 @@ import ch.chalender.api.model.Event;
 import ch.chalender.api.model.EventFilter;
 import ch.chalender.api.service.EventsService;
 import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.mail.MessagingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.UnsupportedEncodingException;
 
 @Slf4j
 @RestController
@@ -32,17 +33,34 @@ public class ModeratorEventsController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Event> showEvent(String id) {
+    public ResponseEntity<Event> showEvent(@PathVariable String id) {
         return ResponseEntity.ok(eventsService.getEvent(id));
     }
 
     @PostMapping("/{id}/accept")
-    public ResponseEntity<Event> acceptChanges(String id) {
-        return ResponseEntity.ok(eventsService.acceptChanges(id));
+    public ResponseEntity<Event> acceptChanges(@PathVariable String id) {
+        try {
+            Event event = eventsService.acceptChanges(id);
+            return ResponseEntity.ok(event);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        } catch (MessagingException | UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @PostMapping("/{id}/refuse")
-    public ResponseEntity<Event> refuseChanges(String id) {
-        return ResponseEntity.ok(eventsService.refuseChanges(id));
+    public ResponseEntity refuseChanges(@PathVariable String id) {
+        try {
+            Event event = eventsService.refuseChanges(id);
+            if (event == null) {
+                return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+            }
+            return ResponseEntity.ok(event);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        } catch (MessagingException | UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

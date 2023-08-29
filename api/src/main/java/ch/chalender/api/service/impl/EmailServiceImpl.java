@@ -1,5 +1,6 @@
 package ch.chalender.api.service.impl;
 
+import ch.chalender.api.model.Event;
 import ch.chalender.api.service.EmailService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
@@ -94,5 +95,25 @@ public class EmailServiceImpl implements EmailService {
         email.addInline("logo", clr, PNG_MIME);
 
         mailSender.send(mimeMessage);
+    }
+
+    @Override
+    public void sendEventPublishedEmail(String emailAddress, String name, Event event) throws MessagingException, UnsupportedEncodingException {
+        // TODO: implement me
+    }
+
+    @Override
+    public void sendEventUpdateAcceptedEmail(String emailAddress, String name, Event event) throws MessagingException, UnsupportedEncodingException {
+        // TODO: implement me
+    }
+
+    @Override
+    public void sendEventRefusedEmail(String emailAddress, String name, Event event) throws MessagingException, UnsupportedEncodingException {
+        // TODO: implement me
+    }
+
+    @Override
+    public void sendEventUpdateRefusedEmail(String emailAddress, String name, Event event) throws MessagingException, UnsupportedEncodingException {
+        // TODO: implement me
     }
 }

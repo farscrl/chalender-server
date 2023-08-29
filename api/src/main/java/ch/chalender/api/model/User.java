@@ -40,4 +40,8 @@ public class User {
     private String emailConfirmationCode;
 
     private String passwordResetToken;
+
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
 }

@@ -1,6 +1,5 @@
 package ch.chalender.api.fixtures;
 
-import ch.chalender.api.converter.EventConverter;
 import ch.chalender.api.model.*;
 import ch.chalender.api.repository.EventGenresRepository;
 import ch.chalender.api.repository.EventLanguagesRepository;
@@ -14,7 +13,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ch.chalender.api.converter.EventConverter.EventVersionSelection.*;
+import static ch.chalender.api.model.EventStatus.*;
+
 
 @Component
 public class EventFixtures {
@@ -46,7 +46,7 @@ public class EventFixtures {
         ev1.setEventLanguages(eventLanguages("de,rm,it"));
         ev1.setOnlineOnly(false);
         ev1.setLink("https://www.flurincaviezel.ch/");
-        events.add(createEvent(ev1, CURRENTLY_PUBLISHED, "user1@chalender.ch"));
+        events.add(createEvent(ev1, PUBLISHED, "user1@chalender.ch"));
 
         EventVersion ev2 = new EventVersion();
         ev2.setTitle("festival da la poesia alpina contemporana");
@@ -59,7 +59,7 @@ public class EventFixtures {
         ev2.setEventLanguages(eventLanguages("rm,de"));
         ev2.setOnlineOnly(false);
         ev2.setLink(null);
-        events.add(createEvent(ev2, CURRENTLY_PUBLISHED, "user1@chalender.ch"));
+        events.add(createEvent(ev2, PUBLISHED, "user1@chalender.ch"));
 
         EventVersion ev3 = new EventVersion();
         ev3.setTitle("Guida publica tras l’exposiziun ‘Retrospectiva Gieri Schmed’");
@@ -72,7 +72,7 @@ public class EventFixtures {
         ev3.setEventLanguages(eventLanguages("rm,de"));
         ev3.setOnlineOnly(false);
         ev3.setLink("http://museum-trun.ch/");
-        events.add(createEvent(ev3, CURRENTLY_PUBLISHED, "user1@chalender.ch"));
+        events.add(createEvent(ev3, PUBLISHED, "user1@chalender.ch"));
 
         EventVersion ev4 = new EventVersion();
         ev4.setTitle("Lavuratori Traversadas litteraras 2023");
@@ -85,7 +85,11 @@ public class EventFixtures {
         ev4.setEventLanguages(eventLanguages("rm"));
         ev4.setOnlineOnly(false);
         ev4.setLink("http://www.liarumantscha.ch/");
-        events.add(createEvent(ev4, CURRENTLY_PUBLISHED, "user1@chalender.ch"));
+        Event event4 = createEvent(ev4, NEW_MODIFICATION, "user1@chalender.ch");
+        event4.getCurrentlyPublished().setTitle("Lavuratori Traversadas litteraras 2022");
+        event4.getCurrentlyPublished().setGenres(getGenres("6"));
+        event4.getCurrentlyPublished().getOccurrences().get(0).setEnd(LocalTime.parse("16:00", timeFormatter));
+        events.add(event4);
 
         EventVersion ev5 = new EventVersion();
         ev5.setTitle("Grischun conta");
@@ -111,7 +115,7 @@ public class EventFixtures {
         ev6.setEventLanguages(eventLanguages("rm"));
         ev6.setOnlineOnly(false);
         ev6.setLink("http://www.san-nicla.ch/");
-        events.add(createEvent(ev6, WAITING_FOR_REVIEW, "user1@chalender.ch"));
+        events.add(createEvent(ev6, IN_REVIEW, "user1@chalender.ch"));
 
         EventVersion ev7 = new EventVersion();
         ev7.setTitle("Retrospectiva Gieri Schmed");
@@ -124,7 +128,7 @@ public class EventFixtures {
         ev7.setEventLanguages(eventLanguages("rm,de"));
         ev7.setOnlineOnly(false);
         ev7.setLink("http://museum-trun.ch/");
-        events.add(createEvent(ev7, CURRENTLY_PUBLISHED, "user2@chalender.ch"));
+        events.add(createEvent(ev7, PUBLISHED, "user2@chalender.ch"));
 
         EventVersion ev8 = new EventVersion();
         ev8.setTitle("Hasi Farinelli");
@@ -137,7 +141,7 @@ public class EventFixtures {
         ev8.setEventLanguages(eventLanguages("rm"));
         ev8.setOnlineOnly(false);
         ev8.setLink("https://www.postremise.ch/events/hasi-farinelli-2/form");
-        events.add(createEvent(ev8, CURRENTLY_PUBLISHED, "user2@chalender.ch"));
+        events.add(createEvent(ev8, PUBLISHED, "user2@chalender.ch"));
 
         EventVersion ev9 = new EventVersion();
         ev9.setTitle("surdada dal premi grischun da litteratura a Joachim B. Schmidt");
@@ -150,7 +154,7 @@ public class EventFixtures {
         ev9.setEventLanguages(eventLanguages("rm"));
         ev9.setOnlineOnly(false);
         ev9.setLink(null);
-        events.add(createEvent(ev9, CURRENTLY_PUBLISHED, "user2@chalender.ch"));
+        events.add(createEvent(ev9, PUBLISHED, "user2@chalender.ch"));
 
         EventVersion ev10 = new EventVersion();
         ev10.setTitle("Rumantsch è …");
@@ -163,7 +167,7 @@ public class EventFixtures {
         ev10.setEventLanguages(eventLanguages("rm,de"));
         ev10.setOnlineOnly(false);
         ev10.setLink("http://cularta.ch/");
-        events.add(createEvent(ev10, CURRENTLY_PUBLISHED, "user2@chalender.ch"));
+        events.add(createEvent(ev10, PUBLISHED, "user2@chalender.ch"));
 
         EventVersion ev11 = new EventVersion();
         ev11.setTitle("Pina Palau");
@@ -176,7 +180,7 @@ public class EventFixtures {
         ev11.setEventLanguages(eventLanguages("de"));
         ev11.setOnlineOnly(false);
         ev11.setLink("https://pinapalau.bandcamp.com/track/closer");
-        events.add(createEvent(ev11, CURRENTLY_PUBLISHED, "user2@chalender.ch"));
+        events.add(createEvent(ev11, PUBLISHED, "user2@chalender.ch"));
 
         EventVersion ev12 = new EventVersion();
         ev12.setTitle("Prelecziun Jachen Andry");
@@ -189,7 +193,7 @@ public class EventFixtures {
         ev12.setEventLanguages(eventLanguages("rm,de,it"));
         ev12.setOnlineOnly(false);
         ev12.setLink(null);
-        events.add(createEvent(ev12, CURRENTLY_PUBLISHED, "user2@chalender.ch"));
+        events.add(createEvent(ev12, PUBLISHED, "user2@chalender.ch"));
 
         EventVersion ev13 = new EventVersion();
         ev13.setTitle("Poetry Slam Engiadinais");
@@ -202,7 +206,7 @@ public class EventFixtures {
         ev13.setEventLanguages(eventLanguages("rm"));
         ev13.setOnlineOnly(false);
         ev13.setLink("https://www.udg.ch");
-        events.add(createEvent(ev13, CURRENTLY_PUBLISHED, "user3@chalender.ch"));
+        events.add(createEvent(ev13, PUBLISHED, "user3@chalender.ch"));
 
         EventVersion ev14 = new EventVersion();
         ev14.setTitle("ina messa per pasch");
@@ -215,7 +219,7 @@ public class EventFixtures {
         ev14.setEventLanguages(eventLanguages("rm"));
         ev14.setOnlineOnly(false);
         ev14.setLink(null);
-        events.add(createEvent(ev14, CURRENTLY_PUBLISHED, "user3@chalender.ch"));
+        events.add(createEvent(ev14, PUBLISHED, "user3@chalender.ch"));
 
         EventVersion ev15 = new EventVersion();
         ev15.setTitle("Concert da Curdin Nicolai & band");
@@ -228,7 +232,7 @@ public class EventFixtures {
         ev15.setEventLanguages(eventLanguages("rm"));
         ev15.setOnlineOnly(false);
         ev15.setLink("www.allegrawinti.ch");
-        events.add(createEvent(ev15, CURRENTLY_PUBLISHED, "user3@chalender.ch"));
+        events.add(createEvent(ev15, PUBLISHED, "user3@chalender.ch"));
 
         EventVersion ev16 = new EventVersion();
         ev16.setTitle("Luvratori «fundar ina cooperativa»");
@@ -241,19 +245,22 @@ public class EventFixtures {
         ev16.setEventLanguages(eventLanguages("rm,de"));
         ev16.setOnlineOnly(false);
         ev16.setLink("http://www.encarden.ch/");
-        events.add(createEvent(ev16, CURRENTLY_PUBLISHED, "user3@chalender.ch"));
+        events.add(createEvent(ev16, PUBLISHED, "user3@chalender.ch"));
 
         return events;
     }
 
-    private Event createEvent(EventVersion eventVersion, EventConverter.EventVersionSelection eventVersionSelection, String ownerEmail) {
+    private Event createEvent(EventVersion eventVersion, EventStatus eventStatus, String ownerEmail) {
         Event event = new Event();
-        if (eventVersionSelection == CURRENTLY_PUBLISHED) {
+        if (eventStatus == PUBLISHED) {
             event.setCurrentlyPublished(eventVersion);
-        } else if (eventVersionSelection == EventConverter.EventVersionSelection.DRAFT) {
+        } else if (eventStatus == EventStatus.DRAFT) {
             event.setDraft(eventVersion);
-        } else if (eventVersionSelection == EventConverter.EventVersionSelection.WAITING_FOR_REVIEW) {
+        } else if (eventStatus == IN_REVIEW) {
             event.setWaitingForReview(eventVersion);
+        } else if (eventStatus == NEW_MODIFICATION) {
+            event.setWaitingForReview(eventVersion);
+            event.setCurrentlyPublished(eventVersion);
         }
 
         event.setOwnerEmail(ownerEmail);

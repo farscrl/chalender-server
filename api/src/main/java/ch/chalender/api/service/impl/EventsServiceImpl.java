@@ -4,17 +4,28 @@ import ch.chalender.api.model.Event;
 import ch.chalender.api.model.EventFilter;
 import ch.chalender.api.model.User;
 import ch.chalender.api.repository.EventsRepository;
+import ch.chalender.api.service.EmailService;
 import ch.chalender.api.service.EventsService;
+import ch.chalender.api.service.UserService;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.io.UnsupportedEncodingException;
 
 @Service
 public class EventsServiceImpl implements EventsService {
 
     @Autowired
     private EventsRepository eventsRepository;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private UserService userService;
 
     @Override
     public Event createEvent(Event event) {
@@ -36,26 +47,50 @@ public class EventsServiceImpl implements EventsService {
     }
 
     @Override
-    public Event acceptChanges(String id) {
+    public Event acceptChanges(String id) throws RuntimeException, MessagingException, UnsupportedEncodingException {
         Event event = eventsRepository.findById(id).orElse(null);
-
         if (event == null) {
-            return null;
+            throw new RuntimeException("Event not found");
         }
 
+        boolean isNew = event.getCurrentlyPublished() == null;
+
         event.setCurrentlyPublished(event.getWaitingForReview());
-        return eventsRepository.save(event);
+        event.setWaitingForReview(null);
+        event = eventsRepository.save(event);
+
+        User user = userService.findUserByEmail(event.getOwnerEmail());
+        if (isNew) {
+            emailService.sendEventPublishedEmail(event.getOwnerEmail(), user != null ? user.getFullName() : null, event);
+            return event;
+        }
+        emailService.sendEventUpdateAcceptedEmail(event.getOwnerEmail(), user != null ? user.getFullName() : null, event);
+        return event;
     }
 
     @Override
-    public Event refuseChanges(String id) {
+    public Event refuseChanges(String id) throws RuntimeException, MessagingException, UnsupportedEncodingException {
         Event event = eventsRepository.findById(id).orElse(null);
-
         if (event == null) {
-            return null;
+            throw new RuntimeException("Event not found");
         }
 
-        event.setWaitingForReview(null);
-        return eventsRepository.save(event);
+        if (event.getCurrentlyPublished() != null) {
+            event.setWaitingForReview(null);
+
+            event = eventsRepository.save(event);
+
+            User user = userService.findUserByEmail(event.getOwnerEmail());
+            emailService.sendEventUpdateRefusedEmail(event.getOwnerEmail(), user != null ? user.getFullName() : null, event);
+
+            return event;
+        }
+
+        eventsRepository.delete(event);
+
+        User user = userService.findUserByEmail(event.getOwnerEmail());
+        emailService.sendEventRefusedEmail(event.getOwnerEmail(), user != null ? user.getFullName() : null, event);
+
+        return null;
     }
 }
