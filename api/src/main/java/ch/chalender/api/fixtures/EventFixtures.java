@@ -81,14 +81,23 @@ public class EventFixtures {
         ev4.setLocation("Lia Rumantscha, Cuira");
         ev4.setAddress("Lia Rumantscha, Via da la Plessur 47, 7001 Cuira");
         ev4.setOccurrences(eventOccurrences(false, "19-10-2023", "08:00", "15:00", false));
-        ev4.setRegions(getRegions("5"));
+        ev4.setRegions(getRegions("5,6"));
         ev4.setEventLanguages(eventLanguages("rm"));
         ev4.setOnlineOnly(false);
         ev4.setLink("http://www.liarumantscha.ch/");
+        EventVersion ev4Old = new EventVersion();
+        ev4Old.setTitle("Lavuratori Traversadas litteraras 2022");
+        ev4Old.setGenres(getGenres("6"));
+        ev4Old.setDescription("Il lavuratori è avert per tut las persunas interessadas cun experientscha da scriver e da translatar.\nLa publicaziun dal lavuratori Traversadas litteraras dals 20 d’october 2023 suonda la fin d’avust");
+        ev4Old.setLocation("Lia Rumantscha, Chur");
+        ev4Old.setAddress("Lia Rumantscha, Via da la Plessur 47, 7001 Cuira");
+        ev4Old.setOccurrences(eventOccurrences(false, "19-10-2023", "08:00", "16:00", false));
+        ev4Old.setRegions(getRegions("5"));
+        ev4Old.setEventLanguages(eventLanguages("rm,de"));
+        ev4Old.setOnlineOnly(false);
+        ev4Old.setLink("http://www.liarumantscha.ch/");
         Event event4 = createEvent(ev4, NEW_MODIFICATION, "user1@chalender.ch");
-        event4.getCurrentlyPublished().setTitle("Lavuratori Traversadas litteraras 2022");
-        event4.getCurrentlyPublished().setGenres(getGenres("6"));
-        event4.getCurrentlyPublished().getOccurrences().get(0).setEnd(LocalTime.parse("16:00", timeFormatter));
+        event4.setCurrentlyPublished(ev4Old);
         events.add(event4);
 
         EventVersion ev5 = new EventVersion();
