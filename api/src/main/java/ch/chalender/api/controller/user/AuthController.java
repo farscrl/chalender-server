@@ -40,9 +40,9 @@ public class AuthController {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         LocalUser localUser = (LocalUser) authentication.getPrincipal();
-        UserInfo userInfo = GeneralUtils.buildUserInfo(localUser);
-        String jwt = tokenProvider.createToken(authentication, userInfo);
-        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, userInfo));
+        UserDto userDto = GeneralUtils.buildUserDto(localUser);
+        String jwt = tokenProvider.createToken(authentication, userDto);
+        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, userDto));
     }
 
     @PostMapping("/signup")
@@ -104,15 +104,15 @@ public class AuthController {
 
     @GetMapping("/profile")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> getMyProfile(@CurrentUser LocalUser user) {
-        return ResponseEntity.ok(GeneralUtils.buildUserInfo(user));
+    public ResponseEntity<UserDto> getMyProfile(@CurrentUser LocalUser user) {
+        return ResponseEntity.ok(GeneralUtils.buildUserDto(user));
     }
 
     @PostMapping("/profile")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> setMyProfile(@Valid @RequestBody UpdateProfileRequest updateProfileRequest, @CurrentUser LocalUser localUser) {
+    public ResponseEntity<UserDto> setMyProfile(@Valid @RequestBody UserDto userDto, @CurrentUser LocalUser localUser) {
         User user = localUser.getUser();
-        user = userService.updateProfile(user, updateProfileRequest);
-        return ResponseEntity.ok(user);
+        user = userService.updateProfile(user, userDto);
+        return ResponseEntity.ok(user.toUserDto());
     }
 }

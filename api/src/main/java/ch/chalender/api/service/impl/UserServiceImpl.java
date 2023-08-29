@@ -1,9 +1,11 @@
 package ch.chalender.api.service.impl;
 
+import ch.chalender.api.dal.UsersDal;
 import ch.chalender.api.dto.*;
 import ch.chalender.api.exception.OAuth2AuthenticationProcessingException;
 import ch.chalender.api.exception.UserAlreadyExistAuthenticationException;
 import ch.chalender.api.model.User;
+import ch.chalender.api.model.UserFilter;
 import ch.chalender.api.repository.UserRepository;
 import ch.chalender.api.security.oauth2.user.OAuth2UserInfo;
 import ch.chalender.api.security.oauth2.user.OAuth2UserInfoFactory;
@@ -15,6 +17,8 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
@@ -22,10 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -33,6 +34,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UsersDal usersDal;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -104,10 +108,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateProfile(User user, UpdateProfileRequest updateProfileRequest) {
-        user.setFirstName(updateProfileRequest.getFirstName());
-        user.setLastName(updateProfileRequest.getLastName());
-        user.setOrganisation(updateProfileRequest.getOrganisation());
+    public User updateProfile(User user, UserDto userDto) {
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setOrganisation(userDto.getOrganisation());
         return userRepository.save(user);
     }
 
@@ -181,5 +185,40 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> findUserById(String id) {
         return userRepository.findById(id);
+    }
+
+    @Override
+    public Page<UserDto> listAllUsers(UserFilter userFilter, Pageable pageable) {
+        return usersDal.getAllUsers(userFilter, pageable).map(User::toUserDto);
+    }
+
+    @Override
+    public UserDto getUser(String id) {
+        return userRepository.findById(id).map(User::toUserDto).orElse(null);
+    }
+
+    @Override
+    public UserDto updateUser(String id, UserDto userDto) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null) {
+            return null;
+        }
+        Set<Role> roleSet = new HashSet<>();
+        for (String role : userDto.getRoles()) {
+            roleSet.add(Role.valueOf(role));
+        }
+
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setOrganisation(userDto.getOrganisation());
+        user.setEmail(userDto.getEmail());
+        user.setRoles(roleSet);
+        userRepository.save(user);
+        return user.toUserDto();
+    }
+
+    @Override
+    public void deleteUser(String id) {
+        userRepository.deleteById(id);
     }
 }

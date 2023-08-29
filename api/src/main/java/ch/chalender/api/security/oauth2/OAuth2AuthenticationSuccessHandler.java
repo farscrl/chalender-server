@@ -1,7 +1,7 @@
 package ch.chalender.api.security.oauth2;
 
 import ch.chalender.api.config.AppProperties;
-import ch.chalender.api.dto.UserInfo;
+import ch.chalender.api.dto.UserDto;
 import ch.chalender.api.exception.BadRequestException;
 import ch.chalender.api.security.jwt.TokenProvider;
 import ch.chalender.api.util.CookieUtils;
@@ -61,8 +61,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
 
         // TODO: generate correct user info
-        UserInfo userInfo = new UserInfo("", "",  "", "", "",null);
-        String token = tokenProvider.createToken(authentication, userInfo);
+        UserDto userDto = new UserDto("", "",  "", "", "",null, false);
+        String token = tokenProvider.createToken(authentication, userDto);
 
         return UriComponentsBuilder.fromUriString(targetUrl).queryParam("token", token).build().toUriString();
     }

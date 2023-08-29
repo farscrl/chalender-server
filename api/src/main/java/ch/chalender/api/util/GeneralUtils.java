@@ -3,7 +3,7 @@ package ch.chalender.api.util;
 import ch.chalender.api.dto.LocalUser;
 import ch.chalender.api.dto.Role;
 import ch.chalender.api.dto.SocialProvider;
-import ch.chalender.api.dto.UserInfo;
+import ch.chalender.api.dto.UserDto;
 import ch.chalender.api.model.User;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -30,9 +30,9 @@ public class GeneralUtils {
         return SocialProvider.LOCAL;
     }
 
-    public static UserInfo buildUserInfo(LocalUser localUser) {
+    public static UserDto buildUserDto(LocalUser localUser) {
         List<String> roles = localUser.getAuthorities().stream().map(item -> item.getAuthority()).collect(Collectors.toList());
         User user = localUser.getUser();
-        return new UserInfo(user.getId().toString(), user.getFirstName(), user.getLastName(), user.getOrganisation(), user.getEmail(), roles);
+        return new UserDto(user.getId().toString(), user.getFirstName(), user.getLastName(), user.getOrganisation(), user.getEmail(), roles, user.isEnabled());
     }
 }

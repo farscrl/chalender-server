@@ -3,9 +3,12 @@ package ch.chalender.api.service;
 import ch.chalender.api.dto.LocalUser;
 import ch.chalender.api.dto.SignUpRequest;
 import ch.chalender.api.dto.UpdatePasswordRequest;
-import ch.chalender.api.dto.UpdateProfileRequest;
+import ch.chalender.api.dto.UserDto;
 import ch.chalender.api.exception.UserAlreadyExistAuthenticationException;
 import ch.chalender.api.model.User;
+import ch.chalender.api.model.UserFilter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 
@@ -21,13 +24,21 @@ public interface UserService {
 
     public boolean redefinePassword(String token, String password);
 
-    public User updateProfile(User user, UpdateProfileRequest updateProfileRequest);
+    public User updateProfile(User user, UserDto userDto);
 
     public boolean updatePassword(User user, UpdatePasswordRequest updatePasswordRequest);
 
-    User findUserByEmail(String email);
+    public User findUserByEmail(String email);
 
-    Optional<User> findUserById(String id);
+    public Optional<User> findUserById(String id);
 
-    LocalUser processUserRegistration(String registrationId, Map<String, Object> attributes, OidcIdToken idToken, OidcUserInfo userInfo);
+    public LocalUser processUserRegistration(String registrationId, Map<String, Object> attributes, OidcIdToken idToken, OidcUserInfo userInfo);
+
+    public Page<UserDto> listAllUsers(UserFilter userFilter, Pageable pageable);
+
+    public UserDto getUser(String id);
+
+    public UserDto updateUser(String id, UserDto userDto);
+
+    public void deleteUser(String id);
 }

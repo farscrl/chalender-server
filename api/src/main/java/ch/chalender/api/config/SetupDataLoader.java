@@ -5,6 +5,7 @@ import ch.chalender.api.dto.SocialProvider;
 import ch.chalender.api.model.User;
 import ch.chalender.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,13 +26,16 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Value("${chalender.adminPassword}")
+    private String adminPassword;
+
     @Override
     public void onApplicationEvent(final ContextRefreshedEvent event) {
         if (alreadySetup) {
             return;
         }
         // Create initial roles
-        createUserIfNotFound("admin@chalender.ch", Set.of(Role.USER, Role.ROLE_ADMIN, Role.ROLE_MODERATOR));
+        createUserIfNotFound("admin@chalender.ch", Set.of(Role.ROLE_USER, Role.ROLE_ADMIN, Role.ROLE_MODERATOR));
         alreadySetup = true;
     }
 
@@ -42,7 +46,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
             user.setFirstName("Admin");
             user.setLastName("Admin");
             user.setEmail(email);
-            user.setPassword(passwordEncoder.encode("admin@"));
+            user.setPassword(passwordEncoder.encode(adminPassword));
             user.setRoles(roles);
             user.setProvider(SocialProvider.LOCAL.getProviderType());
             user.setEnabled(true);
