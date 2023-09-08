@@ -14,6 +14,7 @@ public class Event {
     private EventVersion draft;
     private EventVersion currentlyPublished;
     private EventVersion waitingForReview;
+    private EventVersion rejected;
 
     private List<EventVersion> versions;
 
@@ -23,17 +24,20 @@ public class Event {
     private String contactEmail;
 
     public EventStatus getEventStatus() {
-        if (draft != null && currentlyPublished == null && waitingForReview == null) {
+        if (draft != null && currentlyPublished == null && waitingForReview == null && rejected == null) {
             return EventStatus.DRAFT;
         }
-        if (waitingForReview != null && currentlyPublished == null && draft == null) {
+        if (waitingForReview != null && currentlyPublished == null && draft == null && rejected == null) {
             return EventStatus.IN_REVIEW;
         }
-        if (currentlyPublished != null && waitingForReview != null && draft == null) {
+        if (currentlyPublished != null && waitingForReview != null && draft == null && rejected == null) {
             return EventStatus.NEW_MODIFICATION;
         }
-        if (currentlyPublished != null && waitingForReview == null && draft == null) {
+        if (currentlyPublished != null && waitingForReview == null && draft == null && rejected == null) {
             return EventStatus.PUBLISHED;
+        }
+        if (rejected != null && currentlyPublished == null && waitingForReview == null && draft == null) {
+            return EventStatus.REJECTED;
         }
         return EventStatus.INVALID;
     }

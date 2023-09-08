@@ -1,7 +1,9 @@
 package ch.chalender.api.service;
 
+import ch.chalender.api.dto.ModerationComment;
 import ch.chalender.api.model.Event;
 import ch.chalender.api.model.EventFilter;
+import ch.chalender.api.model.EventVersion;
 import ch.chalender.api.model.User;
 import jakarta.mail.MessagingException;
 import org.springframework.data.domain.Page;
@@ -14,6 +16,8 @@ public interface EventsService {
     public Event getEvent(String id);
     public Page<Event> listAllEvents(EventFilter filter, Pageable pageable);
     public Page<Event> listAllEventsByUser(User user, Pageable pageable);
-    public Event acceptChanges(String id) throws RuntimeException, MessagingException, UnsupportedEncodingException;
-    public Event refuseChanges(String id) throws RuntimeException, MessagingException, UnsupportedEncodingException;
+    public Event acceptChanges(String id, ModerationComment moderationComment) throws RuntimeException, MessagingException, UnsupportedEncodingException;
+    public Event refuseChanges(String id, ModerationComment moderationComment) throws RuntimeException, MessagingException, UnsupportedEncodingException;
+    public Event changeAndPublish(String id, EventVersion eventVersion) throws RuntimeException, MessagingException, UnsupportedEncodingException;
+    public void deleteEvent(String id);
 }

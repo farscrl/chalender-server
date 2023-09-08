@@ -5,5 +5,6 @@ public enum EventStatus {
     IN_REVIEW,
     PUBLISHED,
     NEW_MODIFICATION,
+    REJECTED,
     INVALID,
 }

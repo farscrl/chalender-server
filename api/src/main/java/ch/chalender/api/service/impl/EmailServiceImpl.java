@@ -98,22 +98,22 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void sendEventPublishedEmail(String emailAddress, String name, Event event) throws MessagingException, UnsupportedEncodingException {
+    public void sendEventPublishedEmail(String emailAddress, String name, Event event, String comment) throws MessagingException, UnsupportedEncodingException {
         // TODO: implement me
     }
 
     @Override
-    public void sendEventUpdateAcceptedEmail(String emailAddress, String name, Event event) throws MessagingException, UnsupportedEncodingException {
+    public void sendEventUpdateAcceptedEmail(String emailAddress, String name, Event event, String comment) throws MessagingException, UnsupportedEncodingException {
         // TODO: implement me
     }
 
     @Override
-    public void sendEventRefusedEmail(String emailAddress, String name, Event event) throws MessagingException, UnsupportedEncodingException {
+    public void sendEventRefusedEmail(String emailAddress, String name, Event event, String comment) throws MessagingException, UnsupportedEncodingException {
         // TODO: implement me
     }
 
     @Override
-    public void sendEventUpdateRefusedEmail(String emailAddress, String name, Event event) throws MessagingException, UnsupportedEncodingException {
+    public void sendEventUpdateRefusedEmail(String emailAddress, String name, Event event, String comment) throws MessagingException, UnsupportedEncodingException {
         // TODO: implement me
     }
 }

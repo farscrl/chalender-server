@@ -1,6 +1,8 @@
 package ch.chalender.api.model;
 
+import ch.chalender.api.dto.ModerationComment;
 import lombok.Data;
+import org.springframework.data.annotation.Transient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,4 +24,7 @@ public class EventVersion {
       private String pricing;
       private String link;
       private String contact;
+
+      @Transient
+      private ModerationComment moderationComment;
 }

@@ -1,7 +1,9 @@
 package ch.chalender.api.service.impl;
 
+import ch.chalender.api.dto.ModerationComment;
 import ch.chalender.api.model.Event;
 import ch.chalender.api.model.EventFilter;
+import ch.chalender.api.model.EventVersion;
 import ch.chalender.api.model.User;
 import ch.chalender.api.repository.EventsRepository;
 import ch.chalender.api.service.EmailService;
@@ -47,7 +49,7 @@ public class EventsServiceImpl implements EventsService {
     }
 
     @Override
-    public Event acceptChanges(String id) throws RuntimeException, MessagingException, UnsupportedEncodingException {
+    public Event acceptChanges(String id, ModerationComment moderationComment) throws RuntimeException, MessagingException, UnsupportedEncodingException {
         Event event = eventsRepository.findById(id).orElse(null);
         if (event == null) {
             throw new RuntimeException("Event not found");
@@ -57,19 +59,21 @@ public class EventsServiceImpl implements EventsService {
 
         event.setCurrentlyPublished(event.getWaitingForReview());
         event.setWaitingForReview(null);
+        event.setRejected(null);
+        event.setDraft(null);
         event = eventsRepository.save(event);
 
         User user = userService.findUserByEmail(event.getOwnerEmail());
         if (isNew) {
-            emailService.sendEventPublishedEmail(event.getOwnerEmail(), user != null ? user.getFullName() : null, event);
+            emailService.sendEventPublishedEmail(event.getOwnerEmail(), user != null ? user.getFullName() : null, event, moderationComment.getComment());
             return event;
         }
-        emailService.sendEventUpdateAcceptedEmail(event.getOwnerEmail(), user != null ? user.getFullName() : null, event);
+        emailService.sendEventUpdateAcceptedEmail(event.getOwnerEmail(), user != null ? user.getFullName() : null, event, moderationComment.getComment());
         return event;
     }
 
     @Override
-    public Event refuseChanges(String id) throws RuntimeException, MessagingException, UnsupportedEncodingException {
+    public Event refuseChanges(String id, ModerationComment moderationComment) throws RuntimeException, MessagingException, UnsupportedEncodingException {
         Event event = eventsRepository.findById(id).orElse(null);
         if (event == null) {
             throw new RuntimeException("Event not found");
@@ -81,16 +85,53 @@ public class EventsServiceImpl implements EventsService {
             event = eventsRepository.save(event);
 
             User user = userService.findUserByEmail(event.getOwnerEmail());
-            emailService.sendEventUpdateRefusedEmail(event.getOwnerEmail(), user != null ? user.getFullName() : null, event);
+            emailService.sendEventUpdateRefusedEmail(event.getOwnerEmail(), user != null ? user.getFullName() : null, event, moderationComment.getComment());
 
             return event;
         }
+        event.setRejected(event.getWaitingForReview());
+        event.setWaitingForReview(null);
 
-        eventsRepository.delete(event);
+        event = eventsRepository.save(event);
 
         User user = userService.findUserByEmail(event.getOwnerEmail());
-        emailService.sendEventRefusedEmail(event.getOwnerEmail(), user != null ? user.getFullName() : null, event);
+        emailService.sendEventRefusedEmail(event.getOwnerEmail(), user != null ? user.getFullName() : null, event, moderationComment.getComment());
 
-        return null;
+        return event;
+    }
+
+    @Override
+    public Event changeAndPublish(String id, EventVersion eventVersion) throws RuntimeException, MessagingException, UnsupportedEncodingException {
+        Event event = eventsRepository.findById(id).orElse(null);
+        if (event == null) {
+            throw new RuntimeException("Event not found");
+        }
+
+        boolean isNew = event.getCurrentlyPublished() == null;
+        boolean isUpdate = event.getCurrentlyPublished() != null && event.getWaitingForReview() != null;
+
+        event.setCurrentlyPublished(eventVersion);
+        event.setWaitingForReview(null);
+        event.setRejected(null);
+        event.setDraft(null);
+
+        event = eventsRepository.save(event);
+
+        User user = userService.findUserByEmail(event.getOwnerEmail());
+        if (isNew) {
+            emailService.sendEventPublishedEmail(event.getOwnerEmail(), user != null ? user.getFullName() : null, event, eventVersion.getModerationComment().getComment());
+            return event;
+        }
+        if (isUpdate) {
+            emailService.sendEventUpdateAcceptedEmail(event.getOwnerEmail(), user != null ? user.getFullName() : null, event, eventVersion.getModerationComment().getComment());
+            return event;
+        }
+
+        return event;
+    }
+
+    @Override
+    public void deleteEvent(String id) {
+        eventsRepository.deleteById(id);
     }
 }
