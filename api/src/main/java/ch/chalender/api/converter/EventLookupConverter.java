@@ -23,11 +23,6 @@ public class EventLookupConverter {
             eventLookup.setGenres(version.getGenres());
             eventLookup.setLocation(version.getLocation());
             eventLookup.setRegions(version.getRegions());
-
-            if (version.getImages() != null && !version.getImages().isEmpty()) {
-                eventLookup.setImage(version.getImages().get(0));
-            }
-
             eventLookup.setEventLanguages(version.getEventLanguages());
             eventLookup.setDate(occurrence.getDate());
             eventLookup.setStart(occurrence.getStart());
@@ -35,6 +30,11 @@ public class EventLookupConverter {
             eventLookup.setAllDay(occurrence.isAllDay());
             eventLookup.setCancelled(occurrence.isCancelled());
             eventLookup.setEventId(event.getId().toString());
+
+            if (!event.getCurrentlyPublished().getImages().isEmpty()) {
+                eventLookup.setImageUrl(event.getCurrentlyPublished().getImages().get(0).getUrl());
+            }
+
             eventLookups.add(eventLookup);
         });
 

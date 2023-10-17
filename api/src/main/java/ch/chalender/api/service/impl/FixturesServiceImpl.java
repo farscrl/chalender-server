@@ -45,6 +45,9 @@ public class FixturesServiceImpl implements FixturesService  {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private ImagesRepository imagesRepository;
+
 
     @Override
     public void loadUserFixtures() {
@@ -141,6 +144,7 @@ public class FixturesServiceImpl implements FixturesService  {
     @Override
     public void loadEventFixtures() {
         eventsRepository.deleteAll();
+        imagesRepository.deleteAll();
         eventsRepository.saveAll(eventFixtures.getEvents());
         eventLookupService.recreateAllEventLookupData();
     }

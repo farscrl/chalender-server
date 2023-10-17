@@ -25,7 +25,6 @@ public class EventLookup {
     private List<EventGenre> genres = new ArrayList<>();
     private String location;
     private List<EventRegion> regions = new ArrayList<>();
-    private Image image;
     private List<EventLanguage> eventLanguages = new ArrayList<>();
 
     @JsonFormat(pattern="dd-MM-yyyy")
@@ -42,4 +41,6 @@ public class EventLookup {
 
     @JsonProperty(value="isCancelled")
     private boolean isCancelled = false;
+
+    private String imageUrl;
 }

@@ -4,6 +4,7 @@ import ch.chalender.api.model.*;
 import ch.chalender.api.repository.EventGenresRepository;
 import ch.chalender.api.repository.EventLanguagesRepository;
 import ch.chalender.api.repository.EventRegionsRepository;
+import ch.chalender.api.repository.ImagesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -32,6 +33,9 @@ public class EventFixtures {
     @Autowired
     private EventLanguagesRepository eventLanguagesRepository;
 
+    @Autowired
+    private ImagesRepository imagesRepository;
+
     public List<Event> getEvents() {
         List<Event> events = new ArrayList<>();
 
@@ -46,6 +50,7 @@ public class EventFixtures {
         ev1.setEventLanguages(eventLanguages("de,rm,it"));
         ev1.setOnlineOnly(false);
         ev1.setLink("https://www.flurincaviezel.ch/");
+        ev1.getImages().add(getImg("singen-mit-flurin.png", "static/flurin.png"));
         events.add(createEvent(ev1, PUBLISHED, "user1@chalender.ch"));
 
         EventVersion ev2 = new EventVersion();
@@ -59,6 +64,7 @@ public class EventFixtures {
         ev2.setEventLanguages(eventLanguages("rm,de"));
         ev2.setOnlineOnly(false);
         ev2.setLink(null);
+        ev2.getImages().add(getImg("poesia-contemporana.jpg", "static/poesia-contemporana.jpg"));
         events.add(createEvent(ev2, PUBLISHED, "user1@chalender.ch"));
 
         EventVersion ev3 = new EventVersion();
@@ -72,6 +78,7 @@ public class EventFixtures {
         ev3.setEventLanguages(eventLanguages("rm,de"));
         ev3.setOnlineOnly(false);
         ev3.setLink("http://museum-trun.ch/");
+        ev3.getImages().add(getImg("gieri-schmed.jpg", "static/gieri-schmed.jpg"));
         events.add(createEvent(ev3, PUBLISHED, "user1@chalender.ch"));
 
         EventVersion ev4 = new EventVersion();
@@ -96,6 +103,7 @@ public class EventFixtures {
         ev4Old.setEventLanguages(eventLanguages("rm,de"));
         ev4Old.setOnlineOnly(false);
         ev4Old.setLink("http://www.liarumantscha.ch/");
+        ev4Old.getImages().add(getImg("traversadas-litteraras.jpg", "static/traversadas-litteraras.jpg"));
         Event event4 = createEvent(ev4, NEW_MODIFICATION, "user1@chalender.ch");
         event4.setCurrentlyPublished(ev4Old);
         events.add(event4);
@@ -111,6 +119,7 @@ public class EventFixtures {
         ev5.setEventLanguages(eventLanguages("rm"));
         ev5.setOnlineOnly(false);
         ev5.setLink(null);
+        ev5.getImages().add(getImg("cantusfirmus.png", "static/cantusfirmus.png"));
         events.add(createEvent(ev5, DRAFT, "user1@chalender.ch"));
 
         EventVersion ev6 = new EventVersion();
@@ -124,6 +133,7 @@ public class EventFixtures {
         ev6.setEventLanguages(eventLanguages("rm"));
         ev6.setOnlineOnly(false);
         ev6.setLink("http://www.san-nicla.ch/");
+        ev6.getImages().add(getImg("gian-gaudenz.jpg", "static/gian-gaudenz.jpg"));
         events.add(createEvent(ev6, IN_REVIEW, "user1@chalender.ch"));
 
         EventVersion ev7 = new EventVersion();
@@ -137,6 +147,7 @@ public class EventFixtures {
         ev7.setEventLanguages(eventLanguages("rm,de"));
         ev7.setOnlineOnly(false);
         ev7.setLink("http://museum-trun.ch/");
+        ev7.getImages().add(getImg("gieri-schmed.jpg", "static/gieri-schmed.jpg"));
         events.add(createEvent(ev7, PUBLISHED, "user2@chalender.ch"));
 
         EventVersion ev8 = new EventVersion();
@@ -150,6 +161,7 @@ public class EventFixtures {
         ev8.setEventLanguages(eventLanguages("rm"));
         ev8.setOnlineOnly(false);
         ev8.setLink("https://www.postremise.ch/events/hasi-farinelli-2/form");
+        ev8.getImages().add(getImg("hasi-farinelli.jpg", "static/hasi-farinelli.jpg"));
         events.add(createEvent(ev8, PUBLISHED, "user2@chalender.ch"));
 
         EventVersion ev9 = new EventVersion();
@@ -163,6 +175,7 @@ public class EventFixtures {
         ev9.setEventLanguages(eventLanguages("rm"));
         ev9.setOnlineOnly(false);
         ev9.setLink(null);
+        ev9.getImages().add(getImg("premi-grischun-da-litteratura-2023.jpg", "static/premi-grischun-da-litteratura-2023.jpg"));
         events.add(createEvent(ev9, PUBLISHED, "user2@chalender.ch"));
 
         EventVersion ev10 = new EventVersion();
@@ -176,6 +189,7 @@ public class EventFixtures {
         ev10.setEventLanguages(eventLanguages("rm,de"));
         ev10.setOnlineOnly(false);
         ev10.setLink("http://cularta.ch/");
+        ev10.getImages().add(getImg("cularta.jpg", "static/cularta.jpg"));
         events.add(createEvent(ev10, PUBLISHED, "user2@chalender.ch"));
 
         EventVersion ev11 = new EventVersion();
@@ -189,6 +203,7 @@ public class EventFixtures {
         ev11.setEventLanguages(eventLanguages("de"));
         ev11.setOnlineOnly(false);
         ev11.setLink("https://pinapalau.bandcamp.com/track/closer");
+        ev11.getImages().add(getImg("closer.jpg", "static/closer.jpg"));
         events.add(createEvent(ev11, PUBLISHED, "user2@chalender.ch"));
 
         EventVersion ev12 = new EventVersion();
@@ -202,6 +217,7 @@ public class EventFixtures {
         ev12.setEventLanguages(eventLanguages("rm,de,it"));
         ev12.setOnlineOnly(false);
         ev12.setLink(null);
+        ev12.getImages().add(getImg("jachen-andry.png", "static/jachen-andry.png"));
         events.add(createEvent(ev12, PUBLISHED, "user2@chalender.ch"));
 
         EventVersion ev13 = new EventVersion();
@@ -215,6 +231,7 @@ public class EventFixtures {
         ev13.setEventLanguages(eventLanguages("rm"));
         ev13.setOnlineOnly(false);
         ev13.setLink("https://www.udg.ch");
+        ev13.getImages().add(getImg("poetry-slam-engiadinais.png", "static/poetry-slam-engiadinais.png"));
         events.add(createEvent(ev13, PUBLISHED, "user3@chalender.ch"));
 
         EventVersion ev14 = new EventVersion();
@@ -228,6 +245,7 @@ public class EventFixtures {
         ev14.setEventLanguages(eventLanguages("rm"));
         ev14.setOnlineOnly(false);
         ev14.setLink(null);
+        ev14.getImages().add(getImg("messa-pasch.jpeg", "static/messa-pasch.jpeg"));
         events.add(createEvent(ev14, PUBLISHED, "user3@chalender.ch"));
 
         EventVersion ev15 = new EventVersion();
@@ -241,6 +259,7 @@ public class EventFixtures {
         ev15.setEventLanguages(eventLanguages("rm"));
         ev15.setOnlineOnly(false);
         ev15.setLink("www.allegrawinti.ch");
+        ev15.getImages().add(getImg("allegra-winti.png", "static/allegra-winti.png"));
         events.add(createEvent(ev15, PUBLISHED, "user3@chalender.ch"));
 
         EventVersion ev16 = new EventVersion();
@@ -254,6 +273,7 @@ public class EventFixtures {
         ev16.setEventLanguages(eventLanguages("rm,de"));
         ev16.setOnlineOnly(false);
         ev16.setLink("https://www.encarden.ch/");
+        ev16.getImages().add(getImg("encarden.png", "static/encarden.png"));
         events.add(createEvent(ev16, PUBLISHED, "user3@chalender.ch"));
 
         return events;
@@ -325,5 +345,15 @@ public class EventFixtures {
     private String generateDate(int addition) {
         LocalDate date = LocalDate.now().plusDays(30 + addition);
         return date.format(dateFormatter);
+    }
+
+    private Image getImg(String originalName, String path) {
+        Image img = new Image();
+        img.setOriginalName(originalName);
+        img.setPath(path);
+
+        img = imagesRepository.save(img);
+
+        return img;
     }
 }
