@@ -4,7 +4,7 @@ services:
     image: mongo
     container_name: mongodb-chalender
     ports:
-      - 27500:27017
+      - 27501:27017
     volumes:
       - data:/chalender-mongo-db
     environment:
