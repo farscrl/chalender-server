@@ -11,39 +11,57 @@ import java.util.stream.Collectors;
 
 public class EventConverter {
 
-    public static EventDto toEventDto(ModelMapper modelMapper, Event event, EventVersionSelection eventVersionSelection) {
+    public static EventDto toEventDto(ModelMapper modelMapper, Event event) {
         if (event == null) {
             return null;
         }
 
         EventVersion eventVersion = null;
-        if (eventVersionSelection == EventVersionSelection.CURRENTLY_PUBLISHED) {
-            eventVersion = event.getCurrentlyPublished();
-        } else if (eventVersionSelection == EventVersionSelection.DRAFT) {
-            eventVersion = event.getDraft();
-        } else if (eventVersionSelection == EventVersionSelection.WAITING_FOR_REVIEW) {
-            eventVersion = event.getWaitingForReview();
+
+        switch (event.getEventStatus()) {
+            case DRAFT:
+                eventVersion = event.getDraft();
+                break;
+
+            case IN_REVIEW:
+            case NEW_MODIFICATION:
+                eventVersion = event.getWaitingForReview();
+                break;
+
+            case REJECTED:
+                eventVersion = event.getRejected();
+                break;
+
+            case PUBLISHED:
+                eventVersion = event.getCurrentlyPublished();
+                break;
         }
+
         if (eventVersion == null) {
             return null;
         }
         EventDto eventDto = modelMapper.map(eventVersion, EventDto.class);
         eventDto.setId(event.getId());
         eventDto.setStatus(event.getEventStatus());
+        eventDto.setContactEmail(event.getOwnerEmail());
 
         return eventDto;
     }
 
-    public static List<EventDto> toEventDtoList(ModelMapper modelMapper, List<Event> events, EventVersionSelection eventVersionSelection) {
+    public static List<EventDto> toEventDtoList(ModelMapper modelMapper, List<Event> events) {
         return events.stream()
-                .map(event -> toEventDto(modelMapper, event, eventVersionSelection))
+                .map(event -> toEventDto(modelMapper, event))
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
-    public enum EventVersionSelection {
-        CURRENTLY_PUBLISHED,
-        DRAFT,
-        WAITING_FOR_REVIEW
+    public static EventVersion toEventVersion(ModelMapper modelMapper, EventDto eventDto) {
+        if (eventDto == null) {
+            return null;
+        }
+
+        EventVersion eventVersion = modelMapper.map(eventDto, EventVersion.class);
+
+        return eventVersion;
     }
 }

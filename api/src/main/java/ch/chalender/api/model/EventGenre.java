@@ -1,6 +1,8 @@
 package ch.chalender.api.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -14,7 +16,8 @@ public class EventGenre {
     @JsonIgnore
     private boolean isHidden = false;
 
-    public EventGenre(int id, String name, int order, boolean isHidden) {
+    @JsonCreator
+    public EventGenre(@JsonProperty("id") int id, @JsonProperty("name") String name, @JsonProperty("order") int order, @JsonProperty("isHidden") boolean isHidden) {
         this.id = id;
         this.name = name;
         this.order = order;

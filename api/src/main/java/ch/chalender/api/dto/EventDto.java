@@ -10,6 +10,7 @@ import java.util.List;
 public class EventDto {
     private String id;
     private EventStatus status;
+    private String contactEmail;
 
     private String title;
     private List<EventGenre> genres = new ArrayList<>();

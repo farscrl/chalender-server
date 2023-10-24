@@ -13,6 +13,7 @@ import java.io.UnsupportedEncodingException;
 
 public interface EventsService {
     public Event createEvent(Event event);
+    public Event updateEvent(Event event);
     public Event getEvent(String id);
     public Page<Event> listAllEvents(EventFilter filter, Pageable pageable);
     public Page<Event> listAllEventsByUser(User user, Pageable pageable);
