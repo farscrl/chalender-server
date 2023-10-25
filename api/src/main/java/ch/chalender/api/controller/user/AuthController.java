@@ -115,4 +115,18 @@ public class AuthController {
         user = userService.updateProfile(user, userDto);
         return ResponseEntity.ok(user.toUserDto());
     }
+
+    @PostMapping("/profile/delete")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<Void> deleteMyProfile(@CurrentUser LocalUser localUser, @RequestBody DeleteUserDto deleteUserDto) {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(localUser.getUser().getEmail(), deleteUserDto.getPassword()));
+        User user = localUser.getUser();
+
+        if (deleteUserDto.getMode().equals("delete-events")) {
+            // TODO: delete events of user
+        }
+
+        userService.deleteUser(user.getId());
+        return ResponseEntity.ok().build();
+    }
 }
