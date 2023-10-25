@@ -5,41 +5,87 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <style type="text/css">
         body {
-            font-family: calibri, 'DejaVu Sans', Arial, Helvetica, sans-serif;
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #b0b0b0;
+            margin: 0;
+            padding: 0;
         }
-        a.link {
-            border: solid 1px #000;
-            background-color: #000;
+
+        h1 {
+            font-size: 20px;
+        }
+
+        a {
+            color: #3CBFA4;
             text-decoration: none;
-            color: #fff;
+        }
+
+        a.link {
+            border: solid 1px #3CBFA4;
+            background-color: white;
+            text-decoration: none;
+            color: #3CBFA4;
             font-weight: bold;
             display: block;
-            width: 360px;
+            width: 260px;
             text-align: center;
             padding: 10px 0;
         }
     </style>
 </head>
 <body>
-<p>
-    <img src="images/logo.png" data-th-src="|cid:logo|" height="80" />
-</p>
-<h1>Confermar tes conto</h1>
-<div>Bainvegni sin chalender.ch, <b th:text="${name}">name</b>!</div>
-<p>
-    Tes conto è vegnì creà cun suandantas infurmaziuns d'annunzia:
-    <br/><br/>
-    Adressa dad e-mail: <b th:text="${email}">email</b>
-    <br/><br/><br/><br/>
-    Per confermar tia adressa dad e-mail, stos ti cliccar sin il link sutvart.
-</p>
-<p style="text-align: left;">
-    <a class="link" href="#" th:href="${url}">Confermar l'adressa</a>
-</p>
-<br>
-<p>
-    Cun chars salids,<br />
-    il team da chalender.ch
-</p>
+    <table width="100%">
+        <tr>
+            <td></td>
+            <td width="600" bgcolor="white">
+
+                <table width="100%">
+                    <tr th:height="10">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td width="10"></td>
+                        <td>
+
+
+                            <p>
+                                <img src="images/logo.jpg" data-th-src="|cid:logo|" height="20" />
+                            </p>
+
+                            <h1>Confermar tes conto</h1>
+                            <div>Bainvegni sin chalender.ch, <b th:text="${name}">name</b>!</div>
+                            <p>
+                                Tes conto è vegnì creà cun suandantas infurmaziuns d'annunzia:
+                                <br/><br/>
+                                Adressa dad e-mail: <b th:text="${email}">email</b>
+                                <br/><br/><br/><br/>
+                                Per confermar tia adressa dad e-mail, stos ti cliccar sin il link sutvart.
+                            </p>
+                            <p style="text-align: left;">
+                                <a class="link" href="#" th:href="${url}">Confermar l'adressa</a>
+                            </p>
+                            <br>
+                            <p>
+                                Cun ils megliers salids<br />
+                                il server e la squadra da <a href="https://www.chalender.ch">chalender.ch</a>
+                            </p>
+
+
+                        </td>
+                        <td width="10"></td>
+                    </tr>
+                    <tr th:height="10">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </table>
+
+            </td>
+            <td></td>
+        </tr>
+    </table>
 </body>
 </html>

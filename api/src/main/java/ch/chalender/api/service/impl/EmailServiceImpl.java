@@ -19,7 +19,7 @@ import java.io.UnsupportedEncodingException;
 
 @Service
 public class EmailServiceImpl implements EmailService {
-    private static final String LOGO_PATH = "templates/images/logo.png";
+    private static final String LOGO_PATH = "templates/images/logo.jpg";
     private static final String PNG_MIME = "image/png";
     private final JavaMailSender mailSender;
 
