@@ -1,6 +1,8 @@
 package ch.chalender.api.service.impl;
 
+import ch.chalender.api.model.Document;
 import ch.chalender.api.model.Image;
+import ch.chalender.api.repository.DocumentsRepository;
 import ch.chalender.api.repository.ImagesRepository;
 import ch.chalender.api.service.AmazonService;
 import ch.chalender.api.service.FileService;
@@ -31,11 +33,15 @@ public class FileServiceImpl implements FileService {
     @Autowired
     private ImagesRepository imagesRepository;
 
+    @Autowired
+    private DocumentsRepository documentsRepository;
+
     @Value("${spring.profiles.active:dev}")
     private String activeProfile;
 
     private static final Logger logger = LoggerFactory.getLogger(FileServiceImpl.class);
 
+    @Override
     public Image uploadImage(MultipartFile multipartFile) {
         try {
             File file = convertMultiPartToFile(multipartFile);
@@ -55,6 +61,32 @@ public class FileServiceImpl implements FileService {
             }
 
             return img;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public Document uploadDocument(MultipartFile multipartFile) {
+        try {
+            File file = convertMultiPartToFile(multipartFile);
+            String fileName = toSlug(FilenameUtils.getBaseName(multipartFile.getOriginalFilename()));
+            String fileExtension = FilenameUtils.getExtension(multipartFile.getOriginalFilename());
+            Document doc = new Document();
+            doc.setOriginalName(fileName + "." + fileExtension);
+            doc = documentsRepository.save(doc);
+            String path = activeProfile + "/" + doc.getId() + "." + fileExtension;
+
+            amazonService.uploadFile(path, file);
+            doc.setPath(path);
+            doc = documentsRepository.save(doc);
+            boolean result = file.delete();
+            if (!result) {
+                logger.warn("Could not delete file: " + file.getAbsolutePath());
+            }
+
+            return doc;
         } catch (Exception e) {
             e.printStackTrace();
         }

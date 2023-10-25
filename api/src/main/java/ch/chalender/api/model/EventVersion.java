@@ -17,6 +17,7 @@ public class EventVersion {
       private List<EventOccurrence> occurrences = new ArrayList<>();
       private List<EventRegion> regions = new ArrayList<>();
       private List<Image> images = new ArrayList<>();
+      private List<Document> documents = new ArrayList<>();
       private List<EventLanguage> eventLanguages = new ArrayList<>();
       private boolean onlineOnly;
       private boolean acceptTerms;
