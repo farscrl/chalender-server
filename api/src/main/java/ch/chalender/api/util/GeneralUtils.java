@@ -33,6 +33,6 @@ public class GeneralUtils {
     public static UserDto buildUserDto(LocalUser localUser) {
         List<String> roles = localUser.getAuthorities().stream().map(item -> item.getAuthority()).collect(Collectors.toList());
         User user = localUser.getUser();
-        return new UserDto(user.getId().toString(), user.getFirstName(), user.getLastName(), user.getOrganisation(), user.getEmail(), roles, user.isEnabled());
+        return new UserDto(user.getId(), user.getFirstName(), user.getLastName(), user.getOrganisation(), user.getPhone(), user.getEmail(), roles, user.isEnabled());
     }
 }

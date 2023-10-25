@@ -29,6 +29,8 @@ public class User {
 
     private String organisation;
 
+    private String phone;
+
     protected Date createdDate;
 
     protected Date modifiedDate;
@@ -48,6 +50,6 @@ public class User {
     }
 
     public UserDto toUserDto() {
-        return new UserDto(id, firstName, lastName, organisation, email, this.roles.stream().map(Role::name).collect(Collectors.toList()), enabled);
+        return new UserDto(id, firstName, lastName, organisation, phone, email, this.roles.stream().map(Role::name).collect(Collectors.toList()), enabled);
     }
 }

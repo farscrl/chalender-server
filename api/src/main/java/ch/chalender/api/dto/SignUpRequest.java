@@ -23,6 +23,8 @@ public class SignUpRequest {
 
     private String organisation;
 
+    private String phone;
+
     private SocialProvider socialProvider;
 
     @Size(min = 8, message = "{Size.userDto.password}")

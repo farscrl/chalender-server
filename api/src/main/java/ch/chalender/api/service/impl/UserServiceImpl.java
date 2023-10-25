@@ -112,6 +112,7 @@ public class UserServiceImpl implements UserService {
         user.setFirstName(userDto.getFirstName());
         user.setLastName(userDto.getLastName());
         user.setOrganisation(userDto.getOrganisation());
+        user.setPhone(userDto.getPhone());
         return userRepository.save(user);
     }
 
@@ -211,6 +212,7 @@ public class UserServiceImpl implements UserService {
         user.setFirstName(userDto.getFirstName());
         user.setLastName(userDto.getLastName());
         user.setOrganisation(userDto.getOrganisation());
+        user.setPhone(userDto.getPhone());
         user.setEmail(userDto.getEmail());
         user.setRoles(roleSet);
         userRepository.save(user);
