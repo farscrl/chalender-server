@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
         user = userRepository.save(user);
 
         try {
-            emailService.sendAccountConfirmationEmail(user.getEmail(), user.getFullName(), user.getEmailConfirmationCode());
+            emailService.sendAccountConfirmationEmail(user.getEmail(), user.getFirstName(), user.getEmailConfirmationCode());
         } catch (MessagingException | UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
@@ -86,7 +86,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
 
         try {
-            emailService.sendPasswordResetEmail(user.getEmail(), user.getFullName(), passwordToken);
+            emailService.sendPasswordResetEmail(user.getEmail(), user.getFirstName(), passwordToken);
         } catch (MessagingException | UnsupportedEncodingException e) {
             LOG.error(e);
             return false;
