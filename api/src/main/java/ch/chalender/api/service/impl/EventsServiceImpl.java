@@ -1,21 +1,26 @@
 package ch.chalender.api.service.impl;
 
 import ch.chalender.api.dto.ModerationComment;
-import ch.chalender.api.model.Event;
-import ch.chalender.api.model.EventFilter;
-import ch.chalender.api.model.EventVersion;
-import ch.chalender.api.model.User;
+import ch.chalender.api.model.*;
 import ch.chalender.api.repository.EventsRepository;
 import ch.chalender.api.service.EmailService;
 import ch.chalender.api.service.EventsService;
 import ch.chalender.api.service.UserService;
 import jakarta.mail.MessagingException;
+import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.property.Location;
+import net.fortuna.ical4j.model.property.ProdId;
+import net.fortuna.ical4j.model.property.Uid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
+import java.time.LocalDateTime;
 
 @Service
 public class EventsServiceImpl implements EventsService {
@@ -49,6 +54,40 @@ public class EventsServiceImpl implements EventsService {
     @Override
     public Event getEvent(String id) {
         return eventsRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public Resource getEventIcs(String id, String uid) {
+        Event event = eventsRepository.findById(id).orElse(null);
+        if (event == null) {
+            throw new RuntimeException("Event not found");
+        }
+
+        EventVersion version = null;
+        if (event.getEventStatus() == EventStatus.NEW_MODIFICATION) {
+            version = event.getWaitingForReview();
+        } else if (event.getEventStatus() == EventStatus.PUBLISHED) {
+            version = event.getCurrentlyPublished();
+        } else {
+            version = event.getDraft();
+        }
+
+        if (version == null) {
+            throw new RuntimeException("Event version not found");
+        }
+
+        EventOccurrence occurrence = null;
+        for (EventOccurrence eventOccurrence : version.getOccurrences()) {
+            if (eventOccurrence.getOccurrenceUid().equals(uid)) {
+                occurrence = eventOccurrence;
+            }
+        }
+
+        if (occurrence == null) {
+            throw new RuntimeException("Event occurrence not found");
+        }
+
+        return generateIcs(event, version, occurrence);
     }
 
     @Override
@@ -153,5 +192,38 @@ public class EventsServiceImpl implements EventsService {
         if (event != null) {
             eventLookupService.updateEventLookup(event);
         }
+    }
+
+    private Resource generateIcs(Event chalenderEvent, EventVersion version, EventOccurrence occurrence) {
+        String eventSummary = version.getTitle();
+        if (occurrence.isCancelled()) {
+            eventSummary = "[ANNULLÀ] " + eventSummary;
+        }
+
+        VEvent event = null;
+        if (occurrence.isAllDay()) {
+            event = new VEvent(occurrence.getDate(), eventSummary);
+        } else if (occurrence.getEnd() == null) {
+            LocalDateTime start = LocalDateTime.of(occurrence.getDate(), occurrence.getStart());
+            LocalDateTime end = start.plusHours(2);
+            event = new VEvent(start, end, eventSummary);
+        } else {
+            LocalDateTime start = LocalDateTime.of(occurrence.getDate(), occurrence.getStart());
+            LocalDateTime end = LocalDateTime.of(occurrence.getDate(), occurrence.getEnd());
+            event = new VEvent(start, end, eventSummary);
+
+        }
+        event.add(new Uid(occurrence.getOccurrenceUid()));
+
+        Calendar icsCalendar = new Calendar();
+        icsCalendar.add(new ProdId("-//chalender.ch//iCal4j 1.0//EN"));
+
+        Location location = new Location("Conference Room");
+        event.add(location);
+
+        icsCalendar.add(event);
+
+        byte[] calendarByte = icsCalendar.toString().getBytes();
+        return new ByteArrayResource(calendarByte);
     }
 }

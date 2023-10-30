@@ -17,9 +17,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -67,6 +70,20 @@ public class EventsController {
         }
 
         return ResponseEntity.ok(EventConverter.toEventDto(modelMapper, event));
+    }
+
+    @GetMapping("/{id}/ics/{uid}")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<Resource> getEventIcs(@PathVariable String id, @PathVariable String uid) {
+        Resource resource = eventsService.getEventIcs(id, uid);
+
+        HttpHeaders header = new HttpHeaders();
+        header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=mycalendar.ics");
+        header.add("Cache-Control", "no-cache, no-store, must-revalidate");
+        header.add("Pragma", "no-cache");
+        header.add("Expires", "0");
+
+        return ResponseEntity.ok().headers(header).contentType(MediaType.APPLICATION_OCTET_STREAM).body(resource);
     }
 
     @PostMapping("")
