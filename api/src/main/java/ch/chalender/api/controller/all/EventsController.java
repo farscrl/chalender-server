@@ -142,11 +142,13 @@ public class EventsController {
                     event.setWaitingForReview(null);
                     event.setCurrentlyPublished(null);
                     event.setRejected(null);
+                    event.updateCalculatedEventFields();
                 } else if (nextState == EventStatus.IN_REVIEW) {
                     event.setWaitingForReview(version);
                     event.setDraft(null);
                     event.setCurrentlyPublished(null);
                     event.setRejected(null);
+                    event.updateCalculatedEventFields();
                 } else {
                     throw new InvalidStateRequestedException("Cannot change state from " + currentEventState + " to " + nextState);
                 }
@@ -159,6 +161,7 @@ public class EventsController {
                     event.setWaitingForReview(version);
                     event.setCurrentlyPublished(null);
                     event.setRejected(null);
+                    event.updateCalculatedEventFields();
                 } else {
                     throw new InvalidStateRequestedException("Cannot change state from " + currentEventState + " to " + nextState);
                 }
@@ -171,6 +174,7 @@ public class EventsController {
                     event.setWaitingForReview(version);
                     // event.setCurrentlyPublished(); // do not change
                     event.setRejected(null);
+                    event.updateCalculatedEventFields();
                 } else {
                     throw new InvalidStateRequestedException("Cannot change state from " + currentEventState + " to " + nextState);
                 }
@@ -179,6 +183,8 @@ public class EventsController {
             default:
                 throw new InvalidStateRequestedException("Cannot change state from " + currentEventState + " to " + nextState);
         }
+
+        event.updateCalculatedEventFields();
     }
 
     /**

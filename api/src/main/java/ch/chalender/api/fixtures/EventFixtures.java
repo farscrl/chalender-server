@@ -293,6 +293,7 @@ public class EventFixtures {
         }
 
         event.setOwnerEmail(ownerEmail);
+        event.updateCalculatedEventFields();
 
         return event;
     }

@@ -1,5 +1,6 @@
 package ch.chalender.api.service.impl;
 
+import ch.chalender.api.dal.EventsDal;
 import ch.chalender.api.dto.ModerationComment;
 import ch.chalender.api.model.*;
 import ch.chalender.api.repository.EventsRepository;
@@ -36,6 +37,9 @@ public class EventsServiceImpl implements EventsService {
 
     @Autowired
     private EventLookupServiceImpl eventLookupService;
+
+    @Autowired
+    private EventsDal eventsDal;
 
     @Override
     public Event createEvent(Event event) {
@@ -91,8 +95,8 @@ public class EventsServiceImpl implements EventsService {
     }
 
     @Override
-    public Page<Event> listAllEvents(EventFilter filter, Pageable pageable) {
-        return eventsRepository.findAll(pageable);
+    public Page<Event> listAllEvents(ModerationEventsFilter filter, Pageable pageable) {
+        return eventsDal.getAllEvents(filter, pageable);
     }
     @Override
     public Page<Event> listAllEventsByUser(User user, Pageable pageable) {
@@ -112,6 +116,7 @@ public class EventsServiceImpl implements EventsService {
         event.setWaitingForReview(null);
         event.setRejected(null);
         event.setDraft(null);
+        event.updateCalculatedEventFields();
         event = eventsRepository.save(event);
         eventLookupService.updateEventLookup(event);
 
@@ -133,6 +138,7 @@ public class EventsServiceImpl implements EventsService {
 
         if (event.getCurrentlyPublished() != null) {
             event.setWaitingForReview(null);
+            event.updateCalculatedEventFields();
 
             event = eventsRepository.save(event);
             eventLookupService.updateEventLookup(event);
@@ -144,6 +150,7 @@ public class EventsServiceImpl implements EventsService {
         }
         event.setRejected(event.getWaitingForReview());
         event.setWaitingForReview(null);
+        event.updateCalculatedEventFields();
 
         event = eventsRepository.save(event);
         eventLookupService.updateEventLookup(event);
@@ -168,6 +175,7 @@ public class EventsServiceImpl implements EventsService {
         event.setWaitingForReview(null);
         event.setRejected(null);
         event.setDraft(null);
+        event.updateCalculatedEventFields();
 
         event = eventsRepository.save(event);
         eventLookupService.updateEventLookup(event);

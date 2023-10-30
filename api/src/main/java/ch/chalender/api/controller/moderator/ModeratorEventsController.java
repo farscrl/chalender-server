@@ -2,8 +2,8 @@ package ch.chalender.api.controller.moderator;
 
 import ch.chalender.api.dto.ModerationComment;
 import ch.chalender.api.model.Event;
-import ch.chalender.api.model.EventFilter;
 import ch.chalender.api.model.EventVersion;
+import ch.chalender.api.model.ModerationEventsFilter;
 import ch.chalender.api.service.EventsService;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.mail.MessagingException;
@@ -31,8 +31,8 @@ public class ModeratorEventsController {
 
     @GetMapping("")
     @PageableAsQueryParam
-    public ResponseEntity<Page<Event>> listAllEvents(EventFilter eventFilter, @Parameter(hidden = true) Pageable pageable) {
-        return ResponseEntity.ok(eventsService.listAllEvents(eventFilter, pageable));
+    public ResponseEntity<Page<Event>> listAllEvents(ModerationEventsFilter filter, @Parameter(hidden = true) Pageable pageable) {
+        return ResponseEntity.ok(eventsService.listAllEvents(filter, pageable));
     }
 
     @GetMapping("/{id}")
