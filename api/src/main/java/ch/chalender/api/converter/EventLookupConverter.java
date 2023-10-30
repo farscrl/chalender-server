@@ -16,8 +16,24 @@ public class EventLookupConverter {
             return eventLookups;
         }
 
-        event.getCurrentlyPublished().getOccurrences().forEach(occurrence -> {
-            EventVersion version = event.getCurrentlyPublished();
+        switch (event.getEventStatus()) {
+            case PUBLISHED:
+                addEventLookupsForAllOccurrences(eventLookups, event, event.getCurrentlyPublished());
+                return eventLookups;
+            case NEW_MODIFICATION:
+                addEventLookupsForAllOccurrences(eventLookups, event, event.getWaitingForReview());
+                return eventLookups;
+            case DRAFT:
+            case IN_REVIEW:
+            case REJECTED:
+            case INVALID:
+            default:
+                return eventLookups;
+        }
+    }
+
+    private static void addEventLookupsForAllOccurrences(List<EventLookup> list, Event event, EventVersion version) {
+        version.getOccurrences().forEach(occurrence -> {
             EventLookup eventLookup = new EventLookup();
             eventLookup.setTitle(version.getTitle());
             eventLookup.setGenres(version.getGenres());
@@ -29,15 +45,13 @@ public class EventLookupConverter {
             eventLookup.setEnd(occurrence.getEnd());
             eventLookup.setAllDay(occurrence.isAllDay());
             eventLookup.setCancelled(occurrence.isCancelled());
-            eventLookup.setEventId(event.getId().toString());
+            eventLookup.setEventId(event.getId());
 
             if (!event.getCurrentlyPublished().getImages().isEmpty()) {
                 eventLookup.setImageUrl(event.getCurrentlyPublished().getImages().get(0).getUrl());
             }
 
-            eventLookups.add(eventLookup);
+            list.add(eventLookup);
         });
-
-        return eventLookups;
     }
 }

@@ -29,14 +29,21 @@ public class EventsServiceImpl implements EventsService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private EventLookupServiceImpl eventLookupService;
+
     @Override
     public Event createEvent(Event event) {
-        return eventsRepository.save(event);
+        event = eventsRepository.save(event);
+        eventLookupService.updateEventLookup(event);
+        return event;
     }
 
     @Override
     public Event updateEvent(Event event) {
-        return eventsRepository.save(event);
+        event = eventsRepository.save(event);
+        eventLookupService.updateEventLookup(event);
+        return event;
     }
 
     @Override
@@ -67,6 +74,7 @@ public class EventsServiceImpl implements EventsService {
         event.setRejected(null);
         event.setDraft(null);
         event = eventsRepository.save(event);
+        eventLookupService.updateEventLookup(event);
 
         User user = userService.findUserByEmail(event.getOwnerEmail());
         if (isNew) {
@@ -88,6 +96,7 @@ public class EventsServiceImpl implements EventsService {
             event.setWaitingForReview(null);
 
             event = eventsRepository.save(event);
+            eventLookupService.updateEventLookup(event);
 
             User user = userService.findUserByEmail(event.getOwnerEmail());
             emailService.sendEventUpdateRefusedEmail(event.getOwnerEmail(), user != null ? user.getFullName() : null, event, moderationComment.getComment());
@@ -98,6 +107,7 @@ public class EventsServiceImpl implements EventsService {
         event.setWaitingForReview(null);
 
         event = eventsRepository.save(event);
+        eventLookupService.updateEventLookup(event);
 
         User user = userService.findUserByEmail(event.getOwnerEmail());
         emailService.sendEventRefusedEmail(event.getOwnerEmail(), user != null ? user.getFullName() : null, event, moderationComment.getComment());
@@ -121,6 +131,7 @@ public class EventsServiceImpl implements EventsService {
         event.setDraft(null);
 
         event = eventsRepository.save(event);
+        eventLookupService.updateEventLookup(event);
 
         User user = userService.findUserByEmail(event.getOwnerEmail());
         if (isNew) {
@@ -137,6 +148,10 @@ public class EventsServiceImpl implements EventsService {
 
     @Override
     public void deleteEvent(String id) {
+        Event event = eventsRepository.findById(id).orElse(null);
         eventsRepository.deleteById(id);
+        if (event != null) {
+            eventLookupService.updateEventLookup(event);
+        }
     }
 }
