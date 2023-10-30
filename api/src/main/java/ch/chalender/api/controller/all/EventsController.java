@@ -116,12 +116,20 @@ public class EventsController {
     }
 
     private void validateStateAndUpdateEventVersion(EventStatus currentEventState, EventStatus nextState, Event event, EventVersion version) throws InvalidStateRequestedException {
+        event.getVersions().add(version);
+
         switch (currentEventState) {
             case DRAFT:
                 if (nextState == EventStatus.DRAFT) {
                     event.setDraft(version);
+                    event.setWaitingForReview(null);
+                    event.setCurrentlyPublished(null);
+                    event.setRejected(null);
                 } else if (nextState == EventStatus.IN_REVIEW) {
                     event.setWaitingForReview(version);
+                    event.setDraft(null);
+                    event.setCurrentlyPublished(null);
+                    event.setRejected(null);
                 } else {
                     throw new InvalidStateRequestedException("Cannot change state from " + currentEventState + " to " + nextState);
                 }
@@ -130,7 +138,10 @@ public class EventsController {
             case IN_REVIEW:
             case REJECTED:
                 if (nextState == EventStatus.IN_REVIEW) {
+                    event.setDraft(null);
                     event.setWaitingForReview(version);
+                    event.setCurrentlyPublished(null);
+                    event.setRejected(null);
                 } else {
                     throw new InvalidStateRequestedException("Cannot change state from " + currentEventState + " to " + nextState);
                 }
@@ -139,7 +150,10 @@ public class EventsController {
             case PUBLISHED:
             case NEW_MODIFICATION:
                 if (nextState == EventStatus.NEW_MODIFICATION) {
+                    event.setDraft(null);
                     event.setWaitingForReview(version);
+                    // event.setCurrentlyPublished(); // do not change
+                    event.setRejected(null);
                 } else {
                     throw new InvalidStateRequestedException("Cannot change state from " + currentEventState + " to " + nextState);
                 }
@@ -148,7 +162,6 @@ public class EventsController {
             default:
                 throw new InvalidStateRequestedException("Cannot change state from " + currentEventState + " to " + nextState);
         }
-        event.getVersions().add(version);
     }
 
     /**
