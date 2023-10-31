@@ -35,9 +35,9 @@ public class EventsDalImpl implements EventsDal {
         }
 
         if (filter.getDates() == ModerationEventsFilter.DatesDisplay.FUTURE) {
-            criteria = criteria.and("lastOccurrenceDate").gte(LocalDateTime.now());
+            criteria = criteria.and("lastOccurrenceDate").gte(LocalDateTime.now().minusDays(1));
         } else if (filter.getDates() == ModerationEventsFilter.DatesDisplay.PAST) {
-            criteria = criteria.and("firstOccurrenceDate").lte(LocalDateTime.now());
+            criteria = criteria.and("firstOccurrenceDate").lte(LocalDateTime.now().plusDays(1));
         }
 
         List<EventStatus> eventStates = new ArrayList<>();
