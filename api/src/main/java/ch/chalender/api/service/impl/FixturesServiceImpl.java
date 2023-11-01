@@ -48,6 +48,9 @@ public class FixturesServiceImpl implements FixturesService  {
     @Autowired
     private ImagesRepository imagesRepository;
 
+    @Autowired
+    private DocumentsRepository documentsRepository;
+
 
     @Override
     public void loadUserFixtures() {
@@ -145,6 +148,7 @@ public class FixturesServiceImpl implements FixturesService  {
     public void loadEventFixtures() {
         eventsRepository.deleteAll();
         imagesRepository.deleteAll();
+        documentsRepository.deleteAll();
         eventsRepository.saveAll(eventFixtures.getEvents());
         eventLookupService.recreateAllEventLookupData();
     }
