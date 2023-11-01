@@ -88,18 +88,22 @@ public class FixturesServiceImpl implements FixturesService  {
     @Override
     public void loadEventGenreFixtures() {
         List<EventGenre> genres = new ArrayList<>(List.of(
-                new EventGenre(1, "concert", 1, false),
+                new EventGenre(1, "musica", 1, false),
                 new EventGenre(2, "teater", 2, false),
-                new EventGenre(3, "saut", 3, false),
-                new EventGenre(4, "film", 4, false),
-                new EventGenre(5, "art", 5, false),
-                new EventGenre(6, "litteratura", 6, false),
-                new EventGenre(7, "curs", 7, false),
-                new EventGenre(8, "chor", 8, false),
-                new EventGenre(9, "exposiziun", 9, false),
-                new EventGenre(10, "politica", 10, false),
-                new EventGenre(11, "annunzia", 11, false),
-                new EventGenre(12, "divers", 12, false)
+                new EventGenre(3, "litteratura", 3, false),
+                new EventGenre(4, "referat/podium", 4, false),
+                new EventGenre(5, "saut", 5, false),
+                new EventGenre(6, "chor", 6, false),
+                new EventGenre(7, "art", 7, false),
+                new EventGenre(8, "film", 8, false),
+                new EventGenre(9, "festa", 9, false),
+                new EventGenre(10, "exposiziun", 10, false),
+                new EventGenre(11, "giuventetgna", 11, false),
+                new EventGenre(12, "uffants e famiglia", 12, false),
+                new EventGenre(13, "inscunter rumantsch", 13, false),
+                new EventGenre(14, "curs", 14, false),
+                new EventGenre(15, "sport", 15, false),
+                new EventGenre(16, "auter", 16, false)
         ));
 
         genresRepository.deleteAll();
@@ -109,19 +113,21 @@ public class FixturesServiceImpl implements FixturesService  {
     @Override
     public void loadEventRegionFixtures() {
         List<EventRegion> regions = new ArrayList<>(List.of(
-                new EventRegion(1, "Surselva", 1, false),
-                new EventRegion(2, "Grischun central", 2, false),
-                new EventRegion(3, "Engiadina", 3, false),
-                new EventRegion(4, "Val dal Rain / Cuira", 4, false),
-                new EventRegion(5, "Grischun talian", 5, false),
-                new EventRegion(6, "Tavau / Partenz", 6, false),
-                new EventRegion(7, "regiun Turitg", 7, false),
-                new EventRegion(8, "regiun Berna", 8, false),
-                new EventRegion(9, " regiun Basilea", 9, false),
-                new EventRegion(10, "svizra orientala", 10, false),
-                new EventRegion(11, "svizra franzosa", 11, false),
-                new EventRegion(12, "svizra taliana", 12, false),
-                new EventRegion(13, "auter", 13, false)
+                new EventRegion(1, "Engiadin'auta", 1, false),
+                new EventRegion(2, "Engiadina Bassa/Val Müstair", 2, false),
+                new EventRegion(3, "Grischun central", 3, false),
+                new EventRegion(4, "Surselva", 4, false),
+                new EventRegion(5, "Val dal Rain da Cuira", 5, false),
+                new EventRegion(6, "Grischun talian", 6, false),
+                new EventRegion(7, "Tavau / Partenz", 7, false),
+                new EventRegion(8, "regiun Turitg", 8, false),
+                new EventRegion(9, "regiun Berna", 9, false),
+                new EventRegion(10, "regiun Basilea", 10, false),
+                new EventRegion(11, "Svizra Centrala", 11, false),
+                new EventRegion(12, "Svizra Orientala", 12, false),
+                new EventRegion(13, "Svizra franzosa", 13, false),
+                new EventRegion(14, "Svizra taliana", 14, false),
+                new EventRegion(15, "auter", 15, false)
         ));
 
         regionsRepository.deleteAll();
