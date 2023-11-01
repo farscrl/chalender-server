@@ -23,15 +23,19 @@ public class EventRegion {
     private boolean isHidden = false;
 
     @CreatedDate
+    @JsonIgnore
     private Instant createdDate;
 
     @LastModifiedDate
+    @JsonIgnore
     private Instant lastModifiedDate;
 
     @CreatedBy
+    @JsonIgnore
     private String createdBy;
 
     @LastModifiedBy
+    @JsonIgnore
     private String lastModifiedBy;
 
     @JsonCreator

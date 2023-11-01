@@ -25,15 +25,19 @@ public class Document {
     private String path;
 
     @CreatedDate
+    @JsonIgnore
     private Instant createdDate;
 
     @LastModifiedDate
+    @JsonIgnore
     private Instant lastModifiedDate;
 
     @CreatedBy
+    @JsonIgnore
     private String createdBy;
 
     @LastModifiedBy
+    @JsonIgnore
     private String lastModifiedBy;
 
     public String getUrl() {
