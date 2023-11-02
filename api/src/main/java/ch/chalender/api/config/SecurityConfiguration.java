@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -23,9 +24,13 @@ import org.springframework.security.oauth2.client.http.OAuth2ErrorResponseErrorH
 import org.springframework.security.oauth2.core.http.converter.OAuth2AccessTokenResponseHttpMessageConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 import java.util.Arrays;
+
+import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
 
 @Configuration
 @EnableWebSecurity
@@ -53,7 +58,8 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
+        MvcRequestMatcher.Builder mvc = new MvcRequestMatcher.Builder(introspector);
         http
                 .cors(AbstractHttpConfigurer::disable)
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -62,8 +68,9 @@ public class SecurityConfiguration {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(new RestAuthenticationEntryPoint()))
                 .authorizeHttpRequests(aut-> {
-                    aut.requestMatchers("/", "/error","/api/**", "/oauth2/**").permitAll();
-                    aut.requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll();
+                    aut.requestMatchers(mvc.pattern("/"), mvc.pattern("/error"),mvc.pattern("/api/**"), mvc.pattern("/oauth2/**")).permitAll();
+                    aut.requestMatchers(mvc.pattern("/v3/api-docs/**"), mvc.pattern("/swagger-ui/**"), mvc.pattern("/swagger-ui.html")).permitAll();
+                    aut.requestMatchers(toH2Console()).permitAll();
                     aut.anyRequest().authenticated();
                 })
                 .oauth2Login(oauth2 -> {
@@ -80,7 +87,11 @@ public class SecurityConfiguration {
                     });
                     oauth2.successHandler(oAuth2AuthenticationSuccessHandler);
                     oauth2.failureHandler(oAuth2AuthenticationFailureHandler);
-                });
+                })
+                .headers(headers -> {
+                    headers.frameOptions(Customizer.withDefaults()).disable();
+                })
+        ;
 
         // Add our custom Token based authentication filter
         http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);

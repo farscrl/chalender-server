@@ -13,6 +13,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -23,6 +24,27 @@ public class EventLookupsDalImpl implements EventLookupsDal {
 
     @Override
     public Page<EventLookup> getAllEvents(EventFilter filter, Pageable pageable) {
+        Criteria criteria = getBaseCriteria(filter);
+
+        Query query = new Query(criteria).with(pageable).with(Sort.by(Sort.Direction.ASC, "date", "start"));
+        List<EventLookup> events = mongoTemplate.find(query, EventLookup.class);
+
+        return PageableExecutionUtils.getPage(
+                events,
+                pageable,
+                () -> mongoTemplate.count(Query.of(query).limit(-1).skip(-1), EventLookup.class));
+    }
+
+    public List<EventLookup> getEventsInDateRange(EventFilter filter, LocalDate start, LocalDate end) {
+        Criteria criteria = getBaseCriteria(filter);
+
+        criteria = criteria.and("date").gte(start).lte(end);
+
+        Query query = new Query(criteria).with(Sort.by(Sort.Direction.ASC, "date", "start"));
+        return mongoTemplate.find(query, EventLookup.class);
+    }
+
+    private Criteria getBaseCriteria(EventFilter filter) {
         Criteria criteria = new Criteria();
         if (filter.getGenres() != null && !filter.getGenres().isEmpty()) {
             criteria = criteria.and("genres._id").in(filter.getGenres());
@@ -43,12 +65,6 @@ public class EventLookupsDalImpl implements EventLookupsDal {
             );
         }
 
-        Query query = new Query(criteria).with(pageable).with(Sort.by(Sort.Direction.ASC, "date", "start"));
-        List<EventLookup> events = mongoTemplate.find(query, EventLookup.class);
-
-        return PageableExecutionUtils.getPage(
-                events,
-                pageable,
-                () -> mongoTemplate.count(Query.of(query).limit(-1).skip(-1), EventLookup.class));
+        return criteria;
     }
 }

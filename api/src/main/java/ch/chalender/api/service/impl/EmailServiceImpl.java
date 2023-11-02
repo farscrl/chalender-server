@@ -1,6 +1,7 @@
 package ch.chalender.api.service.impl;
 
 import ch.chalender.api.model.Event;
+import ch.chalender.api.model.EventLookup;
 import ch.chalender.api.service.EmailService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
@@ -15,6 +16,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 
 @Service
@@ -115,5 +117,43 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void sendEventUpdateRefusedEmail(String emailAddress, String name, Event event, String comment) throws MessagingException, UnsupportedEncodingException {
         // TODO: implement me
+    }
+
+    @Override
+    public void sendEmailSubscriptionBatch(String emailAddress, String userName, String subscriptionName, List<EventLookup> events) throws MessagingException, UnsupportedEncodingException {
+        String mailFrom = "no-reply@chalender.ch";
+        String mailFromName = "chalender.ch";
+
+        final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
+        final MimeMessageHelper email;
+        email = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
+        String subject = events.size() + " eveniments per tes abo «" + subscriptionName + "»";
+        if (events.size() == 1) {
+            subject = "In eveniment per tes abo «" + subscriptionName + "»";
+        }
+
+        email.setTo(emailAddress);
+        email.setSubject("[chalender.ch] " + subject);
+        email.setFrom(new InternetAddress(mailFrom, mailFromName));
+
+        final Context ctx = new Context(LocaleContextHolder.getLocale());
+        ctx.setVariable("email", emailAddress);
+        ctx.setVariable("name", userName);
+        ctx.setVariable("logo", LOGO_PATH);
+        ctx.setVariable("subscriptionName", subscriptionName);
+        ctx.setVariable("events", events);
+        ctx.setVariable("subject", subject);
+
+        final String textContent = this.templateEngine.process("email-user/subscription-batch.txt", ctx);
+        final String htmlContent = this.templateEngine.process("email-user/subscription-batch.html", ctx);
+
+        email.setText(textContent, htmlContent);
+
+        ClassPathResource clr = new ClassPathResource(LOGO_PATH);
+
+        email.addInline("logo", clr, PNG_MIME);
+
+        mailSender.send(mimeMessage);
     }
 }

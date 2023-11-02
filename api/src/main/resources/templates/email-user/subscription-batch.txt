@@ -1,0 +1,12 @@
+Confermar tia adressa dad e-mail
+
+Bainvegni sin chalender.ch, [( ${name} )]!
+
+Tes conto è vegnì creà cun suandantas infurmaziuns d'annunzia:
+Adressa dad e-mail: [( ${email} )]
+
+Per confermar tia adressa dad e-mail, stos ti cliccar sin il link sutvart.
+Confermar l'adressa: [( ${url} )]
+
+Cun chars salids,
+il team da chalender.ch

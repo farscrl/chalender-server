@@ -1,9 +1,11 @@
 package ch.chalender.api.service;
 
 import ch.chalender.api.model.Event;
+import ch.chalender.api.model.EventLookup;
 import jakarta.mail.MessagingException;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 public interface EmailService {
     public void sendAccountConfirmationEmail(String emailAddress, String name, String confirmationCode) throws MessagingException, UnsupportedEncodingException;
@@ -13,4 +15,6 @@ public interface EmailService {
     public void sendEventUpdateAcceptedEmail(String emailAddress, String name, Event event, String comment) throws MessagingException, UnsupportedEncodingException;
     public void sendEventRefusedEmail(String emailAddress, String name, Event event, String comment) throws MessagingException, UnsupportedEncodingException;
     public void sendEventUpdateRefusedEmail(String emailAddress, String name, Event event, String comment) throws MessagingException, UnsupportedEncodingException;
+
+    public void sendEmailSubscriptionBatch(String emailAddress, String userName, String subscriptionName, List<EventLookup> events) throws MessagingException, UnsupportedEncodingException;
 }

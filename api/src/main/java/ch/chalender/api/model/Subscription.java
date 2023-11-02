@@ -17,6 +17,10 @@ import java.util.List;
 public class Subscription {
     private String id;
 
+    private String name;
+    private SubscriptionType type;
+    private boolean active = true;
+
     private List<EventGenre> genres = new ArrayList<>();
     private List<EventRegion> regions = new ArrayList<>();
     private List<EventLanguage> eventLanguages = new ArrayList<>();
@@ -41,4 +45,9 @@ public class Subscription {
     @LastModifiedBy
     @JsonIgnore
     private String lastModifiedBy;
+
+    public enum SubscriptionType {
+        SINGLE,
+        BATCH;
+    }
 }
