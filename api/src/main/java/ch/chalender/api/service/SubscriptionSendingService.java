@@ -30,7 +30,7 @@ public class SubscriptionSendingService {
     @Autowired
     private PlatformTransactionManager transactionManager;
 
-    @Scheduled(cron = "0 0/1 * * * *")
+    @Scheduled(cron = "${chalender.cronWeeklyEmails}")
     public void sendSubscriptions() {
         JobParameters params = new JobParametersBuilder().addLong("jobId", System.currentTimeMillis())
                 .toJobParameters();
