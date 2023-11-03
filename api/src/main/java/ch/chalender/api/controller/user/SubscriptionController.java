@@ -17,7 +17,6 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@PreAuthorize("hasRole('USER')")
 @RequestMapping("/api/user/subscriptions")
 public class SubscriptionController {
 
@@ -25,12 +24,14 @@ public class SubscriptionController {
     private SubscriptionService subscriptionService;
 
     @GetMapping("")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<List<Subscription>> listAllSubscriptions(@CurrentUser LocalUser localUser) {
         User user = localUser.getUser();
         return ResponseEntity.ok(subscriptionService.findAllByUsername(user.getEmail()));
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Subscription> getSubscription(@PathVariable String id, @CurrentUser LocalUser localUser) {
         Subscription subscription = subscriptionService.findById(id);
 
@@ -41,13 +42,23 @@ public class SubscriptionController {
         return ResponseEntity.ok(subscription);
     }
 
+    @PreAuthorize("permitAll()")
+    @PostMapping("/{id}/disable")
+    public ResponseEntity<Subscription> disableSubscription(@PathVariable String id) {
+        Subscription subscription = subscriptionService.findById(id);
+        subscription.setActive(false);
+        return ResponseEntity.ok(subscriptionService.update(subscription));
+    }
+
     @PostMapping("")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Subscription> createSubscription(@RequestBody Subscription subscriptionToCreate, @CurrentUser LocalUser localUser) {
         subscriptionToCreate.setUsername(localUser.getUser().getEmail());
         return ResponseEntity.ok(subscriptionService.add(subscriptionToCreate));
     }
 
     @PostMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Subscription> updateSubscription(@PathVariable String id, @RequestBody Subscription subscriptionToUpdate, @CurrentUser LocalUser localUser) {
         Subscription subscription = subscriptionService.findById(id);
 
@@ -61,6 +72,7 @@ public class SubscriptionController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Void> deleteSubscription(@PathVariable String id, @CurrentUser LocalUser localUser) {
         Subscription subscription = subscriptionService.findById(id);
 
