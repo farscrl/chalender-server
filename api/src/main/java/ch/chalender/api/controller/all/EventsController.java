@@ -62,11 +62,17 @@ public class EventsController {
 
     @GetMapping("/{id}")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<EventDto> getEvent(@PathVariable String id) {
+    public ResponseEntity<EventDto> getEvent(@PathVariable String id, @CurrentUser LocalUser localUser) {
         Event event = eventsService.getEvent(id);
 
         if (event == null) {
             return ResponseEntity.notFound().build();
+        }
+
+        if (event.getEventStatus() != EventStatus.PUBLISHED && event.getEventStatus() != EventStatus.NEW_MODIFICATION) {
+            if (!localUser.getUser().getEmail().equals(event.getOwnerEmail()) && !localUser.getUser().getRoles().contains(Role.ROLE_MODERATOR)  && !localUser.getUser().getRoles().contains(Role.ROLE_ADMIN)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
         }
 
         return ResponseEntity.ok(EventConverter.toEventDto(modelMapper, event));
@@ -74,7 +80,19 @@ public class EventsController {
 
     @GetMapping("/{id}/ics/{uid}")
     @PreAuthorize("permitAll()")
-    public ResponseEntity<Resource> getEventIcs(@PathVariable String id, @PathVariable String uid) {
+    public ResponseEntity<Resource> getEventIcs(@PathVariable String id, @PathVariable String uid, @CurrentUser LocalUser localUser) {
+        Event event = eventsService.getEvent(id);
+
+        if (event == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if (event.getEventStatus() != EventStatus.PUBLISHED && event.getEventStatus() != EventStatus.NEW_MODIFICATION) {
+            if (!localUser.getUser().getEmail().equals(event.getOwnerEmail()) && !localUser.getUser().getRoles().contains(Role.ROLE_MODERATOR)  && !localUser.getUser().getRoles().contains(Role.ROLE_ADMIN)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+        }
+
         Resource resource = eventsService.getEventIcs(id, uid);
 
         HttpHeaders header = new HttpHeaders();
