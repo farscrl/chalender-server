@@ -203,7 +203,7 @@ public class EventsServiceImpl implements EventsService {
         Event event = eventsRepository.findById(id).orElse(null);
         eventsRepository.deleteById(id);
         if (event != null) {
-            eventLookupService.updateEventLookup(event);
+            eventLookupService.removeEventLookup(event);
         }
     }
 

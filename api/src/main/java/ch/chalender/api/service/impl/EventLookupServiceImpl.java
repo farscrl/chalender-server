@@ -49,4 +49,9 @@ public class EventLookupServiceImpl implements EventLookupService {
         List<EventLookup> eventLookups = EventLookupConverter.getEventLookups(event);
         eventLookupsRepository.saveAll(eventLookups);
     }
+
+    @Override
+    public void removeEventLookup(Event event) {
+        eventLookupsRepository.deleteAllByEventId(event.getId());
+    }
 }
