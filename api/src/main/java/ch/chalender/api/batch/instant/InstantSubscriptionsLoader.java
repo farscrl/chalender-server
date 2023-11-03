@@ -95,7 +95,7 @@ public class InstantSubscriptionsLoader implements Tasklet, StepExecutionListene
 
         User user = userService.findUserByEmail(subscription.getUsername());
 
-        emailService.sendEmailSubscriptionInstant(user.getEmail(), user.getFirstName(), subscription.getName(), event);
+        emailService.sendEmailSubscriptionInstant(user.getEmail(), user.getFirstName(), subscription.getName(), event, subscription.getId());
 
         index++;
 

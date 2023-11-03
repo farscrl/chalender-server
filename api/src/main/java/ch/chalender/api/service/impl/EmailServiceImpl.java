@@ -120,7 +120,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void sendEmailSubscriptionInstant(String emailAddress, String userName, String subscriptionName, Event event) throws MessagingException, UnsupportedEncodingException {
+    public void sendEmailSubscriptionInstant(String emailAddress, String userName, String subscriptionName, Event event, String subscriptionId) throws MessagingException, UnsupportedEncodingException {
         String mailFrom = "no-reply@chalender.ch";
         String mailFromName = "chalender.ch";
 
@@ -128,7 +128,7 @@ public class EmailServiceImpl implements EmailService {
         final MimeMessageHelper email;
         email = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
-        String subject = "In eveniment per tes abo «" + subscriptionName + "»";
+        String subject = "Ina occurrenza per tes abo «" + subscriptionName + "»";
 
         email.setTo(emailAddress);
         email.setSubject("[chalender.ch] " + subject);
@@ -141,6 +141,9 @@ public class EmailServiceImpl implements EmailService {
         ctx.setVariable("subscriptionName", subscriptionName);
         ctx.setVariable("event", event);
         ctx.setVariable("subject", subject);
+        ctx.setVariable("accountLink", appUrl + "/admin/subscriptions");
+        ctx.setVariable("unsubscribeLink", appUrl + "/admin/subscriptions/disable/" + subscriptionId);
+        ctx.setVariable("mainLink", appUrl);
 
         final String textContent = this.templateEngine.process("email-user/subscription-instant.txt", ctx);
         final String htmlContent = this.templateEngine.process("email-user/subscription-instant.html", ctx);
@@ -155,7 +158,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void sendEmailSubscriptionWeekly(String emailAddress, String userName, String subscriptionName, List<EventLookup> events) throws MessagingException, UnsupportedEncodingException {
+    public void sendEmailSubscriptionWeekly(String emailAddress, String userName, String subscriptionName, List<EventLookup> events, String subscriptionId) throws MessagingException, UnsupportedEncodingException {
         String mailFrom = "no-reply@chalender.ch";
         String mailFromName = "chalender.ch";
 
@@ -163,9 +166,9 @@ public class EmailServiceImpl implements EmailService {
         final MimeMessageHelper email;
         email = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
-        String subject = events.size() + " eveniments per tes abo «" + subscriptionName + "»";
+        String subject = events.size() + " occurrenzas per tes abo «" + subscriptionName + "»";
         if (events.size() == 1) {
-            subject = "In eveniment per tes abo «" + subscriptionName + "»";
+            subject = "Ina occurrenza per tes abo «" + subscriptionName + "»";
         }
 
         email.setTo(emailAddress);
@@ -179,6 +182,9 @@ public class EmailServiceImpl implements EmailService {
         ctx.setVariable("subscriptionName", subscriptionName);
         ctx.setVariable("events", events);
         ctx.setVariable("subject", subject);
+        ctx.setVariable("accountLink", appUrl + "/admin/subscriptions");
+        ctx.setVariable("unsubscribeLink", appUrl + "/admin/subscriptions/disable/" + subscriptionId);
+        ctx.setVariable("mainLink", appUrl);
 
         final String textContent = this.templateEngine.process("email-user/subscription-weekly.txt", ctx);
         final String htmlContent = this.templateEngine.process("email-user/subscription-weekly.html", ctx);

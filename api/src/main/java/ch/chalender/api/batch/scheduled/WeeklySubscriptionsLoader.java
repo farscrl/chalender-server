@@ -87,7 +87,7 @@ public class WeeklySubscriptionsLoader implements Tasklet, StepExecutionListener
 
         User user = userService.findUserByEmail(subscription.getUsername());
 
-        emailService.sendEmailSubscriptionWeekly(user.getEmail(), user.getFirstName(), subscription.getName(), events);
+        emailService.sendEmailSubscriptionWeekly(user.getEmail(), user.getFirstName(), subscription.getName(), events, subscription.getId());
 
         index++;
 

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title th:remove="all">Confermar tia adressa dad e-mail</title>
+    <title th:remove="all">Nova occurrenza</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <style type="text/css">
         body {
@@ -47,6 +47,13 @@
             text-align: center;
             padding: 10px 0;
         }
+
+        .footer-text, .footer-text a {
+            font-size: 12px;
+            color: #999999;
+            text-align: center;
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -64,25 +71,18 @@
                     <tr>
                         <td width="10"></td>
                         <td>
-
-
                             <p>
                                 <img src="images/logo.jpg" data-th-src="|cid:logo|" height="20" />
                             </p>
 
                             <h1 th:text="${subject}">[dumber] occurrenzas per tai</h1>
 
-                            <p>
-                                L’occurrenza survart correspunda als criteris da tes abunament da chalender.ch.
-                                Midar ils criteris da l’abunament pos ti en tes conto.
-                                Nus avain plaschair che ti dovras noss chalender.
-                            </p>
                             <table>
 
                                 <tbody>
                                 <tr>
                                     <td>
-                                        <h2 th:text="${event.title}"></h2>
+                                        <h2><a href="https://www.chalender.ch" th:href="${mainLink} + '/' + ${event.id}" th:text="${event.title}"></a></h2>
                                         <p class="no-margin" th:text="${event.location}"></p>
                                         <p class="no-margin" th:text="${event.date}"></p>
                                         <p class="no-margin">
@@ -92,17 +92,23 @@
                                 </tbody>
                             </table>
                             <p>
-                                Cun ils megliers salids<br />
-                                il server e la squadra da <a href="https://www.chalender.ch">chalender.ch</a>
+                                L’occurrenza survart correspunda als criteris da tes abunament da <a href="https://www.chalender.ch" th:href="@{mainLink}" target="_blank">chalender.ch</a>.
+                                Midar ils criteris da l’abunament pos ti <a href="https://www.chalender.ch" th:href="@{accountLink}" target="_blank">en tes conto</a>.
+                                Nus avain plaschair che ti dovras noss chalender.
                             </p>
 
-
+                            <p>
+                                Cun ils megliers salids<br />
+                                il server e la squadra da <a href="https://www.chalender.ch" th:href="@{mainLink}" target="_blank">chalender.ch</a>
+                            </p>
                         </td>
                         <td width="10"></td>
                     </tr>
                     <tr th:height="10">
                         <td></td>
-                        <td></td>
+                        <td class="footer-text">
+                            <a href="https://www.chalender.ch" th:href="@{unsubscribeLink}" target="_blank">Na betg pli retschaiver quests e-mails</a>
+                        </td>
                         <td></td>
                     </tr>
                 </table>

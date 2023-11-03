@@ -1,12 +1,22 @@
-Confermar tia adressa dad e-mail
+[( ${subject} )]
 
-Bainvegni sin chalender.ch, [( ${name} )]!
+[${event.title}]
+  [${event.location}]
+  [${event.date}]
+  <th:block th:each="genre: ${event.getGenres()}">[${genre.name}] </span>
+  [( ${mainLink} + '/' + ${event.eventId} )]
 
-Tes conto è vegnì creà cun suandantas infurmaziuns d'annunzia:
-Adressa dad e-mail: [( ${email} )]
+L’occurrenza survart correspunda als criteris da tes abunament da chalender.ch.
+Midar ils criteris da l’abunament pos ti en tes conto:
+[${accountLink}]
 
-Per confermar tia adressa dad e-mail, stos ti cliccar sin il link sutvart.
-Confermar l'adressa: [( ${url} )]
+Nus avain plaschair che ti dovras noss chalender.
 
-Cun chars salids,
-il team da chalender.ch
+
+
+Cun ils megliers salids
+il server e la squadra da chalender.ch
+
+
+Na betg pli retschaiver quests e-mails:
+[${unsubscribeLink}]
