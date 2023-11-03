@@ -56,6 +56,7 @@ public class SubscriptionController {
         }
 
         subscriptionToUpdate.setId(id);
+        subscriptionToUpdate.setUsername(subscription.getUsername());
         return ResponseEntity.ok(subscriptionService.update(subscriptionToUpdate));
     }
 
