@@ -223,6 +223,9 @@ public class EventsServiceImpl implements EventsService {
         } else {
             LocalDateTime start = LocalDateTime.of(occurrence.getDate(), occurrence.getStart());
             LocalDateTime end = LocalDateTime.of(occurrence.getDate(), occurrence.getEnd());
+            if (end.isBefore(start)) {
+                end = end.plusDays(1);
+            }
             event = new VEvent(start, end, eventSummary);
 
         }
