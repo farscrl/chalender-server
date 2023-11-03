@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:remove="all">Confermar tia adressa dad e-mail</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style type="text/css">
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            font-size: 20px;
+        }
+
+        h2 {
+            color: #3CBFA4;
+            font-size: 18px;
+            margin-bottom: 0;
+        }
+
+        a {
+            color: #3CBFA4;
+            text-decoration: none;
+        }
+
+        p.no-margin {
+            margin: 0;
+        }
+
+        .tag {
+            background-color: #3CBFA4;
+            color: white;
+            margin-right: 5px;
+            padding: 2px 5px;
+        }
+
+        a.link {
+            border: solid 1px #3CBFA4;
+            background-color: white;
+            text-decoration: none;
+            color: #3CBFA4;
+            font-weight: bold;
+            display: block;
+            width: 260px;
+            text-align: center;
+            padding: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <table width="100%">
+        <tr>
+            <td></td>
+            <td width="600" bgcolor="white">
+
+                <table width="100%">
+                    <tr th:height="10">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td width="10"></td>
+                        <td>
+
+
+                            <p>
+                                <img src="images/logo.jpg" data-th-src="|cid:logo|" height="20" />
+                            </p>
+
+                            <h1 th:text="${subject}">[dumber] occurrenzas per tai</h1>
+
+                            <p>
+                                L’occurrenza survart correspunda als criteris da tes abunament da chalender.ch.
+                                Midar ils criteris da l’abunament pos ti en tes conto.
+                                Nus avain plaschair che ti dovras noss chalender.
+                            </p>
+                            <table>
+
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <h2 th:text="${event.title}"></h2>
+                                        <p class="no-margin" th:text="${event.location}"></p>
+                                        <p class="no-margin" th:text="${event.date}"></p>
+                                        <p class="no-margin">
+                                            <span class="tag" th:each="genre: ${event.getGenres()}" th:text="${genre.name}"></span>
+                                        </p>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <p>
+                                Cun ils megliers salids<br />
+                                il server e la squadra da <a href="https://www.chalender.ch">chalender.ch</a>
+                            </p>
+
+
+                        </td>
+                        <td width="10"></td>
+                    </tr>
+                    <tr th:height="10">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </table>
+
+            </td>
+            <td></td>
+        </tr>
+    </table>
+</body>
+</html>

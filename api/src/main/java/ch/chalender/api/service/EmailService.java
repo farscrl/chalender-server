@@ -16,5 +16,6 @@ public interface EmailService {
     public void sendEventRefusedEmail(String emailAddress, String name, Event event, String comment) throws MessagingException, UnsupportedEncodingException;
     public void sendEventUpdateRefusedEmail(String emailAddress, String name, Event event, String comment) throws MessagingException, UnsupportedEncodingException;
 
-    public void sendEmailSubscriptionBatch(String emailAddress, String userName, String subscriptionName, List<EventLookup> events) throws MessagingException, UnsupportedEncodingException;
+    public void sendEmailSubscriptionInstant(String emailAddress, String userName, String subscriptionName, Event event) throws MessagingException, UnsupportedEncodingException;
+    public void sendEmailSubscriptionWeekly(String emailAddress, String userName, String subscriptionName, List<EventLookup> events) throws MessagingException, UnsupportedEncodingException;
 }

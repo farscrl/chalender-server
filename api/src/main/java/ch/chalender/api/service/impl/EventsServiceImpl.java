@@ -6,6 +6,7 @@ import ch.chalender.api.model.*;
 import ch.chalender.api.repository.EventsRepository;
 import ch.chalender.api.service.EmailService;
 import ch.chalender.api.service.EventsService;
+import ch.chalender.api.service.SubscriptionSendingService;
 import ch.chalender.api.service.UserService;
 import jakarta.mail.MessagingException;
 import net.fortuna.ical4j.model.Calendar;
@@ -40,6 +41,9 @@ public class EventsServiceImpl implements EventsService {
 
     @Autowired
     private EventsDal eventsDal;
+
+    @Autowired
+    private SubscriptionSendingService subscriptionSendingService;
 
     @Override
     public Event createEvent(Event event) {
@@ -123,6 +127,7 @@ public class EventsServiceImpl implements EventsService {
         User user = userService.findUserByEmail(event.getOwnerEmail());
         if (isNew) {
             emailService.sendEventPublishedEmail(event.getOwnerEmail(), user != null ? user.getFullName() : null, event, moderationComment.getComment());
+            this.subscriptionSendingService.notifyUsersAboutNewEvent(event);
             return event;
         }
         emailService.sendEventUpdateAcceptedEmail(event.getOwnerEmail(), user != null ? user.getFullName() : null, event, moderationComment.getComment());

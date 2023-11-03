@@ -47,7 +47,7 @@ public class Subscription {
     private String lastModifiedBy;
 
     public enum SubscriptionType {
-        SINGLE,
-        BATCH;
+        INSTANT,
+        WEEKLY;
     }
 }

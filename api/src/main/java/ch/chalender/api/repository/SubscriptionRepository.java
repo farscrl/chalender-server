@@ -8,5 +8,5 @@ import java.util.List;
 public interface SubscriptionRepository extends MongoRepository<Subscription, String> {
     List<Subscription> findAllByUsername(String username);
 
-    List<Subscription> findAllByActive(boolean active);
+    List<Subscription> findAllByActiveAndType(boolean active, Subscription.SubscriptionType type);
 }

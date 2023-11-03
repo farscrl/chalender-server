@@ -21,8 +21,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Component
-public class SubscriptionsLoader implements Tasklet, StepExecutionListener {
-    private static final Logger logger = LoggerFactory.getLogger(SubscriptionsLoader.class);
+public class WeeklySubscriptionsLoader implements Tasklet, StepExecutionListener {
+    private static final Logger logger = LoggerFactory.getLogger(WeeklySubscriptionsLoader.class);
 
     @Autowired
     private SubscriptionRepository subscriptionRepository;
@@ -46,13 +46,13 @@ public class SubscriptionsLoader implements Tasklet, StepExecutionListener {
     @Override
     public void beforeStep(StepExecution stepExecution) {
         StepExecutionListener.super.beforeStep(stepExecution);
-        logger.debug("SubscriptionsLoader initialized.");
+        logger.debug("WeeklySubscriptionsLoader initialized.");
 
         this.startDate = LocalDate.now();
         this.endDate = startDate.plusDays(50); // TODO: change to 15
 
-        this.subscriptions = subscriptionRepository.findAllByActive(true);
-        logger.debug("SubscriptionsLoader loaded " + subscriptions.size() + " subscriptions.");
+        this.subscriptions = subscriptionRepository.findAllByActiveAndType(true, Subscription.SubscriptionType.WEEKLY);
+        logger.debug("WeeklySubscriptionsLoader loaded " + subscriptions.size() + " subscriptions.");
     }
 
     @Override
@@ -68,7 +68,8 @@ public class SubscriptionsLoader implements Tasklet, StepExecutionListener {
             return next();
         }
 
-        if (subscription.getType() != Subscription.SubscriptionType.BATCH) {
+        if (subscription.getType() != Subscription.SubscriptionType.WEEKLY) {
+            logger.error("Subscription " + subscription.getId() + " is not a weekly subscription.");
             return next();
         }
 
@@ -86,7 +87,7 @@ public class SubscriptionsLoader implements Tasklet, StepExecutionListener {
 
         User user = userService.findUserByEmail(subscription.getUsername());
 
-        emailService.sendEmailSubscriptionBatch(user.getEmail(), user.getFirstName(), subscription.getName(), events);
+        emailService.sendEmailSubscriptionWeekly(user.getEmail(), user.getFirstName(), subscription.getName(), events);
 
         index++;
 
@@ -96,7 +97,7 @@ public class SubscriptionsLoader implements Tasklet, StepExecutionListener {
     @Override
     public ExitStatus afterStep(StepExecution stepExecution) {
         this.index = 0;
-        logger.debug("SubscriptionsLoader finished.");
+        logger.debug("WeeklySubscriptionsLoader finished.");
 
         return StepExecutionListener.super.afterStep(stepExecution);
     }
