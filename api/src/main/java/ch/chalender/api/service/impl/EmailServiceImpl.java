@@ -30,6 +30,9 @@ public class EmailServiceImpl implements EmailService {
     @Value("${chalender.appUrl}")
     private String appUrl;
 
+    String mailFrom = "no-reply@chalender.ch";
+    String mailFromName = "chalender.ch";
+
     public EmailServiceImpl(JavaMailSender mailSender, TemplateEngine templateEngine) {
         this.mailSender = mailSender;
         this.templateEngine = templateEngine;
@@ -38,15 +41,13 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void sendAccountConfirmationEmail(String emailAddress, String name, String confirmationCode) throws MessagingException, UnsupportedEncodingException {
         String confirmationUrl = appUrl + "/u/confirm-email?code=" + confirmationCode;
-        String mailFrom = "no-reply@chalender.ch";
-        String mailFromName = "chalender.ch";
 
         final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
         final MimeMessageHelper email;
         email = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
         email.setTo(emailAddress);
-        email.setSubject("Confermar tia adressa dad e-mail");
+        email.setSubject("[chalender.ch] " + "Confermar tia adressa dad e-mail");
         email.setFrom(new InternetAddress(mailFrom, mailFromName));
 
         final Context ctx = new Context(LocaleContextHolder.getLocale());
@@ -70,15 +71,13 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void sendPasswordResetEmail(String emailAddress, String name, String passwordResetToken) throws MessagingException, UnsupportedEncodingException {
         String passwordResetUrl = appUrl + "/u/confirm-password?token=" + passwordResetToken;
-        String mailFrom = "no-reply@chalender.ch";
-        String mailFromName = "chalender.ch";
 
         final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
         final MimeMessageHelper email;
         email = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
         email.setTo(emailAddress);
-        email.setSubject("Redefinir tes pled-clav");
+        email.setSubject("[chalender.ch] " + "Redefinir tes pled-clav");
         email.setFrom(new InternetAddress(mailFrom, mailFromName));
 
         final Context ctx = new Context(LocaleContextHolder.getLocale());
@@ -101,29 +100,146 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public void sendEventPublishedEmail(String emailAddress, String name, Event event, String comment) throws MessagingException, UnsupportedEncodingException {
-        // TODO: implement me
+        final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
+        final MimeMessageHelper email;
+        email = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
+        String subject = "Occurrenza publitgada: «" + event.getCurrentlyPublished().getTitle() + "»";
+
+        email.setTo(emailAddress);
+        email.setSubject("[chalender.ch] " + subject);
+        email.setFrom(new InternetAddress(mailFrom, mailFromName));
+
+        String eventUrl = appUrl + "/" + event.getId();
+
+        final Context ctx = new Context(LocaleContextHolder.getLocale());
+        ctx.setVariable("email", emailAddress);
+        ctx.setVariable("name", name);
+        ctx.setVariable("logo", LOGO_PATH);
+        ctx.setVariable("eventUrl", eventUrl);
+        ctx.setVariable("comment", comment);
+        ctx.setVariable("mainLink", appUrl);
+        ctx.setVariable("subject", subject);
+
+        final String textContent = this.templateEngine.process("email-user/event-published.txt", ctx);
+        final String htmlContent = this.templateEngine.process("email-user/event-published.html", ctx);
+
+        email.setText(textContent, htmlContent);
+
+        ClassPathResource clr = new ClassPathResource(LOGO_PATH);
+
+        email.addInline("logo", clr, PNG_MIME);
+
+        mailSender.send(mimeMessage);
     }
 
     @Override
     public void sendEventUpdateAcceptedEmail(String emailAddress, String name, Event event, String comment) throws MessagingException, UnsupportedEncodingException {
-        // TODO: implement me
+        final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
+        final MimeMessageHelper email;
+        email = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
+        String subject = "Acceptà l’actualisaziun da l’occurrenza «" + event.getCurrentlyPublished().getTitle() + "»";
+
+        email.setTo(emailAddress);
+        email.setSubject("[chalender.ch] " + subject);
+        email.setFrom(new InternetAddress(mailFrom, mailFromName));
+
+        String eventUrl = appUrl + "/" + event.getId();
+
+        final Context ctx = new Context(LocaleContextHolder.getLocale());
+        ctx.setVariable("email", emailAddress);
+        ctx.setVariable("name", name);
+        ctx.setVariable("logo", LOGO_PATH);
+        ctx.setVariable("eventUrl", eventUrl);
+        ctx.setVariable("comment", comment);
+        ctx.setVariable("mainLink", appUrl);
+        ctx.setVariable("subject", subject);
+
+        final String textContent = this.templateEngine.process("email-user/event-update-published.txt", ctx);
+        final String htmlContent = this.templateEngine.process("email-user/event-update-published.html", ctx);
+
+        email.setText(textContent, htmlContent);
+
+        ClassPathResource clr = new ClassPathResource(LOGO_PATH);
+
+        email.addInline("logo", clr, PNG_MIME);
+
+        mailSender.send(mimeMessage);
     }
 
     @Override
     public void sendEventRefusedEmail(String emailAddress, String name, Event event, String comment) throws MessagingException, UnsupportedEncodingException {
-        // TODO: implement me
+        final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
+        final MimeMessageHelper email;
+        email = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
+        String subject = "La moderaziun ha refusà la publicaziun da «" + event.getRejected().getTitle() + "»";
+
+        email.setTo(emailAddress);
+        email.setSubject("[chalender.ch] " + subject);
+        email.setFrom(new InternetAddress(mailFrom, mailFromName));
+
+        String eventUrl = appUrl + "/" + event.getId();
+
+        final Context ctx = new Context(LocaleContextHolder.getLocale());
+        ctx.setVariable("email", emailAddress);
+        ctx.setVariable("name", name);
+        ctx.setVariable("logo", LOGO_PATH);
+        ctx.setVariable("eventUrl", eventUrl);
+        ctx.setVariable("comment", comment);
+        ctx.setVariable("mainLink", appUrl);
+        ctx.setVariable("subject", subject);
+
+        final String textContent = this.templateEngine.process("email-user/event-rejected.txt", ctx);
+        final String htmlContent = this.templateEngine.process("email-user/event-rejected.html", ctx);
+
+        email.setText(textContent, htmlContent);
+
+        ClassPathResource clr = new ClassPathResource(LOGO_PATH);
+
+        email.addInline("logo", clr, PNG_MIME);
+
+        mailSender.send(mimeMessage);
     }
 
     @Override
     public void sendEventUpdateRefusedEmail(String emailAddress, String name, Event event, String comment) throws MessagingException, UnsupportedEncodingException {
-        // TODO: implement me
+        final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
+        final MimeMessageHelper email;
+        email = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
+        String subject = "La moderaziun ha refusà la midada da l’occurrenza «" + event.getCurrentlyPublished().getTitle() + "»";
+
+        email.setTo(emailAddress);
+        email.setSubject("[chalender.ch] " + subject);
+        email.setFrom(new InternetAddress(mailFrom, mailFromName));
+
+        String eventUrl = appUrl + "/" + event.getId();
+
+        final Context ctx = new Context(LocaleContextHolder.getLocale());
+        ctx.setVariable("email", emailAddress);
+        ctx.setVariable("name", name);
+        ctx.setVariable("logo", LOGO_PATH);
+        ctx.setVariable("eventUrl", eventUrl);
+        ctx.setVariable("comment", comment);
+        ctx.setVariable("mainLink", appUrl);
+        ctx.setVariable("subject", subject);
+
+        final String textContent = this.templateEngine.process("email-user/event-update-rejected.txt", ctx);
+        final String htmlContent = this.templateEngine.process("email-user/event-update-rejected.html", ctx);
+
+        email.setText(textContent, htmlContent);
+
+        ClassPathResource clr = new ClassPathResource(LOGO_PATH);
+
+        email.addInline("logo", clr, PNG_MIME);
+
+        mailSender.send(mimeMessage);
     }
 
     @Override
     public void sendEmailSubscriptionInstant(String emailAddress, String userName, String subscriptionName, Event event, String subscriptionId) throws MessagingException, UnsupportedEncodingException {
-        String mailFrom = "no-reply@chalender.ch";
-        String mailFromName = "chalender.ch";
-
         final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
         final MimeMessageHelper email;
         email = new MimeMessageHelper(mimeMessage, true, "UTF-8");
@@ -159,9 +275,6 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public void sendEmailSubscriptionWeekly(String emailAddress, String userName, String subscriptionName, List<EventLookup> events, String subscriptionId) throws MessagingException, UnsupportedEncodingException {
-        String mailFrom = "no-reply@chalender.ch";
-        String mailFromName = "chalender.ch";
-
         final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
         final MimeMessageHelper email;
         email = new MimeMessageHelper(mimeMessage, true, "UTF-8");

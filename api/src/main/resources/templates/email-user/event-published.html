@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:remove="all">Occurrenza publitgada</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style type="text/css">
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            font-size: 20px;
+        }
+
+        h2 {
+            color: #3CBFA4;
+            font-size: 18px;
+            margin-bottom: 0;
+        }
+
+        a {
+            color: #3CBFA4;
+            text-decoration: none;
+        }
+
+        p.no-margin {
+            margin: 0;
+        }
+
+        .tag {
+            background-color: #3CBFA4;
+            color: white;
+            margin-right: 5px;
+            padding: 2px 5px;
+        }
+
+        a.link {
+            border: solid 1px #3CBFA4;
+            background-color: white;
+            text-decoration: none;
+            color: #3CBFA4;
+            font-weight: bold;
+            display: block;
+            width: 260px;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        .footer-text, .footer-text a {
+            font-size: 12px;
+            color: #999999;
+            text-align: center;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <table width="100%">
+        <tr>
+            <td></td>
+            <td width="600" bgcolor="white">
+
+                <table width="100%">
+                    <tr th:height="10">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td width="10"></td>
+                        <td>
+                            <p>
+                                <img src="images/logo.jpg" data-th-src="|cid:logo|" height="20" />
+                            </p>
+
+                            <h1 th:text="${subject}">Occurrenza publitgada</h1>
+
+                            <p>
+                                Grazia per annunziar tia occurrenza sin <a href="https://www.chalender.ch" th:href="${mainLink}" target="_blank">chalender.ch</a>.<br>
+                                Nossa squadra ha controllà ils criteris formals. L’occurrenza è ussa <a href="https://www.chalender.ch" th:href="${eventUrl}" target="_blank">publitgada qua</a>.
+                            </p>
+
+                            <p th:if="${not #strings.isEmpty(comment)}">
+                                <strong>Commentari da la moderaziun:</strong><br />
+                                <span th:text="${comment}"></span>
+                            </p>
+
+                            <p>
+                                En cas dad eventualas midadas pos ti actualisar l’occurrenza en tes conto.
+                                Sche l’occurrenza avess da vegnir annullada, suplitgain nus ad immediat inditgar quai cun il champ «Annullà» (sper la data).
+                            </p>
+
+                            <p>
+                                Nus giavischain bun success!
+                            </p>
+
+                            <p>
+                                Cun ils megliers salids<br />
+                                la squadra da <a href="https://www.chalender.ch" th:href="${mainLink}" target="_blank">chalender.ch</a>
+                            </p>
+                        </td>
+                        <td width="10"></td>
+                    </tr>
+                    <tr th:height="10">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </table>
+
+            </td>
+            <td></td>
+        </tr>
+    </table>
+</body>
+</html>
