@@ -1,10 +1,9 @@
 [( ${subject} )]
 
-[${event.title}]
-  [${event.location}]
-  [${event.date}]
-  <th:block th:each="genre: ${event.getGenres()}">[${genre.name}] </span>
-  [( ${mainLink} + '/' + ${event.eventId} )]
+[${event.currentlyPublished.title}]
+  [${event.currentlyPublished.location}]
+  <th:block th:each="genre: ${event.currentlyPublished.getGenres()}">[${genre.name}] </span>
+  [( ${mainLink} + '/' + ${event.id} )]
 
 L’occurrenza survart correspunda als criteris da tes abunament da chalender.ch.
 Midar ils criteris da l’abunament pos ti en tes conto:

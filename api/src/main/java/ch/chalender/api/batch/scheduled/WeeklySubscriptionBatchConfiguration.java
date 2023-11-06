@@ -40,7 +40,7 @@ public class WeeklySubscriptionBatchConfiguration extends DefaultBatchConfigurat
 
     @Bean
     public Job weeklyJob(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
-        return new JobBuilder("scheduledSubscriptionsJob", jobRepository())
+        return new JobBuilder("weeklySubscriptionsJob", jobRepository())
                 .start(loadWeeklySubscriptions(jobRepository, transactionManager))
                 .build();
     }

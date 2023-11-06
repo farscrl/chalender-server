@@ -48,7 +48,7 @@ public class InstantSubscriptionsLoader implements Tasklet, StepExecutionListene
         StepExecutionListener.super.beforeStep(stepExecution);
         logger.debug("InstantSubscriptionsLoader initialized.");
 
-        String eventId = (String) stepExecution.getExecutionContext().get("jobId");
+        String eventId = (String) stepExecution.getJobExecution().getJobParameters().getParameters().get("jobId").getValue();
         if (eventId == null) {
             logger.error("No event id found in job parameters.");
             return;
@@ -79,7 +79,7 @@ public class InstantSubscriptionsLoader implements Tasklet, StepExecutionListene
 
         boolean sendEmail = true;
         EventVersion version = event.getCurrentlyPublished();
-        if (!version.getTitle().equals("") && !(version.getTitle().contains(subscription.getSearchTerm()) || version.getDescription().contains(subscription.getSearchTerm()))) {
+        if (!subscription.getSearchTerm().equals("") && !(version.getTitle().contains(subscription.getSearchTerm()) || version.getDescription().contains(subscription.getSearchTerm()))) {
             sendEmail = false;
         } else if (!subscription.getGenres().isEmpty() && subscription.getGenres().stream().noneMatch(version.getGenres()::contains)) {
             sendEmail = false;

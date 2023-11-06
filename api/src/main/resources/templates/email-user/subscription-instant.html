@@ -82,24 +82,23 @@
                                 <tbody>
                                 <tr>
                                     <td>
-                                        <h2><a href="https://www.chalender.ch" th:href="${mainLink} + '/' + ${event.id}" th:text="${event.title}"></a></h2>
-                                        <p class="no-margin" th:text="${event.location}"></p>
-                                        <p class="no-margin" th:text="${event.date}"></p>
+                                        <h2><a href="https://www.chalender.ch" th:href="${mainLink} + '/' + ${event.id}" th:text="${event.currentlyPublished.title}"></a></h2>
+                                        <p class="no-margin" th:text="${event.currentlyPublished.location}"></p>
                                         <p class="no-margin">
-                                            <span class="tag" th:each="genre: ${event.getGenres()}" th:text="${genre.name}"></span>
+                                            <span class="tag" th:each="genre: ${event.currentlyPublished.getGenres()}" th:text="${genre.name}"></span>
                                         </p>
                                 </tr>
                                 </tbody>
                             </table>
                             <p>
-                                L’occurrenza survart correspunda als criteris da tes abunament da <a href="https://www.chalender.ch" th:href="@{mainLink}" target="_blank">chalender.ch</a>.
-                                Midar ils criteris da l’abunament pos ti <a href="https://www.chalender.ch" th:href="@{accountLink}" target="_blank">en tes conto</a>.
+                                L’occurrenza survart correspunda als criteris da tes abunament da <a href="https://www.chalender.ch" th:href="${mainLink}" target="_blank">chalender.ch</a>.
+                                Midar ils criteris da l’abunament pos ti <a href="https://www.chalender.ch" th:href="${accountLink}" target="_blank">en tes conto</a>.
                                 Nus avain plaschair che ti dovras noss chalender.
                             </p>
 
                             <p>
                                 Cun ils megliers salids<br />
-                                il server e la squadra da <a href="https://www.chalender.ch" th:href="@{mainLink}" target="_blank">chalender.ch</a>
+                                il server e la squadra da <a href="https://www.chalender.ch" th:href="${mainLink}" target="_blank">chalender.ch</a>
                             </p>
                         </td>
                         <td width="10"></td>
@@ -107,7 +106,7 @@
                     <tr th:height="10">
                         <td></td>
                         <td class="footer-text">
-                            <a href="https://www.chalender.ch" th:href="@{unsubscribeLink}" target="_blank">Na betg pli retschaiver quests e-mails</a>
+                            <a href="https://www.chalender.ch" th:href="${unsubscribeLink}" target="_blank">Na betg pli retschaiver quests e-mails</a>
                         </td>
                         <td></td>
                     </tr>

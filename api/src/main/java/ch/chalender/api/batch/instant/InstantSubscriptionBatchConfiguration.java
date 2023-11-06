@@ -1,6 +1,5 @@
 package ch.chalender.api.batch.instant;
 
-import ch.chalender.api.batch.scheduled.WeeklySubscriptionsLoader;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.support.DefaultBatchConfiguration;
@@ -18,7 +17,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 public class InstantSubscriptionBatchConfiguration extends DefaultBatchConfiguration {
 
     @Autowired
-    private WeeklySubscriptionsLoader weeklySubscriptionsLoader;
+    private InstantSubscriptionsLoader instantSubscriptionsLoader;
 
     @Bean
     public JobLauncher instantJobLauncher(JobRepository jobRepository) throws Exception {
@@ -36,13 +35,13 @@ public class InstantSubscriptionBatchConfiguration extends DefaultBatchConfigura
     @Bean
     protected Step loadInstantSubscriptions(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
         return new StepBuilder("loadSubscriptions", jobRepository)
-                .tasklet(weeklySubscriptionsLoader, transactionManager)
+                .tasklet(instantSubscriptionsLoader, transactionManager)
                 .build();
     }
 
     @Bean
     public Job instantJob(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
-        return new JobBuilder("scheduledSubscriptionsJob", jobRepository)
+        return new JobBuilder("instantSubscriptionsJob", jobRepository)
                 .start(loadInstantSubscriptions(jobRepository, transactionManager))
                 .build();
     }
