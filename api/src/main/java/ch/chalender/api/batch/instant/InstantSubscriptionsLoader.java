@@ -79,7 +79,7 @@ public class InstantSubscriptionsLoader implements Tasklet, StepExecutionListene
 
         boolean sendEmail = true;
         EventVersion version = event.getCurrentlyPublished();
-        if (!subscription.getSearchTerm().equals("") && !(version.getTitle().contains(subscription.getSearchTerm()) || version.getDescription().contains(subscription.getSearchTerm()))) {
+        if (!subscription.getSearchTerm().isEmpty() && !(version.getTitle().contains(subscription.getSearchTerm()) || version.getDescription().contains(subscription.getSearchTerm()))) {
             sendEmail = false;
         } else if (!subscription.getGenres().isEmpty() && subscription.getGenres().stream().noneMatch(version.getGenres()::contains)) {
             sendEmail = false;
