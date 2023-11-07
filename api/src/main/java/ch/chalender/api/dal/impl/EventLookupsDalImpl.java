@@ -61,6 +61,7 @@ public class EventLookupsDalImpl implements EventLookupsDal {
         if (filter.getSearchTerm() != null) {
             criteria = criteria.orOperator(
                     Criteria.where("title").regex(filter.getSearchTerm(), "i"),
+                    Criteria.where("description").regex(filter.getSearchTerm(), "i"),
                     Criteria.where("location").regex(filter.getSearchTerm(), "i")
             );
         }

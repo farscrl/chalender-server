@@ -22,6 +22,7 @@ public class EventLookup {
     private String eventId;
 
     private String title;
+    private String description;
     private List<EventGenre> genres = new ArrayList<>();
     private String location;
     private List<EventRegion> regions = new ArrayList<>();
