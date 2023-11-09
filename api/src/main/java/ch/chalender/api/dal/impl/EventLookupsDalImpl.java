@@ -57,6 +57,8 @@ public class EventLookupsDalImpl implements EventLookupsDal {
         }
         if (filter.getDate() != null) {
             criteria = criteria.and("date").gte(filter.getDate());
+        } else {
+            criteria = criteria.and("date").gte(LocalDate.now());
         }
         if (filter.getSearchTerm() != null) {
             criteria = criteria.orOperator(
