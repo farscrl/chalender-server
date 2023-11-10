@@ -30,7 +30,8 @@ public class EventsDalImpl implements EventsDal {
 
         if (filter.getSearchTerm() != null) {
             criteria = criteria.orOperator(
-                    Criteria.where("title").regex(filter.getSearchTerm(), "i")
+                    Criteria.where("title").regex(filter.getSearchTerm(), "i"),
+                    Criteria.where("ownerEmail").regex(filter.getSearchTerm(), "i")
             );
         }
 
