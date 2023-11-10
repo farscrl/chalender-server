@@ -40,7 +40,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public void sendAccountConfirmationEmail(String emailAddress, String name, String confirmationCode) throws MessagingException, UnsupportedEncodingException {
-        String confirmationUrl = appUrl + "/u/confirm-email?code=" + confirmationCode;
+        String confirmationUrl = appUrl + "/user/confirm-email?code=" + confirmationCode;
 
         final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
         final MimeMessageHelper email;
@@ -70,7 +70,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public void sendPasswordResetEmail(String emailAddress, String name, String passwordResetToken) throws MessagingException, UnsupportedEncodingException {
-        String passwordResetUrl = appUrl + "/u/confirm-password?token=" + passwordResetToken;
+        String passwordResetUrl = appUrl + "/user/confirm-password?token=" + passwordResetToken;
 
         final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
         final MimeMessageHelper email;
