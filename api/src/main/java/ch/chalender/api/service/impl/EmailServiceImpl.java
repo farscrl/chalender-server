@@ -257,8 +257,8 @@ public class EmailServiceImpl implements EmailService {
         ctx.setVariable("subscriptionName", subscriptionName);
         ctx.setVariable("event", event);
         ctx.setVariable("subject", subject);
-        ctx.setVariable("accountLink", appUrl + "/admin/subscriptions");
-        ctx.setVariable("unsubscribeLink", appUrl + "/admin/subscriptions/disable/" + subscriptionId);
+        ctx.setVariable("accountLink", appUrl + "/user/subscriptions");
+        ctx.setVariable("unsubscribeLink", appUrl + "/user/subscriptions/disable/" + subscriptionId);
         ctx.setVariable("mainLink", appUrl);
 
         final String textContent = this.templateEngine.process("email-user/subscription-instant.txt", ctx);
@@ -295,8 +295,8 @@ public class EmailServiceImpl implements EmailService {
         ctx.setVariable("subscriptionName", subscriptionName);
         ctx.setVariable("events", events);
         ctx.setVariable("subject", subject);
-        ctx.setVariable("accountLink", appUrl + "/admin/subscriptions");
-        ctx.setVariable("unsubscribeLink", appUrl + "/admin/subscriptions/disable/" + subscriptionId);
+        ctx.setVariable("accountLink", appUrl + "/user/subscriptions");
+        ctx.setVariable("unsubscribeLink", appUrl + "/user/subscriptions/disable/" + subscriptionId);
         ctx.setVariable("mainLink", appUrl);
 
         final String textContent = this.templateEngine.process("email-user/subscription-weekly.txt", ctx);
