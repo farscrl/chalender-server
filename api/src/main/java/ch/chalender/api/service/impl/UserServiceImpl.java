@@ -6,6 +6,7 @@ import ch.chalender.api.exception.OAuth2AuthenticationProcessingException;
 import ch.chalender.api.exception.UserAlreadyExistAuthenticationException;
 import ch.chalender.api.model.User;
 import ch.chalender.api.model.UserFilter;
+import ch.chalender.api.repository.EventsRepository;
 import ch.chalender.api.repository.UserRepository;
 import ch.chalender.api.security.oauth2.user.OAuth2UserInfo;
 import ch.chalender.api.security.oauth2.user.OAuth2UserInfoFactory;
@@ -35,6 +36,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private EventsRepository eventsRepository;
 
     @Autowired
     private UsersDal usersDal;
@@ -220,7 +224,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(String id) {
+    public void deleteUser(String id, boolean deleteEvents) {
+        if (deleteEvents) {
+            Pageable pageable = Pageable.unpaged();
+            userRepository.findById(id).ifPresent(user -> {
+                eventsRepository.deleteAll(eventsRepository.findByOwnerEmail(user.getEmail(), pageable));
+            });
+        }
+
         userRepository.deleteById(id);
     }
 }

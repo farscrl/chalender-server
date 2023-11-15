@@ -41,5 +41,5 @@ public interface UserService {
 
     public UserDto updateUser(String id, UserDto userDto);
 
-    public void deleteUser(String id);
+    public void deleteUser(String id, boolean deleteEvents);
 }

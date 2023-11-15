@@ -125,11 +125,9 @@ public class AuthController {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(localUser.getUser().getEmail(), deleteUserDto.getPassword()));
         User user = localUser.getUser();
 
-        if (deleteUserDto.getMode().equals("delete-events")) {
-            // TODO: delete events of user
-        }
+        boolean deleteEvents = deleteUserDto.getMode().equals("delete-events");
 
-        userService.deleteUser(user.getId());
+        userService.deleteUser(user.getId(), deleteEvents);
         return ResponseEntity.ok().build();
     }
 }
