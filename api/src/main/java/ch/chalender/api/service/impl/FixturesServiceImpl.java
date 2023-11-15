@@ -113,7 +113,7 @@ public class FixturesServiceImpl implements FixturesService  {
     @Override
     public void loadEventRegionFixtures() {
         List<EventRegion> regions = new ArrayList<>(List.of(
-                new EventRegion(1, "Engiadin'auta", 1, false),
+                new EventRegion(1, "Engiadin’auta", 1, false),
                 new EventRegion(2, "Engiadina Bassa/Val Müstair", 2, false),
                 new EventRegion(3, "Grischun central", 3, false),
                 new EventRegion(4, "Surselva", 4, false),
