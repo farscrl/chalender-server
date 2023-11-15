@@ -24,7 +24,7 @@ public class EventLookupsDalImpl implements EventLookupsDal {
 
     @Override
     public Page<EventLookup> getAllEvents(EventFilter filter, Pageable pageable) {
-        Criteria criteria = getBaseCriteria(filter);
+        Criteria criteria = getBaseCriteria(filter, true);
 
         Query query = new Query(criteria).with(pageable).with(Sort.by(Sort.Direction.ASC, "date", "start"));
         List<EventLookup> events = mongoTemplate.find(query, EventLookup.class);
@@ -36,7 +36,7 @@ public class EventLookupsDalImpl implements EventLookupsDal {
     }
 
     public List<EventLookup> getEventsInDateRange(EventFilter filter, LocalDate start, LocalDate end) {
-        Criteria criteria = getBaseCriteria(filter);
+        Criteria criteria = getBaseCriteria(filter, false);
 
         criteria = criteria.and("date").gte(start).lte(end);
 
@@ -44,7 +44,7 @@ public class EventLookupsDalImpl implements EventLookupsDal {
         return mongoTemplate.find(query, EventLookup.class);
     }
 
-    private Criteria getBaseCriteria(EventFilter filter) {
+    private Criteria getBaseCriteria(EventFilter filter, boolean includeDateFilter) {
         Criteria criteria = new Criteria();
         if (filter.getGenres() != null && !filter.getGenres().isEmpty()) {
             criteria = criteria.and("genres._id").in(filter.getGenres());
@@ -55,10 +55,12 @@ public class EventLookupsDalImpl implements EventLookupsDal {
         if (filter.getEventLanguages() != null && !filter.getEventLanguages().isEmpty()) {
             criteria = criteria.and("eventLanguages._id").in(filter.getEventLanguages());
         }
-        if (filter.getDate() != null) {
-            criteria = criteria.and("date").gte(filter.getDate());
-        } else {
-            criteria = criteria.and("date").gte(LocalDate.now());
+        if (includeDateFilter) {
+            if (filter.getDate() != null) {
+                criteria = criteria.and("date").gte(filter.getDate());
+            } else {
+                criteria = criteria.and("date").gte(LocalDate.now());
+            }
         }
         if (filter.getSearchTerm() != null) {
             criteria = criteria.orOperator(
