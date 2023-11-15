@@ -103,8 +103,8 @@ public class EventsServiceImpl implements EventsService {
         return eventsDal.getAllEvents(filter, pageable);
     }
     @Override
-    public Page<Event> listAllEventsByUser(User user, Pageable pageable) {
-        return eventsRepository.findByOwnerEmail(user.getEmail(), pageable);
+    public Page<Event> listAllEventsByUser(ModerationEventsFilter filter, User user, Pageable pageable) {
+        return eventsDal.getAllEventsByUser(filter, pageable, user.getEmail());
     }
 
     @Override

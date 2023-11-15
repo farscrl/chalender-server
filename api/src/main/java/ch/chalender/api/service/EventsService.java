@@ -18,7 +18,7 @@ public interface EventsService {
     public Event getEvent(String id);
     public Resource getEventIcs(String id, String uid);
     public Page<Event> listAllEvents(ModerationEventsFilter filter, Pageable pageable);
-    public Page<Event> listAllEventsByUser(User user, Pageable pageable);
+    public Page<Event> listAllEventsByUser(ModerationEventsFilter filter, User user, Pageable pageable);
     public Event acceptChanges(String id, ModerationComment moderationComment) throws RuntimeException, MessagingException, UnsupportedEncodingException;
     public Event refuseChanges(String id, ModerationComment moderationComment) throws RuntimeException, MessagingException, UnsupportedEncodingException;
     public Event changeAndPublish(String id, EventVersion eventVersion) throws RuntimeException, MessagingException, UnsupportedEncodingException;

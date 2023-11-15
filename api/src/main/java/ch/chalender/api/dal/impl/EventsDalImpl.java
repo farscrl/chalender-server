@@ -26,20 +26,7 @@ public class EventsDalImpl implements EventsDal {
 
     @Override
     public Page<Event> getAllEvents(ModerationEventsFilter filter, Pageable pageable) {
-        Criteria criteria = new Criteria();
-
-        if (filter.getSearchTerm() != null) {
-            criteria = criteria.orOperator(
-                    Criteria.where("title").regex(filter.getSearchTerm(), "i"),
-                    Criteria.where("ownerEmail").regex(filter.getSearchTerm(), "i")
-            );
-        }
-
-        if (filter.getDates() == ModerationEventsFilter.DatesDisplay.FUTURE) {
-            criteria = criteria.and("lastOccurrenceDate").gte(LocalDateTime.now().minusDays(1));
-        } else if (filter.getDates() == ModerationEventsFilter.DatesDisplay.PAST) {
-            criteria = criteria.and("firstOccurrenceDate").lte(LocalDateTime.now().plusDays(1));
-        }
+        Criteria criteria = generateBaseCriteria(filter);
 
         List<EventStatus> eventStates = new ArrayList<>();
         if (filter.isIncludeStateInReview()) {
@@ -57,8 +44,20 @@ public class EventsDalImpl implements EventsDal {
         if (filter.isIncludeStateInvalid()) {
             eventStates.add(EventStatus.INVALID);
         }
-        criteria = criteria.and("eventStatus").in(eventStates);
+        criteria =  criteria.and("eventStatus").in(eventStates);
 
+        return getEvents(filter, pageable, criteria);
+    }
+    
+    @Override
+    public Page<Event> getAllEventsByUser(ModerationEventsFilter filter, Pageable pageable, String email) {
+        Criteria criteria = generateBaseCriteria(filter)
+                .and("ownerEmail").is(email);
+
+        return getEvents(filter, pageable, criteria);
+    }
+
+    private Page<Event> getEvents(ModerationEventsFilter filter, Pageable pageable, Criteria criteria) {
         String sortField = "firstOccurrenceDate";
         if (filter.getSortBy() == ModerationEventsFilter.SortBy.TITLE) {
             sortField = "title";
@@ -79,5 +78,24 @@ public class EventsDalImpl implements EventsDal {
                 events,
                 pageable,
                 () -> mongoTemplate.count(Query.of(query).limit(-1).skip(-1), Event.class));
+    }
+
+    private Criteria generateBaseCriteria(ModerationEventsFilter filter) {
+        Criteria criteria = new Criteria();
+
+        if (filter.getSearchTerm() != null) {
+            criteria = criteria.orOperator(
+                    Criteria.where("title").regex(filter.getSearchTerm(), "i"),
+                    Criteria.where("ownerEmail").regex(filter.getSearchTerm(), "i")
+            );
+        }
+
+        if (filter.getDates() == ModerationEventsFilter.DatesDisplay.FUTURE) {
+            criteria = criteria.and("lastOccurrenceDate").gte(LocalDateTime.now().minusDays(1));
+        } else if (filter.getDates() == ModerationEventsFilter.DatesDisplay.PAST) {
+            criteria = criteria.and("firstOccurrenceDate").lte(LocalDateTime.now().plusDays(1));
+        }
+
+        return criteria;
     }
 }

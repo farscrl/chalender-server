@@ -3,7 +3,7 @@ package ch.chalender.api.controller.user;
 import ch.chalender.api.config.CurrentUser;
 import ch.chalender.api.dto.LocalUser;
 import ch.chalender.api.model.Event;
-import ch.chalender.api.model.EventFilter;
+import ch.chalender.api.model.ModerationEventsFilter;
 import ch.chalender.api.model.User;
 import ch.chalender.api.service.EventsService;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -29,8 +29,8 @@ public class UserEventsController {
 
     @GetMapping("")
     @PageableAsQueryParam
-    public ResponseEntity<Page<Event>> listAllEvents(EventFilter eventFilter, @Parameter(hidden = true) Pageable pageable, @CurrentUser LocalUser localUser) {
+    public ResponseEntity<Page<Event>> listAllEvents(ModerationEventsFilter eventFilter, @Parameter(hidden = true) Pageable pageable, @CurrentUser LocalUser localUser) {
         User user = localUser.getUser();
-        return ResponseEntity.ok(eventsService.listAllEventsByUser(user, pageable));
+        return ResponseEntity.ok(eventsService.listAllEventsByUser(eventFilter, user, pageable));
     }
 }

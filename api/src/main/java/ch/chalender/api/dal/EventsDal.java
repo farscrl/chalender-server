@@ -7,4 +7,5 @@ import org.springframework.data.domain.Pageable;
 
 public interface EventsDal {
     public Page<Event> getAllEvents(ModerationEventsFilter filter, Pageable pageable);
+    public Page<Event> getAllEventsByUser(ModerationEventsFilter filter, Pageable pageable, String email);
 }
