@@ -41,6 +41,6 @@ public class Document {
     private String lastModifiedBy;
 
     public String getUrl() {
-        return "https://chalender.b-cdn.net/" + path;
+        return "https://cdn.chalender.ch/" + path;
     }
 }
