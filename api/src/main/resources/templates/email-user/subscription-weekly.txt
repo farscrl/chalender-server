@@ -1,10 +1,10 @@
 [( ${subject} )]
 
 
-[# th:each="event : ${events}"]
+[# th:each="event,iter : ${events}"]
 [( ${event.title} )]
   [( ${event.location} )]
-  [( ${event.date} )]
+  [( ${datesList[iter.index]} )]
   [# th:each="genre: ${event.getGenres()}"][( ${genre.name} )]  [/]
   [( ${mainLink} + '/' + ${event.eventId} )]
 

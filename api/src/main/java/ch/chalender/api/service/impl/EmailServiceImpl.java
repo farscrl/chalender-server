@@ -2,6 +2,7 @@ package ch.chalender.api.service.impl;
 
 import ch.chalender.api.model.Event;
 import ch.chalender.api.model.EventLookup;
+import ch.chalender.api.model.EventOccurrence;
 import ch.chalender.api.service.EmailService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
@@ -16,6 +17,9 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import java.io.UnsupportedEncodingException;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -250,12 +254,19 @@ public class EmailServiceImpl implements EmailService {
         email.setSubject("[chalender.ch] " + subject);
         email.setFrom(new InternetAddress(mailFrom, mailFromName));
 
+        List<String> datesList = new ArrayList<>();
+        for (EventOccurrence occ : event.getCurrentlyPublished().getOccurrences()) {
+            String date = getOccurrenceString(occ.getDate(), occ.getStart(), occ.getEnd(), occ.isAllDay());
+            datesList.add(date);
+        }
+
         final Context ctx = new Context(LocaleContextHolder.getLocale());
         ctx.setVariable("email", emailAddress);
         ctx.setVariable("name", userName);
         ctx.setVariable("logo", LOGO_PATH);
         ctx.setVariable("subscriptionName", subscriptionName);
         ctx.setVariable("event", event);
+        ctx.setVariable("datesList", datesList);
         ctx.setVariable("subject", subject);
         ctx.setVariable("accountLink", appUrl + "/user/subscriptions");
         ctx.setVariable("unsubscribeLink", appUrl + "/user/subscriptions/disable/" + subscriptionId);
@@ -288,12 +299,19 @@ public class EmailServiceImpl implements EmailService {
         email.setSubject("[chalender.ch] " + subject);
         email.setFrom(new InternetAddress(mailFrom, mailFromName));
 
+        List<String> datesList = new ArrayList<>();
+        for (EventLookup event : events) {
+            String date = getOccurrenceString(event.getDate(), event.getStart(), event.getEnd(), event.isAllDay());
+            datesList.add(date);
+        }
+
         final Context ctx = new Context(LocaleContextHolder.getLocale());
         ctx.setVariable("email", emailAddress);
         ctx.setVariable("name", userName);
         ctx.setVariable("logo", LOGO_PATH);
         ctx.setVariable("subscriptionName", subscriptionName);
         ctx.setVariable("events", events);
+        ctx.setVariable("datesList", datesList);
         ctx.setVariable("subject", subject);
         ctx.setVariable("accountLink", appUrl + "/user/subscriptions");
         ctx.setVariable("unsubscribeLink", appUrl + "/user/subscriptions/disable/" + subscriptionId);
@@ -309,5 +327,19 @@ public class EmailServiceImpl implements EmailService {
         email.addInline("logo", clr, PNG_MIME);
 
         mailSender.send(mimeMessage);
+    }
+
+    private String getOccurrenceString(LocalDate date, LocalTime startTime, LocalTime endTime, boolean isAllDay) {
+        String result = date.toString();
+        if (isAllDay) {
+            return result + ", tuttadi";
+        }
+
+        result = result + ", " + startTime.toString();
+        if (endTime != null) {
+            result = result + " - " + endTime.toString();
+        }
+
+        return result;
     }
 }

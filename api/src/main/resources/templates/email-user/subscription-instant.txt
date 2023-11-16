@@ -2,6 +2,9 @@
 
 [${event.currentlyPublished.title}]
   [${event.currentlyPublished.location}]
+  [# th:each="occur,iter : ${event.currentlyPublished.occurrences}"]
+  [( ${datesList[iter.index]} )]
+  [/]
   <th:block th:each="genre: ${event.currentlyPublished.getGenres()}">[${genre.name}] </span>
   [( ${mainLink} + '/' + ${event.id} )]
 
