@@ -5,12 +5,12 @@
   [# th:each="occur,iter : ${event.currentlyPublished.occurrences}"]
   [( ${datesList[iter.index]} )]
   [/]
-  <th:block th:each="genre: ${event.currentlyPublished.getGenres()}">[${genre.name}] </span>
+  [# th:each="genre : ${event.currentlyPublished.getGenres()}"][( ${genre.name} )] [/]
   [( ${mainLink} + '/' + ${event.id} )]
 
 L’occurrenza survart correspunda als criteris da tes abunament da chalender.ch.
 Midar ils criteris da l’abunament pos ti en tes conto:
-[${accountLink}]
+[( ${accountLink} )]
 
 Nus avain plaschair che ti dovras noss chalender.
 
@@ -21,4 +21,4 @@ il server e la squadra da chalender.ch
 
 
 Na betg pli retschaiver quests e-mails:
-[${unsubscribeLink}]
+[( ${unsubscribeLink} )]
