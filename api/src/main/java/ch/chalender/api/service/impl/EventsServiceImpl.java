@@ -234,7 +234,7 @@ public class EventsServiceImpl implements EventsService {
         Calendar icsCalendar = new Calendar();
         icsCalendar.add(new ProdId("-//chalender.ch//iCal4j 1.0//EN"));
 
-        Location location = new Location("Conference Room");
+        Location location = new Location(version.getLocation());
         event.add(location);
 
         icsCalendar.add(event);
