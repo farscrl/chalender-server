@@ -85,8 +85,8 @@
                                         <h2><a href="https://www.chalender.ch" th:href="${mainLink} + '/' + ${event.eventId}" th:text="${event.title}"></a></h2>
                                         <p class="no-margin" th:text="${event.location}"></p>
                                         <p class="no-margin" th:text="${datesList[iter.index]}"></p>
-                                        <p class="no-margin">
-                                            <span class="tag" th:each="genre: ${event.getGenres()}" th:text="${genre.name}"></span>
+                                        <p class="no-margin" style="margin-top: 6px;">
+                                            <a class="tag" th:each="genre: ${event.getGenres()}" th:text="${genre.name}" th:href="${mainLink} + '?genres=' + ${genre.id}"></a>
                                         </p>
                                 </tr>
                                 </tbody>

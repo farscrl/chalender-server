@@ -268,7 +268,7 @@ public class EmailServiceImpl implements EmailService {
         ctx.setVariable("event", event);
         ctx.setVariable("datesList", datesList);
         ctx.setVariable("subject", subject);
-        ctx.setVariable("accountLink", appUrl + "/user/subscriptions");
+        ctx.setVariable("accountLink", appUrl + "/user/subscriptions/" + subscriptionId);
         ctx.setVariable("unsubscribeLink", appUrl + "/user/subscriptions/disable/" + subscriptionId);
         ctx.setVariable("mainLink", appUrl);
 
@@ -313,7 +313,7 @@ public class EmailServiceImpl implements EmailService {
         ctx.setVariable("events", events);
         ctx.setVariable("datesList", datesList);
         ctx.setVariable("subject", subject);
-        ctx.setVariable("accountLink", appUrl + "/user/subscriptions");
+        ctx.setVariable("accountLink", appUrl + "/user/subscriptions/" + subscriptionId);
         ctx.setVariable("unsubscribeLink", appUrl + "/user/subscriptions/disable/" + subscriptionId);
         ctx.setVariable("mainLink", appUrl);
 

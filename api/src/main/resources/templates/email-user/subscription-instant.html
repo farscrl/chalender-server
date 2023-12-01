@@ -86,8 +86,8 @@
                                         <p class="no-margin" th:text="${event.currentlyPublished.location}"></p>
                                         <p th:each="occur,iter : ${event.currentlyPublished.occurrences}" th:text="${datesList[iter.index]}">
                                         </p>
-                                        <p class="no-margin">
-                                            <span class="tag" th:each="genre: ${event.currentlyPublished.getGenres()}" th:text="${genre.name}"></span>
+                                        <p class="no-margin" style="margin-top: 6px;">
+                                            <a class="tag" th:each="genre: ${event.currentlyPublished.getGenres()}" th:text="${genre.name}" th:href="${mainLink} + '?genres=' + ${genre.id}"></a>
                                         </p>
                                     </td>
                                 </tr>
