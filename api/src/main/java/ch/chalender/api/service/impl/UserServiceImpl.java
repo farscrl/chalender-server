@@ -18,7 +18,6 @@ import jakarta.mail.MessagingException;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.http.auth.InvalidCredentialsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -126,9 +125,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updatePassword(User user, UpdatePasswordRequest updatePasswordRequest) throws InvalidCredentialsException {
+    public void updatePassword(User user, UpdatePasswordRequest updatePasswordRequest) {
         if (!passwordEncoder.matches(updatePasswordRequest.getCurrentPassword(), user.getPassword())) {
-            throw new InvalidCredentialsException("Current password is not correct");
+            throw new RuntimeException("Current password is not correct");
         }
         user.setPassword(passwordEncoder.encode(updatePasswordRequest.getNewPassword()));
         userRepository.save(user);

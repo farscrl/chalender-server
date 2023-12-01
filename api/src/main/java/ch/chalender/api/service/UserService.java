@@ -7,7 +7,6 @@ import ch.chalender.api.dto.UserDto;
 import ch.chalender.api.exception.UserAlreadyExistAuthenticationException;
 import ch.chalender.api.model.User;
 import ch.chalender.api.model.UserFilter;
-import org.apache.http.auth.InvalidCredentialsException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
@@ -27,7 +26,7 @@ public interface UserService {
 
     public User updateProfile(User user, UserDto userDto);
 
-    public void updatePassword(User user, UpdatePasswordRequest updatePasswordRequest) throws InvalidCredentialsException;
+    public void updatePassword(User user, UpdatePasswordRequest updatePasswordRequest);
 
     public User findUserByEmail(String email);
 
