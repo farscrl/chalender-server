@@ -26,6 +26,7 @@ public class ModerationEventsFilter {
     }
 
     public enum SortBy {
+        MODIFIED_DATE("modified_date"),
         DATE("date"),
         USER("user"),
         TITLE("title"),

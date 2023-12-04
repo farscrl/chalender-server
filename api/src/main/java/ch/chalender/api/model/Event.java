@@ -34,11 +34,9 @@ public class Event {
     private String contactEmail;
 
     @CreatedDate
-    @JsonIgnore
     private Instant createdDate;
 
     @LastModifiedDate
-    @JsonIgnore
     private Instant lastModifiedDate;
 
     @CreatedBy

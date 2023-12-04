@@ -58,13 +58,15 @@ public class EventsDalImpl implements EventsDal {
     }
 
     private Page<Event> getEvents(ModerationEventsFilter filter, Pageable pageable, Criteria criteria) {
-        String sortField = "firstOccurrenceDate";
+        String sortField = "lastModifiedDate";
         if (filter.getSortBy() == ModerationEventsFilter.SortBy.TITLE) {
             sortField = "title";
         } else if (filter.getSortBy() == ModerationEventsFilter.SortBy.USER) {
             sortField = "ownerEmail";
         } else if (filter.getSortBy() == ModerationEventsFilter.SortBy.STATE) {
             sortField = "eventStatus";
+        } else if (filter.getSortBy() == ModerationEventsFilter.SortBy.MODIFIED_DATE) {
+            sortField = "lastModifiedDate";
         }
         Sort.Direction sortDirection = Sort.Direction.ASC;
         if (filter.getSortOrder() == ModerationEventsFilter.SortOrder.DESC) {
