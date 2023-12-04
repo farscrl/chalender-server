@@ -34,6 +34,9 @@ public class EmailServiceImpl implements EmailService {
     @Value("${chalender.appUrl}")
     private String appUrl;
 
+    @Value("${chalender.moderatorEmail}")
+    private String[] moderatorEmails;
+
     String mailFrom = "no-reply@chalender.ch";
     String mailFromName = "chalender.ch";
 
@@ -319,6 +322,37 @@ public class EmailServiceImpl implements EmailService {
 
         final String textContent = this.templateEngine.process("email-user/subscription-weekly.txt", ctx);
         final String htmlContent = this.templateEngine.process("email-user/subscription-weekly.html", ctx);
+
+        email.setText(textContent, htmlContent);
+
+        ClassPathResource clr = new ClassPathResource(LOGO_PATH);
+
+        email.addInline("logo", clr, PNG_MIME);
+
+        mailSender.send(mimeMessage);
+    }
+
+    @Override
+    public void sendModeratorEmail(Event event) throws MessagingException, UnsupportedEncodingException {
+        final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
+        final MimeMessageHelper email;
+        email = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
+        String subject = "«" + event.getTitle() + "» spetga sin la moderaziun";
+
+        email.setTo(moderatorEmails);
+        email.setSubject("[chalender.ch] " + subject);
+        email.setFrom(new InternetAddress(mailFrom, mailFromName));
+
+        final Context ctx = new Context(LocaleContextHolder.getLocale());
+        ctx.setVariable("logo", LOGO_PATH);
+        ctx.setVariable("event", event);
+        ctx.setVariable("subject", subject);
+        ctx.setVariable("moderationLink", appUrl + "/moderator/events");
+        ctx.setVariable("mainLink", appUrl);
+
+        final String textContent = this.templateEngine.process("email-user/moderation-event.txt", ctx);
+        final String htmlContent = this.templateEngine.process("email-user/moderation-event.html", ctx);
 
         email.setText(textContent, htmlContent);
 

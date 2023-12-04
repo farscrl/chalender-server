@@ -49,6 +49,13 @@ public class EventsServiceImpl implements EventsService {
     public Event createEvent(Event event) {
         event = eventsRepository.save(event);
         eventLookupService.updateEventLookup(event);
+        if (event.getEventStatus() == EventStatus.IN_REVIEW) {
+            try {
+                emailService.sendModeratorEmail(event);
+            } catch (MessagingException | UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
+        }
         return event;
     }
 
@@ -56,6 +63,13 @@ public class EventsServiceImpl implements EventsService {
     public Event updateEvent(Event event) {
         event = eventsRepository.save(event);
         eventLookupService.updateEventLookup(event);
+        if (event.getEventStatus() == EventStatus.IN_REVIEW || event.getEventStatus() == EventStatus.NEW_MODIFICATION) {
+            try {
+                emailService.sendModeratorEmail(event);
+            } catch (MessagingException | UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
+        }
         return event;
     }
 
