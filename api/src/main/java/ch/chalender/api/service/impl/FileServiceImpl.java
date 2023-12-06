@@ -7,6 +7,7 @@ import ch.chalender.api.repository.ImagesRepository;
 import ch.chalender.api.service.AmazonService;
 import ch.chalender.api.service.FileService;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.Normalizer;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
@@ -41,10 +43,20 @@ public class FileServiceImpl implements FileService {
 
     private static final Logger logger = LoggerFactory.getLogger(FileServiceImpl.class);
 
+    private String[] allowedMimeTypesImages = {"image/jpeg","image/png","image/webp"};
+    private String[] allowedMimeTypesDocuments = {"application/pdf"};
+
     @Override
     public Image uploadImage(MultipartFile multipartFile) {
         try {
             File file = convertMultiPartToFile(multipartFile);
+
+            Tika tika = new Tika();
+            String mimeType = tika.detect(file);
+            if (Arrays.stream(allowedMimeTypesImages).noneMatch(mimeType::equals)) {
+                throw new RuntimeException("File is not an image");
+            }
+
             String fileName = toSlug(FilenameUtils.getBaseName(multipartFile.getOriginalFilename()));
             String fileExtension = FilenameUtils.getExtension(multipartFile.getOriginalFilename());
             Image img = new Image();
@@ -52,7 +64,7 @@ public class FileServiceImpl implements FileService {
             img = imagesRepository.save(img);
             String path = activeProfile + "/" + img.getId() + "." + fileExtension;
 
-            amazonService.uploadFile(path, file);
+            amazonService.uploadFile(path, file, mimeType);
             img.setPath(path);
             img = imagesRepository.save(img);
             boolean result = file.delete();
@@ -71,6 +83,13 @@ public class FileServiceImpl implements FileService {
     public Document uploadDocument(MultipartFile multipartFile) {
         try {
             File file = convertMultiPartToFile(multipartFile);
+
+            Tika tika = new Tika();
+            String mimeType = tika.detect(file);
+            if (Arrays.stream(allowedMimeTypesDocuments).noneMatch(mimeType::equals)) {
+                throw new RuntimeException("File is not a document");
+            }
+
             String fileName = toSlug(FilenameUtils.getBaseName(multipartFile.getOriginalFilename()));
             String fileExtension = FilenameUtils.getExtension(multipartFile.getOriginalFilename());
             Document doc = new Document();
@@ -78,7 +97,7 @@ public class FileServiceImpl implements FileService {
             doc = documentsRepository.save(doc);
             String path = activeProfile + "/" + doc.getId() + "." + fileExtension;
 
-            amazonService.uploadFile(path, file);
+            amazonService.uploadFile(path, file, mimeType);
             doc.setPath(path);
             doc = documentsRepository.save(doc);
             boolean result = file.delete();

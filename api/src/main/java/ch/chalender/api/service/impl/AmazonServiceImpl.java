@@ -41,24 +41,26 @@ public class AmazonServiceImpl implements AmazonService {
                 .build();
     }
 
-    public String uploadFile(String fileName, File file) {
+    @Override
+    public String uploadFile(String fileName, File file, String mimeType) {
         String fileUrl = "";
 
         try {
             fileUrl = endpointUrl + "/" + bucketName + "/" + fileName;
-            uploadFileTos3bucket(fileName, file);
+            uploadFileTos3bucket(fileName, file, mimeType);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return fileUrl;
     }
 
-    private void uploadFileTos3bucket(String fileName, File file) {
+    private void uploadFileTos3bucket(String fileName, File file, String mimeType) {
         Path path = Paths.get(file.getPath());
         PutObjectRequest request = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(fileName)
                 .acl("public-read")
+                .contentType(mimeType)
                 .build();
         PutObjectResponse response = s3client.putObject(request, RequestBody.fromFile(path));
     }
