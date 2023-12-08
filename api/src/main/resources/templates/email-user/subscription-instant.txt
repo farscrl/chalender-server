@@ -20,5 +20,5 @@ Cun ils megliers salids
 il server e la squadra da chalender.ch
 
 
-Na betg pli retschaiver quests e-mails:
+Betg pli retschaiver quests e-mails:
 [( ${unsubscribeLink} )]
