@@ -27,6 +27,8 @@ public class EventLookup {
     private String location;
     private List<EventRegion> regions = new ArrayList<>();
     private List<EventLanguage> eventLanguages = new ArrayList<>();
+    private String address;
+    private String organiser;
 
     @JsonFormat(pattern="dd-MM-yyyy")
     private LocalDate date;
