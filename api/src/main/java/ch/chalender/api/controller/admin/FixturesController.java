@@ -1,6 +1,7 @@
 package ch.chalender.api.controller.admin;
 
 import ch.chalender.api.dto.EventDto;
+import ch.chalender.api.dto.NoticeBoardItemDto;
 import ch.chalender.api.model.EventGenre;
 import ch.chalender.api.model.EventLanguage;
 import ch.chalender.api.model.EventRegion;
@@ -55,6 +56,12 @@ public class FixturesController {
     @GetMapping("/events")
     public ResponseEntity<List<EventDto>> loadEventFixtures() throws IOException {
         fixturesService.loadEventFixtures();
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/notices")
+    public ResponseEntity<List<NoticeBoardItemDto>> loadNoticeBoardFixtures() throws IOException {
+        fixturesService.loadNoticeBoardFixtures();
         return ResponseEntity.ok().build();
     }
 }

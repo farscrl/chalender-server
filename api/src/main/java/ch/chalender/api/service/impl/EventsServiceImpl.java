@@ -49,9 +49,9 @@ public class EventsServiceImpl implements EventsService {
     public Event createEvent(Event event) {
         event = eventsRepository.save(event);
         eventLookupService.updateEventLookup(event);
-        if (event.getEventStatus() == EventStatus.IN_REVIEW) {
+        if (event.getPublicationStatus() == PublicationStatus.IN_REVIEW) {
             try {
-                emailService.sendModeratorEmail(event);
+                emailService.sendEventModeratorEmail(event);
             } catch (MessagingException | UnsupportedEncodingException e) {
                 throw new RuntimeException(e);
             }
@@ -63,9 +63,9 @@ public class EventsServiceImpl implements EventsService {
     public Event updateEvent(Event event) {
         event = eventsRepository.save(event);
         eventLookupService.updateEventLookup(event);
-        if (event.getEventStatus() == EventStatus.IN_REVIEW || event.getEventStatus() == EventStatus.NEW_MODIFICATION) {
+        if (event.getPublicationStatus() == PublicationStatus.IN_REVIEW || event.getPublicationStatus() == PublicationStatus.NEW_MODIFICATION) {
             try {
-                emailService.sendModeratorEmail(event);
+                emailService.sendEventModeratorEmail(event);
             } catch (MessagingException | UnsupportedEncodingException e) {
                 throw new RuntimeException(e);
             }
@@ -86,9 +86,9 @@ public class EventsServiceImpl implements EventsService {
         }
 
         EventVersion version = null;
-        if (event.getEventStatus() == EventStatus.NEW_MODIFICATION) {
+        if (event.getPublicationStatus() == PublicationStatus.NEW_MODIFICATION) {
             version = event.getWaitingForReview();
-        } else if (event.getEventStatus() == EventStatus.PUBLISHED) {
+        } else if (event.getPublicationStatus() == PublicationStatus.PUBLISHED) {
             version = event.getCurrentlyPublished();
         } else {
             version = event.getDraft();

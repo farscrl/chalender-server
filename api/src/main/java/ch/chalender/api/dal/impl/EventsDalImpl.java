@@ -2,8 +2,8 @@ package ch.chalender.api.dal.impl;
 
 import ch.chalender.api.dal.EventsDal;
 import ch.chalender.api.model.Event;
-import ch.chalender.api.model.EventStatus;
 import ch.chalender.api.model.ModerationEventsFilter;
+import ch.chalender.api.model.PublicationStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,21 +28,21 @@ public class EventsDalImpl implements EventsDal {
     public Page<Event> getAllEvents(ModerationEventsFilter filter, Pageable pageable) {
         Criteria criteria = generateBaseCriteria(filter);
 
-        List<EventStatus> eventStates = new ArrayList<>();
+        List<PublicationStatus> eventStates = new ArrayList<>();
         if (filter.isIncludeStateInReview()) {
-            eventStates.add(EventStatus.IN_REVIEW);
+            eventStates.add(PublicationStatus.IN_REVIEW);
         }
         if (filter.isIncludeStateNewModification()) {
-            eventStates.add(EventStatus.NEW_MODIFICATION);
+            eventStates.add(PublicationStatus.NEW_MODIFICATION);
         }
         if (filter.isIncludeStatePublished()) {
-            eventStates.add(EventStatus.PUBLISHED);
+            eventStates.add(PublicationStatus.PUBLISHED);
         }
         if (filter.isIncludeStateRejected()) {
-            eventStates.add(EventStatus.REJECTED);
+            eventStates.add(PublicationStatus.REJECTED);
         }
         if (filter.isIncludeStateInvalid()) {
-            eventStates.add(EventStatus.INVALID);
+            eventStates.add(PublicationStatus.INVALID);
         }
         criteria =  criteria.and("eventStatus").in(eventStates);
 

@@ -16,7 +16,7 @@ public class EventLookupConverter {
             return eventLookups;
         }
 
-        switch (event.getEventStatus()) {
+        switch (event.getPublicationStatus()) {
             case PUBLISHED:
                 addEventLookupsForAllOccurrences(eventLookups, event, event.getCurrentlyPublished());
                 return eventLookups;

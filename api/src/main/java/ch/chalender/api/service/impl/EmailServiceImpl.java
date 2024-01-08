@@ -3,6 +3,7 @@ package ch.chalender.api.service.impl;
 import ch.chalender.api.model.Event;
 import ch.chalender.api.model.EventLookup;
 import ch.chalender.api.model.EventOccurrence;
+import ch.chalender.api.model.NoticeBoardItem;
 import ch.chalender.api.service.EmailService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
@@ -245,6 +246,27 @@ public class EmailServiceImpl implements EmailService {
         mailSender.send(mimeMessage);
     }
 
+
+    @Override
+    public void sendNoticeBoardPublishedEmail(String emailAddress, String name, NoticeBoardItem item, String comment) throws MessagingException, UnsupportedEncodingException {
+        // TODO: implement
+    }
+
+    @Override
+    public void sendNoticeBoardUpdateAcceptedEmail(String emailAddress, String name, NoticeBoardItem item, String comment) throws MessagingException, UnsupportedEncodingException {
+        // TODO: implement
+    }
+
+    @Override
+    public void sendNoticeBoardRefusedEmail(String emailAddress, String name, NoticeBoardItem item, String comment) throws MessagingException, UnsupportedEncodingException {
+        // TODO: implement
+    }
+
+    @Override
+    public void sendNoticeBoardUpdateRefusedEmail(String emailAddress, String name, NoticeBoardItem item, String comment) throws MessagingException, UnsupportedEncodingException {
+        // TODO: implement
+    }
+
     @Override
     public void sendEmailSubscriptionInstant(String emailAddress, String userName, String subscriptionName, Event event, String subscriptionId) throws MessagingException, UnsupportedEncodingException {
         final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
@@ -333,7 +355,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void sendModeratorEmail(Event event) throws MessagingException, UnsupportedEncodingException {
+    public void sendEventModeratorEmail(Event event) throws MessagingException, UnsupportedEncodingException {
         final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
         final MimeMessageHelper email;
         email = new MimeMessageHelper(mimeMessage, true, "UTF-8");
@@ -361,6 +383,11 @@ public class EmailServiceImpl implements EmailService {
         email.addInline("logo", clr, PNG_MIME);
 
         mailSender.send(mimeMessage);
+    }
+
+    @Override
+    public void sendNoticeBoardModeratorEmail(NoticeBoardItem item) throws MessagingException, UnsupportedEncodingException {
+        // TODO: implement
     }
 
     private String getOccurrenceString(LocalDate date, LocalTime startTime, LocalTime endTime, boolean isAllDay) {

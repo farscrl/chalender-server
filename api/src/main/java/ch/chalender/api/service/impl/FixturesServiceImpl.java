@@ -2,6 +2,7 @@ package ch.chalender.api.service.impl;
 
 import ch.chalender.api.dto.Role;
 import ch.chalender.api.fixtures.EventFixtures;
+import ch.chalender.api.fixtures.NoticeBoardItemFixtures;
 import ch.chalender.api.model.EventGenre;
 import ch.chalender.api.model.EventLanguage;
 import ch.chalender.api.model.EventRegion;
@@ -37,7 +38,13 @@ public class FixturesServiceImpl implements FixturesService  {
     private EventsRepository eventsRepository;
 
     @Autowired
+    private NoticeBoardItemsRepository noticeBoardItemsRepository;
+
+    @Autowired
     private EventFixtures eventFixtures;
+
+    @Autowired
+    private NoticeBoardItemFixtures noticeBoardItemFixtures;
 
     @Autowired
     private EventLookupService eventLookupService;
@@ -157,6 +164,14 @@ public class FixturesServiceImpl implements FixturesService  {
         documentsRepository.deleteAll();
         eventsRepository.saveAll(eventFixtures.getEvents());
         eventLookupService.recreateAllEventLookupData();
+    }
+
+    @Override
+    public void loadNoticeBoardFixtures() {
+        noticeBoardItemsRepository.deleteAll();
+        // imagesRepository.deleteAll();
+        // documentsRepository.deleteAll();
+        noticeBoardItemsRepository.saveAll(noticeBoardItemFixtures.getNoticeBoardItems());
     }
 
     private User getUser(String firstName, String lastName, String email) {

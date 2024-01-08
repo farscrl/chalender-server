@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 public class EventDto {
     private String id;
-    private EventStatus status;
+    private PublicationStatus status;
     private String contactEmail;
 
     private String title;

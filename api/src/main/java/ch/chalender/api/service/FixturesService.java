@@ -6,4 +6,5 @@ public interface FixturesService {
     public void loadEventRegionFixtures();
     public void loadEventLanguagesFixtures();
     public void loadEventFixtures();
+    public void loadNoticeBoardFixtures();
 }

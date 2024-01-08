@@ -10,6 +10,7 @@ import ch.chalender.api.repository.DocumentsRepository;
 import ch.chalender.api.repository.ImagesRepository;
 import ch.chalender.api.service.EventLookupService;
 import ch.chalender.api.service.EventsService;
+import ch.chalender.api.util.DataUtil;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -27,9 +28,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -69,7 +67,7 @@ public class EventsController {
             return ResponseEntity.notFound().build();
         }
 
-        if (event.getEventStatus() != EventStatus.PUBLISHED && event.getEventStatus() != EventStatus.NEW_MODIFICATION) {
+        if (event.getPublicationStatus() != PublicationStatus.PUBLISHED && event.getPublicationStatus() != PublicationStatus.NEW_MODIFICATION) {
             if (!localUser.getUser().getEmail().equals(event.getOwnerEmail()) && !localUser.getUser().getRoles().contains(Role.ROLE_MODERATOR)  && !localUser.getUser().getRoles().contains(Role.ROLE_ADMIN)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
@@ -87,7 +85,7 @@ public class EventsController {
             return ResponseEntity.notFound().build();
         }
 
-        if (event.getEventStatus() != EventStatus.PUBLISHED && event.getEventStatus() != EventStatus.NEW_MODIFICATION) {
+        if (event.getPublicationStatus() != PublicationStatus.PUBLISHED && event.getPublicationStatus() != PublicationStatus.NEW_MODIFICATION) {
             if (!localUser.getUser().getEmail().equals(event.getOwnerEmail()) && !localUser.getUser().getRoles().contains(Role.ROLE_MODERATOR)  && !localUser.getUser().getRoles().contains(Role.ROLE_ADMIN)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
@@ -107,12 +105,12 @@ public class EventsController {
     @PostMapping("")
     @PreAuthorize("permitAll()")
     public ResponseEntity<EventDto> createEvent(@Valid @RequestBody EventDto eventToCreate, @CurrentUser LocalUser localUser) {
-        eventToCreate.setImages(updateImages(eventToCreate.getImages()));
-        eventToCreate.setDocuments(updateDocuments(eventToCreate.getDocuments()));
+        eventToCreate.setImages(DataUtil.updateImages(imagesRepository, eventToCreate.getImages()));
+        eventToCreate.setDocuments(DataUtil.updateDocuments(documentsRepository, eventToCreate.getDocuments()));
         EventVersion version = EventConverter.toEventVersion(modelMapper, eventToCreate);
         Event event = new Event();
 
-        validateStateAndUpdateEventVersion(EventStatus.DRAFT, eventToCreate.getStatus(), event, version);
+        validateStateAndUpdateEventVersion(PublicationStatus.DRAFT, eventToCreate.getStatus(), event, version);
 
         if (localUser != null) {
             event.setOwnerEmail(localUser.getUser().getEmail());
@@ -141,27 +139,27 @@ public class EventsController {
         }
 
         EventVersion version = EventConverter.toEventVersion(modelMapper, eventDto);
-        version.setImages(updateImages(version.getImages()));
-        version.setDocuments(updateDocuments(version.getDocuments()));
-        validateStateAndUpdateEventVersion(eventToModify.getEventStatus(), eventDto.getStatus(), eventToModify, version);
+        version.setImages(DataUtil.updateImages(imagesRepository, version.getImages()));
+        version.setDocuments(DataUtil.updateDocuments(documentsRepository, version.getDocuments()));
+        validateStateAndUpdateEventVersion(eventToModify.getPublicationStatus(), eventDto.getStatus(), eventToModify, version);
 
         eventToModify = eventsService.updateEvent(eventToModify);
 
         return ResponseEntity.ok(EventConverter.toEventDto(modelMapper, eventToModify));
     }
 
-    private void validateStateAndUpdateEventVersion(EventStatus currentEventState, EventStatus nextState, Event event, EventVersion version) throws InvalidStateRequestedException {
+    private void validateStateAndUpdateEventVersion(PublicationStatus currentEventState, PublicationStatus nextState, Event event, EventVersion version) throws InvalidStateRequestedException {
         event.getVersions().add(version);
 
         switch (currentEventState) {
             case DRAFT:
-                if (nextState == EventStatus.DRAFT) {
+                if (nextState == PublicationStatus.DRAFT) {
                     event.setDraft(version);
                     event.setWaitingForReview(null);
                     event.setCurrentlyPublished(null);
                     event.setRejected(null);
                     event.updateCalculatedEventFields();
-                } else if (nextState == EventStatus.IN_REVIEW) {
+                } else if (nextState == PublicationStatus.IN_REVIEW) {
                     event.setWaitingForReview(version);
                     event.setDraft(null);
                     event.setCurrentlyPublished(null);
@@ -174,7 +172,7 @@ public class EventsController {
 
             case IN_REVIEW:
             case REJECTED:
-                if (nextState == EventStatus.IN_REVIEW) {
+                if (nextState == PublicationStatus.IN_REVIEW) {
                     event.setDraft(null);
                     event.setWaitingForReview(version);
                     event.setCurrentlyPublished(null);
@@ -187,7 +185,7 @@ public class EventsController {
 
             case PUBLISHED:
             case NEW_MODIFICATION:
-                if (nextState == EventStatus.NEW_MODIFICATION) {
+                if (nextState == PublicationStatus.NEW_MODIFICATION) {
                     event.setDraft(null);
                     event.setWaitingForReview(version);
                     // event.setCurrentlyPublished(); // do not change
@@ -203,46 +201,6 @@ public class EventsController {
         }
 
         event.updateCalculatedEventFields();
-    }
-
-    /**
-     * Update the images in the dto with the ones from the database.
-     * This is used, as not all data regarding images is exposed over the API.
-     *
-     * @param images The list of the images to update
-     * @return The updated images-list
-     */
-    private List<Image> updateImages(List<Image> images) {
-        List<Image> imagesFound = new ArrayList<>();
-
-        for (Image image : images) {
-            Image imageFound = imagesRepository.findById(image.getId()).orElse(null);
-            if (imageFound != null) {
-                imagesFound.add(imageFound);
-            }
-        }
-
-        return imagesFound;
-    }
-
-    /**
-     * Update the documents in the dto with the ones from the database.
-     * This is used, as not all data regarding documents is exposed over the API.
-     *
-     * @param documents The list of the documents to update
-     * @return The updated documents-list
-     */
-    private List<Document> updateDocuments(List<Document> documents) {
-        List<Document> documentsFound = new ArrayList<>();
-
-        for (Document document : documents) {
-            Document documentFound = documentsRepository.findById(document.getId()).orElse(null);
-            if (documentFound != null) {
-                documentsFound.add(documentFound);
-            }
-        }
-
-        return documentsFound;
     }
 
     public static class InvalidStateRequestedException extends RuntimeException {

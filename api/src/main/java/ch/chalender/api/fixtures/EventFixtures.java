@@ -14,7 +14,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ch.chalender.api.model.EventStatus.*;
+import static ch.chalender.api.model.PublicationStatus.*;
 
 
 @Component
@@ -279,15 +279,15 @@ public class EventFixtures {
         return events;
     }
 
-    private Event createEvent(EventVersion eventVersion, EventStatus eventStatus, String ownerEmail) {
+    private Event createEvent(EventVersion eventVersion, PublicationStatus publicationStatus, String ownerEmail) {
         Event event = new Event();
-        if (eventStatus == PUBLISHED) {
+        if (publicationStatus == PUBLISHED) {
             event.setCurrentlyPublished(eventVersion);
-        } else if (eventStatus == EventStatus.DRAFT) {
+        } else if (publicationStatus == PublicationStatus.DRAFT) {
             event.setDraft(eventVersion);
-        } else if (eventStatus == IN_REVIEW) {
+        } else if (publicationStatus == IN_REVIEW) {
             event.setWaitingForReview(eventVersion);
-        } else if (eventStatus == NEW_MODIFICATION) {
+        } else if (publicationStatus == NEW_MODIFICATION) {
             event.setWaitingForReview(eventVersion);
             event.setCurrentlyPublished(eventVersion);
         }

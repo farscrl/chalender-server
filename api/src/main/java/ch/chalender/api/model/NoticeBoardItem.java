@@ -6,27 +6,24 @@ import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Document("events")
+@Document("notice_board")
 @Data
-public class Event {
+public class NoticeBoardItem {
     private String id;
 
     // calculated fields
     private PublicationStatus publicationStatus;
-    @JsonIgnore private LocalDate firstOccurrenceDate;
-    @JsonIgnore private LocalDate lastOccurrenceDate;
     @JsonIgnore private String title;
 
-    private EventVersion draft;
-    private EventVersion currentlyPublished;
-    private EventVersion waitingForReview;
-    private EventVersion rejected;
+    private NoticeBoardItemVersion draft;
+    private NoticeBoardItemVersion currentlyPublished;
+    private NoticeBoardItemVersion waitingForReview;
+    private NoticeBoardItemVersion rejected;
 
-    private List<EventVersion> versions = new ArrayList<>();
+    private List<NoticeBoardItemVersion> versions = new ArrayList<>();
 
     private String ownerEmail;
 
@@ -47,8 +44,8 @@ public class Event {
     @JsonIgnore
     private String lastModifiedBy;
 
-    public void updateCalculatedEventFields() {
-        this.publicationStatus = calculateEventStatus();
+    public void updateCalculatedFields() {
+        this.publicationStatus = calculateStatus();
         calculateEventDatesAndTitle();
     }
 
@@ -61,10 +58,10 @@ public class Event {
             return publicationStatus;
         }
 
-        return calculateEventStatus();
+        return calculateStatus();
     }
 
-    private PublicationStatus calculateEventStatus() {
+    private PublicationStatus calculateStatus() {
         if (draft != null && currentlyPublished == null && waitingForReview == null && rejected == null) {
             return PublicationStatus.DRAFT;
         }
@@ -84,7 +81,7 @@ public class Event {
     }
 
     private void calculateEventDatesAndTitle() {
-        EventVersion version = null;
+        NoticeBoardItemVersion version = null;
         if (waitingForReview != null) {
             version = waitingForReview;
         } else if (currentlyPublished != null) {
@@ -99,14 +96,6 @@ public class Event {
             return;
         }
 
-        firstOccurrenceDate = version.getOccurrences().stream()
-                .map(EventOccurrence::getDate)
-                .min(LocalDate::compareTo)
-                .orElse(null);
-        lastOccurrenceDate = version.getOccurrences().stream()
-                .map(EventOccurrence::getDate)
-                .max(LocalDate::compareTo)
-                .orElse(null);
         title = version.getTitle();
     }
 }

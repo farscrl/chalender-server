@@ -1,6 +1,6 @@
 package ch.chalender.api.model;
 
-public enum EventStatus {
+public enum PublicationStatus {
     DRAFT,
     IN_REVIEW,
     PUBLISHED,

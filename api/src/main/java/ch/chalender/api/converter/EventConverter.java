@@ -18,7 +18,7 @@ public class EventConverter {
 
         EventVersion eventVersion = null;
 
-        switch (event.getEventStatus()) {
+        switch (event.getPublicationStatus()) {
             case DRAFT:
                 eventVersion = event.getDraft();
                 break;
@@ -42,7 +42,7 @@ public class EventConverter {
         }
         EventDto eventDto = modelMapper.map(eventVersion, EventDto.class);
         eventDto.setId(event.getId());
-        eventDto.setStatus(event.getEventStatus());
+        eventDto.setStatus(event.getPublicationStatus());
         eventDto.setContactEmail(event.getOwnerEmail());
 
         return eventDto;
