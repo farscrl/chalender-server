@@ -64,7 +64,7 @@ public class NoticeBoardItemFixtures {
                 "• Representar la Svizra e la cultura rumantscha");
         n1.setContactData("Verein Naturkultur: info@nakultur.ch, +41 76 338 93 51");
         n1.getImages().add(getImg("walls.png", "static/walls.png"));
-        n1.getImages().add(getImg("walls.pdf", "static/walls.pdf"));
+        n1.getDocuments().add(getDoc("walls.pdf", "static/walls.pdf"));
         notices.add(createNotice(n1, PUBLISHED, "user1@chalender.ch"));
 
         NoticeBoardItemVersion n2 = new NoticeBoardItemVersion();
