@@ -20,6 +20,7 @@ import org.thymeleaf.context.Context;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -391,7 +392,8 @@ public class EmailServiceImpl implements EmailService {
     }
 
     private String getOccurrenceString(LocalDate date, LocalTime startTime, LocalTime endTime, boolean isAllDay) {
-        String result = date.toString();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        String result = formatter.format(date);
         if (isAllDay) {
             return result + ", tuttadi";
         }
