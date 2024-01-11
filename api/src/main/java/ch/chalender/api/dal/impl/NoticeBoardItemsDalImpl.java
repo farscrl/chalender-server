@@ -38,7 +38,7 @@ public class NoticeBoardItemsDalImpl implements NoticeBoardItemsDal {
             );
         }
 
-        Query query = new Query(criteria).with(pageable).with(Sort.by(Sort.Direction.ASC, "date", "start"));
+        Query query = new Query(criteria).with(pageable).with(Sort.by(Sort.Direction.DESC, "createdDate"));
         List<NoticeBoardItem> items = mongoTemplate.find(query, NoticeBoardItem.class);
 
         return PageableExecutionUtils.getPage(
