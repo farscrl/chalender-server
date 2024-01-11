@@ -15,7 +15,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,7 +67,7 @@ public class NoticeBoardItemsDalImpl implements NoticeBoardItemsDal {
         if (filter.isIncludeStateInvalid()) {
             eventStates.add(PublicationStatus.INVALID);
         }
-        criteria =  criteria.and("eventStatus").in(eventStates);
+        criteria =  criteria.and("publicationStatus").in(eventStates);
 
         return getItems(filter, pageable, criteria);
     }
@@ -88,7 +87,7 @@ public class NoticeBoardItemsDalImpl implements NoticeBoardItemsDal {
         } else if (filter.getSortBy() == ModerationNoticeBoardFilter.SortBy.USER) {
             sortField = "ownerEmail";
         } else if (filter.getSortBy() == ModerationNoticeBoardFilter.SortBy.STATE) {
-            sortField = "eventStatus";
+            sortField = "publicationStatus";
         } else if (filter.getSortBy() == ModerationNoticeBoardFilter.SortBy.MODIFIED_DATE) {
             sortField = "lastModifiedDate";
         }
@@ -114,12 +113,6 @@ public class NoticeBoardItemsDalImpl implements NoticeBoardItemsDal {
                     Criteria.where("title").regex(filter.getSearchTerm(), "i"),
                     Criteria.where("ownerEmail").regex(filter.getSearchTerm(), "i")
             );
-        }
-
-        if (filter.getDates() == ModerationNoticeBoardFilter.DatesDisplay.FUTURE) {
-            criteria = criteria.and("lastOccurrenceDate").gte(LocalDateTime.now().minusDays(1));
-        } else if (filter.getDates() == ModerationNoticeBoardFilter.DatesDisplay.PAST) {
-            criteria = criteria.and("firstOccurrenceDate").lte(LocalDateTime.now().plusDays(1));
         }
 
         return criteria;

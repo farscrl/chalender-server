@@ -44,7 +44,7 @@ public class EventsDalImpl implements EventsDal {
         if (filter.isIncludeStateInvalid()) {
             eventStates.add(PublicationStatus.INVALID);
         }
-        criteria =  criteria.and("eventStatus").in(eventStates);
+        criteria =  criteria.and("publicationStatus").in(eventStates);
 
         return getEvents(filter, pageable, criteria);
     }
@@ -64,7 +64,7 @@ public class EventsDalImpl implements EventsDal {
         } else if (filter.getSortBy() == ModerationEventsFilter.SortBy.USER) {
             sortField = "ownerEmail";
         } else if (filter.getSortBy() == ModerationEventsFilter.SortBy.STATE) {
-            sortField = "eventStatus";
+            sortField = "publicationStatus";
         } else if (filter.getSortBy() == ModerationEventsFilter.SortBy.MODIFIED_DATE) {
             sortField = "lastModifiedDate";
         }
