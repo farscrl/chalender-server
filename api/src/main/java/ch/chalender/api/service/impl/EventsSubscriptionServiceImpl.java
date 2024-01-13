@@ -26,6 +26,7 @@ public class EventsSubscriptionServiceImpl implements EventsSubscriptionService 
 
     @Override
     public EventsSubscription add(EventsSubscription subscription) {
+        subscription.setId(null);
         return eventsSubscriptionRepository.save(subscription);
     }
 

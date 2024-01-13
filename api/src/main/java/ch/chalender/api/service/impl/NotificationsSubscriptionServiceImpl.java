@@ -26,6 +26,7 @@ public class NotificationsSubscriptionServiceImpl implements NotificationsSubscr
 
     @Override
     public NotificationsSubscription add(NotificationsSubscription subscription) {
+        subscription.setId(null);
         return notificationsSubscriptionRepository.save(subscription);
     }
 
