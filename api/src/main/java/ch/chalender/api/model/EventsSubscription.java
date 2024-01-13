@@ -12,9 +12,9 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-@Document("subscriptions")
+@Document("event-subscriptions")
 @Data
-public class Subscription {
+public class EventsSubscription {
     private String id;
 
     private String name;
@@ -45,9 +45,4 @@ public class Subscription {
     @LastModifiedBy
     @JsonIgnore
     private String lastModifiedBy;
-
-    public enum SubscriptionType {
-        INSTANT,
-        WEEKLY;
-    }
 }

@@ -1,11 +1,8 @@
 package ch.chalender.api.batch.instant;
 
-import ch.chalender.api.model.Event;
-import ch.chalender.api.model.EventVersion;
-import ch.chalender.api.model.Subscription;
-import ch.chalender.api.model.User;
+import ch.chalender.api.model.*;
 import ch.chalender.api.repository.EventsRepository;
-import ch.chalender.api.repository.SubscriptionRepository;
+import ch.chalender.api.repository.EventsSubscriptionRepository;
 import ch.chalender.api.service.EmailService;
 import ch.chalender.api.service.UserService;
 import org.slf4j.Logger;
@@ -27,7 +24,7 @@ public class InstantSubscriptionsLoader implements Tasklet, StepExecutionListene
     private static final Logger logger = LoggerFactory.getLogger(InstantSubscriptionsLoader.class);
 
     @Autowired
-    private SubscriptionRepository subscriptionRepository;
+    private EventsSubscriptionRepository eventsSubscriptionRepository;
 
     @Autowired
     private UserService userService;
@@ -38,7 +35,7 @@ public class InstantSubscriptionsLoader implements Tasklet, StepExecutionListene
     @Autowired
     private EventsRepository eventsRepository;
 
-    private List<Subscription> subscriptions;
+    private List<EventsSubscription> subscriptions;
     private Event event;
 
 
@@ -55,7 +52,7 @@ public class InstantSubscriptionsLoader implements Tasklet, StepExecutionListene
         }
         event = eventsRepository.findById(eventId).orElseThrow();
 
-        this.subscriptions = subscriptionRepository.findAllByActiveAndType(true, Subscription.SubscriptionType.INSTANT);
+        this.subscriptions = eventsSubscriptionRepository.findAllByActiveAndType(true, SubscriptionType.INSTANT);
         logger.debug("InstantSubscriptionsLoader loaded " + subscriptions.size() + " subscriptions.");
     }
 
@@ -65,14 +62,14 @@ public class InstantSubscriptionsLoader implements Tasklet, StepExecutionListene
             return null;
         }
 
-        Subscription subscription = subscriptions.get(index);
+        EventsSubscription subscription = subscriptions.get(index);
 
         if (!subscription.isActive()) {
             logger.error("Subscription " + subscription.getId() + " is not active.");
             return next();
         }
 
-        if (subscription.getType() != Subscription.SubscriptionType.INSTANT) {
+        if (subscription.getType() != SubscriptionType.INSTANT) {
             logger.error("Subscription " + subscription.getId() + " is not a weekly subscription.");
             return next();
         }

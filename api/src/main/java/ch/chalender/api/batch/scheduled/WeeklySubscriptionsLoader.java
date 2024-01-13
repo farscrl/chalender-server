@@ -2,7 +2,7 @@ package ch.chalender.api.batch.scheduled;
 
 import ch.chalender.api.dal.EventLookupsDal;
 import ch.chalender.api.model.*;
-import ch.chalender.api.repository.SubscriptionRepository;
+import ch.chalender.api.repository.EventsSubscriptionRepository;
 import ch.chalender.api.service.EmailService;
 import ch.chalender.api.service.UserService;
 import org.slf4j.Logger;
@@ -25,7 +25,7 @@ public class WeeklySubscriptionsLoader implements Tasklet, StepExecutionListener
     private static final Logger logger = LoggerFactory.getLogger(WeeklySubscriptionsLoader.class);
 
     @Autowired
-    private SubscriptionRepository subscriptionRepository;
+    private EventsSubscriptionRepository eventsSubscriptionRepository;
 
     @Autowired
     private EventLookupsDal eventLookupsDal;
@@ -36,7 +36,7 @@ public class WeeklySubscriptionsLoader implements Tasklet, StepExecutionListener
     @Autowired
     private EmailService emailService;
 
-    private List<Subscription> subscriptions;
+    private List<EventsSubscription> subscriptions;
 
     private LocalDate startDate;
 
@@ -51,7 +51,7 @@ public class WeeklySubscriptionsLoader implements Tasklet, StepExecutionListener
         this.startDate = LocalDate.now();
         this.endDate = startDate.plusDays(50); // TODO: change to 15
 
-        this.subscriptions = subscriptionRepository.findAllByActiveAndType(true, Subscription.SubscriptionType.WEEKLY);
+        this.subscriptions = eventsSubscriptionRepository.findAllByActiveAndType(true, SubscriptionType.WEEKLY);
         logger.debug("WeeklySubscriptionsLoader loaded " + subscriptions.size() + " subscriptions.");
     }
 
@@ -61,14 +61,14 @@ public class WeeklySubscriptionsLoader implements Tasklet, StepExecutionListener
             return null;
         }
 
-        Subscription subscription = subscriptions.get(index);
+        EventsSubscription subscription = subscriptions.get(index);
 
         if (!subscription.isActive()) {
             logger.error("Subscription " + subscription.getId() + " is not active.");
             return next();
         }
 
-        if (subscription.getType() != Subscription.SubscriptionType.WEEKLY) {
+        if (subscription.getType() != SubscriptionType.WEEKLY) {
             logger.error("Subscription " + subscription.getId() + " is not a weekly subscription.");
             return next();
         }
