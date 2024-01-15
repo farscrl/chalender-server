@@ -1,6 +1,5 @@
 package ch.chalender.api.service.impl;
 
-import ch.chalender.api.dto.NoticeBoardItemDto;
 import ch.chalender.api.model.Event;
 import ch.chalender.api.model.EventLookup;
 import ch.chalender.api.model.EventOccurrence;
@@ -512,7 +511,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void sendNoticesBoardSubscriptionWeekly(String emailAddress, String userName, String subscriptionName, List<NoticeBoardItemDto> items, String subscriptionId) throws MessagingException, UnsupportedEncodingException {
+    public void sendNoticesBoardSubscriptionWeekly(String emailAddress, String userName, String subscriptionName, List<NoticeBoardItem> items, String subscriptionId) throws MessagingException, UnsupportedEncodingException {
         final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
         final MimeMessageHelper email;
         email = new MimeMessageHelper(mimeMessage, true, "UTF-8");

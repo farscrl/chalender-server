@@ -1,4 +1,4 @@
-package ch.chalender.api.batch.instant;
+package ch.chalender.api.batch.events.instant;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -15,13 +15,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @Component
-public class InstantSubscriptionBatchConfiguration extends DefaultBatchConfiguration {
+public class InstantEventSubscriptionBatchConfiguration extends DefaultBatchConfiguration {
 
     @Autowired
-    private InstantSubscriptionsLoader instantSubscriptionsLoader;
+    private InstantEventSubscriptionsLoader instantEventSubscriptionsLoader;
 
     @Bean
-    public JobLauncher instantJobLauncher(JobRepository jobRepository) throws Exception {
+    public JobLauncher instantEventJobLauncher(JobRepository jobRepository) throws Exception {
         TaskExecutorJobLauncher jobLauncher = new TaskExecutorJobLauncher();
         jobLauncher.setJobRepository(jobRepository);
         jobLauncher.setTaskExecutor(new SimpleAsyncTaskExecutor());
@@ -35,16 +35,16 @@ public class InstantSubscriptionBatchConfiguration extends DefaultBatchConfigura
 
 
     @Bean
-    protected Step loadInstantSubscriptions(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+    protected Step loadInstantEventSubscriptions(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
         return new StepBuilder("loadSubscriptions", jobRepository)
-                .tasklet(instantSubscriptionsLoader, transactionManager)
+                .tasklet(instantEventSubscriptionsLoader, transactionManager)
                 .build();
     }
 
     @Bean
     public Job instantJob(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
         return new JobBuilder("instantSubscriptionsJob", jobRepository)
-                .start(loadInstantSubscriptions(jobRepository, transactionManager))
+                .start(loadInstantEventSubscriptions(jobRepository, transactionManager))
                 .build();
     }
 }

@@ -106,7 +106,7 @@ public class NoticeBoardServiceImpl implements NoticeBoardService {
         User user = userService.findUserByEmail(item.getOwnerEmail());
         if (isNew) {
             emailService.sendNoticeBoardPublishedEmail(item.getOwnerEmail(), user != null ? user.getFullName() : null, item, moderationComment.getComment());
-            // this.subscriptionSendingService.notifyUsersAboutNewEvent(item); // TODO: activate
+            this.subscriptionSendingService.notifyUsersAboutNewNoticeBoardItem(item);
             return item;
         }
         emailService.sendNoticeBoardUpdateAcceptedEmail(item.getOwnerEmail(), user != null ? user.getFullName() : null, item, moderationComment.getComment());

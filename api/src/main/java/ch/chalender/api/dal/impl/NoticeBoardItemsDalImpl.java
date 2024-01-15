@@ -15,6 +15,9 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,17 +29,7 @@ public class NoticeBoardItemsDalImpl implements NoticeBoardItemsDal {
 
     @Override
     public Page<NoticeBoardItem> getAllNoticeBoardItems(NoticeBoardFilter filter, Pageable pageable) {
-        Criteria criteria = new Criteria();
-        if (filter.getGenres() != null && !filter.getGenres().isEmpty()) {
-            criteria = criteria.and("genres._id").in(filter.getGenres());
-        }
-        if (filter.getSearchTerm() != null) {
-            criteria = criteria.orOperator(
-                    Criteria.where("title").regex(filter.getSearchTerm(), "i"),
-                    Criteria.where("currentlyPublished.description").regex(filter.getSearchTerm(), "i"),
-                    Criteria.where("currentlyPublished.contactData").regex(filter.getSearchTerm(), "i")
-            );
-        }
+        Criteria criteria = getBaseCriteria(filter);
 
         Query query = new Query(criteria).with(pageable).with(Sort.by(Sort.Direction.DESC, "createdDate"));
         List<NoticeBoardItem> items = mongoTemplate.find(query, NoticeBoardItem.class);
@@ -45,6 +38,18 @@ public class NoticeBoardItemsDalImpl implements NoticeBoardItemsDal {
                 items,
                 pageable,
                 () -> mongoTemplate.count(Query.of(query).limit(-1).skip(-1), NoticeBoardItem.class));
+    }
+
+    @Override
+    public List<NoticeBoardItem> getNoticeBoardItemsInDateRange(NoticeBoardFilter filter, LocalDate start, LocalDate end) {
+        Criteria criteria = getBaseCriteria(filter);
+
+        criteria = criteria.and("createdDate")
+                .gte(start.atStartOfDay(ZoneId.of("Europe/Zurich")).toInstant())
+                .lte(end.atTime(LocalTime.MAX).atZone(ZoneId.of("Europe/Zurich")).toInstant());
+
+        Query query = new Query(criteria).with(Sort.by(Sort.Direction.ASC, "createdDate"));
+        return mongoTemplate.find(query, NoticeBoardItem.class);
     }
 
     @Override
@@ -114,6 +119,27 @@ public class NoticeBoardItemsDalImpl implements NoticeBoardItemsDal {
                     Criteria.where("ownerEmail").regex(filter.getSearchTerm(), "i")
             );
         }
+
+        return criteria;
+    }
+
+    private static Criteria getBaseCriteria(NoticeBoardFilter filter) {
+        Criteria criteria = new Criteria();
+        if (filter.getGenres() != null && !filter.getGenres().isEmpty()) {
+            criteria = criteria.and("genres._id").in(filter.getGenres());
+        }
+        if (filter.getSearchTerm() != null) {
+            criteria = criteria.orOperator(
+                    Criteria.where("title").regex(filter.getSearchTerm(), "i"),
+                    Criteria.where("currentlyPublished.description").regex(filter.getSearchTerm(), "i"),
+                    Criteria.where("currentlyPublished.contactData").regex(filter.getSearchTerm(), "i")
+            );
+        }
+
+        List<PublicationStatus> eventStates = new ArrayList<>();
+        eventStates.add(PublicationStatus.PUBLISHED);
+        eventStates.add(PublicationStatus.NEW_MODIFICATION);
+        criteria.and("publicationStatus").in(eventStates);
 
         return criteria;
     }

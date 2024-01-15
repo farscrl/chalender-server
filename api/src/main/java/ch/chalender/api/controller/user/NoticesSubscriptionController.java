@@ -2,7 +2,7 @@ package ch.chalender.api.controller.user;
 
 import ch.chalender.api.config.CurrentUser;
 import ch.chalender.api.dto.LocalUser;
-import ch.chalender.api.model.NotificationsSubscription;
+import ch.chalender.api.model.NoticeBoardSubscription;
 import ch.chalender.api.model.User;
 import ch.chalender.api.service.NotificationsSubscriptionService;
 import lombok.extern.slf4j.Slf4j;
@@ -25,15 +25,15 @@ public class NoticesSubscriptionController {
 
     @GetMapping("")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<List<NotificationsSubscription>> listAllSubscriptions(@CurrentUser LocalUser localUser) {
+    public ResponseEntity<List<NoticeBoardSubscription>> listAllSubscriptions(@CurrentUser LocalUser localUser) {
         User user = localUser.getUser();
         return ResponseEntity.ok(subscriptionService.findAllByUsername(user.getEmail()));
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<NotificationsSubscription> getSubscription(@PathVariable String id, @CurrentUser LocalUser localUser) {
-        NotificationsSubscription subscription = subscriptionService.findById(id);
+    public ResponseEntity<NoticeBoardSubscription> getSubscription(@PathVariable String id, @CurrentUser LocalUser localUser) {
+        NoticeBoardSubscription subscription = subscriptionService.findById(id);
 
         if (!subscription.getUsername().equals(localUser.getUser().getEmail())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
@@ -44,23 +44,23 @@ public class NoticesSubscriptionController {
 
     @PreAuthorize("permitAll()")
     @PostMapping("/{id}/disable")
-    public ResponseEntity<NotificationsSubscription> disableSubscription(@PathVariable String id) {
-        NotificationsSubscription subscription = subscriptionService.findById(id);
+    public ResponseEntity<NoticeBoardSubscription> disableSubscription(@PathVariable String id) {
+        NoticeBoardSubscription subscription = subscriptionService.findById(id);
         subscription.setActive(false);
         return ResponseEntity.ok(subscriptionService.update(subscription));
     }
 
     @PostMapping("")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<NotificationsSubscription> createSubscription(@RequestBody NotificationsSubscription subscriptionToCreate, @CurrentUser LocalUser localUser) {
+    public ResponseEntity<NoticeBoardSubscription> createSubscription(@RequestBody NoticeBoardSubscription subscriptionToCreate, @CurrentUser LocalUser localUser) {
         subscriptionToCreate.setUsername(localUser.getUser().getEmail());
         return ResponseEntity.ok(subscriptionService.add(subscriptionToCreate));
     }
 
     @PostMapping("/{id}")
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<NotificationsSubscription> updateSubscription(@PathVariable String id, @RequestBody NotificationsSubscription subscriptionToUpdate, @CurrentUser LocalUser localUser) {
-        NotificationsSubscription subscription = subscriptionService.findById(id);
+    public ResponseEntity<NoticeBoardSubscription> updateSubscription(@PathVariable String id, @RequestBody NoticeBoardSubscription subscriptionToUpdate, @CurrentUser LocalUser localUser) {
+        NoticeBoardSubscription subscription = subscriptionService.findById(id);
 
         if (!subscription.getUsername().equals(localUser.getUser().getEmail())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
@@ -74,7 +74,7 @@ public class NoticesSubscriptionController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<Void> deleteSubscription(@PathVariable String id, @CurrentUser LocalUser localUser) {
-        NotificationsSubscription subscription = subscriptionService.findById(id);
+        NoticeBoardSubscription subscription = subscriptionService.findById(id);
 
         if (!subscription.getUsername().equals(localUser.getUser().getEmail())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);

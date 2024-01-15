@@ -1,4 +1,4 @@
-package ch.chalender.api.batch.instant;
+package ch.chalender.api.batch.events.instant;
 
 import ch.chalender.api.model.*;
 import ch.chalender.api.repository.EventsRepository;
@@ -20,8 +20,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class InstantSubscriptionsLoader implements Tasklet, StepExecutionListener {
-    private static final Logger logger = LoggerFactory.getLogger(InstantSubscriptionsLoader.class);
+public class InstantEventSubscriptionsLoader implements Tasklet, StepExecutionListener {
+    private static final Logger logger = LoggerFactory.getLogger(InstantEventSubscriptionsLoader.class);
 
     @Autowired
     private EventsSubscriptionRepository eventsSubscriptionRepository;
@@ -43,7 +43,7 @@ public class InstantSubscriptionsLoader implements Tasklet, StepExecutionListene
     @Override
     public void beforeStep(StepExecution stepExecution) {
         StepExecutionListener.super.beforeStep(stepExecution);
-        logger.debug("InstantSubscriptionsLoader initialized.");
+        logger.debug("InstantEventSubscriptionsLoader initialized.");
 
         String eventId = (String) stepExecution.getJobExecution().getJobParameters().getParameters().get("jobId").getValue();
         if (eventId == null) {
@@ -53,7 +53,7 @@ public class InstantSubscriptionsLoader implements Tasklet, StepExecutionListene
         event = eventsRepository.findById(eventId).orElseThrow();
 
         this.subscriptions = eventsSubscriptionRepository.findAllByActiveAndType(true, SubscriptionType.INSTANT);
-        logger.debug("InstantSubscriptionsLoader loaded " + subscriptions.size() + " subscriptions.");
+        logger.debug("InstantEventSubscriptionsLoader loaded " + subscriptions.size() + " subscriptions.");
     }
 
     @Override
@@ -70,13 +70,22 @@ public class InstantSubscriptionsLoader implements Tasklet, StepExecutionListene
         }
 
         if (subscription.getType() != SubscriptionType.INSTANT) {
-            logger.error("Subscription " + subscription.getId() + " is not a weekly subscription.");
+            logger.error("Subscription " + subscription.getId() + " is not an instant subscription.");
             return next();
         }
 
         boolean sendEmail = true;
         EventVersion version = event.getCurrentlyPublished();
-        if (!subscription.getSearchTerm().isEmpty() && !(version.getTitle().contains(subscription.getSearchTerm()) || version.getDescription().contains(subscription.getSearchTerm()))) {
+        if (
+                !subscription.getSearchTerm().isEmpty() &&
+                !(
+                        version.getTitle().contains(subscription.getSearchTerm()) ||
+                        version.getDescription().contains(subscription.getSearchTerm()) ||
+                        version.getLocation().contains(subscription.getSearchTerm()) ||
+                        version.getAddress().contains(subscription.getSearchTerm()) ||
+                        version.getOrganiser().contains(subscription.getSearchTerm())
+                )
+        ) {
             sendEmail = false;
         } else if (!subscription.getGenres().isEmpty() && subscription.getGenres().stream().noneMatch(version.getGenres()::contains)) {
             sendEmail = false;
@@ -94,15 +103,13 @@ public class InstantSubscriptionsLoader implements Tasklet, StepExecutionListene
 
         emailService.sendEventSubscriptionInstant(user.getEmail(), user.getFirstName(), subscription.getName(), event, subscription.getId());
 
-        index++;
-
-        return RepeatStatus.CONTINUABLE;
+        return next();
     }
 
     @Override
     public ExitStatus afterStep(StepExecution stepExecution) {
         this.index = 0;
-        logger.debug("InstantSubscriptionsLoader finished.");
+        logger.debug("InstantEventSubscriptionsLoader finished.");
 
         return StepExecutionListener.super.afterStep(stepExecution);
     }

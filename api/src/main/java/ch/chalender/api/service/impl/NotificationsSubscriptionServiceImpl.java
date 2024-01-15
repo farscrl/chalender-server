@@ -1,7 +1,7 @@
 package ch.chalender.api.service.impl;
 
-import ch.chalender.api.model.NotificationsSubscription;
-import ch.chalender.api.repository.NotificationsSubscriptionRepository;
+import ch.chalender.api.model.NoticeBoardSubscription;
+import ch.chalender.api.repository.NoticeBoardSubscriptionRepository;
 import ch.chalender.api.service.NotificationsSubscriptionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,31 +12,31 @@ import java.util.List;
 public class NotificationsSubscriptionServiceImpl implements NotificationsSubscriptionService {
 
     @Autowired
-    private NotificationsSubscriptionRepository notificationsSubscriptionRepository;
+    private NoticeBoardSubscriptionRepository noticeBoardSubscriptionRepository;
 
     @Override
-    public List<NotificationsSubscription> findAllByUsername(String username) {
-        return notificationsSubscriptionRepository.findAllByUsername(username);
+    public List<NoticeBoardSubscription> findAllByUsername(String username) {
+        return noticeBoardSubscriptionRepository.findAllByUsername(username);
     }
 
     @Override
-    public NotificationsSubscription findById(String id) {
-        return notificationsSubscriptionRepository.findById(id).get();
+    public NoticeBoardSubscription findById(String id) {
+        return noticeBoardSubscriptionRepository.findById(id).get();
     }
 
     @Override
-    public NotificationsSubscription add(NotificationsSubscription subscription) {
+    public NoticeBoardSubscription add(NoticeBoardSubscription subscription) {
         subscription.setId(null);
-        return notificationsSubscriptionRepository.save(subscription);
+        return noticeBoardSubscriptionRepository.save(subscription);
     }
 
     @Override
-    public NotificationsSubscription update(NotificationsSubscription subscription) {
-        return notificationsSubscriptionRepository.save(subscription);
+    public NoticeBoardSubscription update(NoticeBoardSubscription subscription) {
+        return noticeBoardSubscriptionRepository.save(subscription);
     }
 
     @Override
     public void delete(String id) {
-        notificationsSubscriptionRepository.deleteById(id);
+        noticeBoardSubscriptionRepository.deleteById(id);
     }
 }

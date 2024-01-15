@@ -1,8 +1,8 @@
-package ch.chalender.api.batch.scheduled;
+package ch.chalender.api.batch.notices.scheduled;
 
-import ch.chalender.api.dal.EventLookupsDal;
+import ch.chalender.api.dal.NoticeBoardItemsDal;
 import ch.chalender.api.model.*;
-import ch.chalender.api.repository.EventsSubscriptionRepository;
+import ch.chalender.api.repository.NoticeBoardSubscriptionRepository;
 import ch.chalender.api.service.EmailService;
 import ch.chalender.api.service.UserService;
 import org.slf4j.Logger;
@@ -21,14 +21,14 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Component
-public class WeeklySubscriptionsLoader implements Tasklet, StepExecutionListener {
-    private static final Logger logger = LoggerFactory.getLogger(WeeklySubscriptionsLoader.class);
+public class WeeklyNoticeSubscriptionsLoader implements Tasklet, StepExecutionListener {
+    private static final Logger logger = LoggerFactory.getLogger(WeeklyNoticeSubscriptionsLoader.class);
 
     @Autowired
-    private EventsSubscriptionRepository eventsSubscriptionRepository;
+    private NoticeBoardSubscriptionRepository noticeBoardSubscriptionRepository;
 
     @Autowired
-    private EventLookupsDal eventLookupsDal;
+    private NoticeBoardItemsDal noticeBoardItemsDal;
 
     @Autowired
     private UserService userService;
@@ -36,7 +36,7 @@ public class WeeklySubscriptionsLoader implements Tasklet, StepExecutionListener
     @Autowired
     private EmailService emailService;
 
-    private List<EventsSubscription> subscriptions;
+    private List<NoticeBoardSubscription> subscriptions;
 
     private LocalDate startDate;
 
@@ -46,13 +46,13 @@ public class WeeklySubscriptionsLoader implements Tasklet, StepExecutionListener
     @Override
     public void beforeStep(StepExecution stepExecution) {
         StepExecutionListener.super.beforeStep(stepExecution);
-        logger.debug("WeeklySubscriptionsLoader initialized.");
+        logger.debug("WeeklyNoticeSubscriptionsLoader initialized.");
 
-        this.startDate = LocalDate.now();
-        this.endDate = startDate.plusDays(50); // TODO: change to 15
+        this.startDate = LocalDate.now().minusDays(8);
+        this.endDate = startDate.plusDays(7);
 
-        this.subscriptions = eventsSubscriptionRepository.findAllByActiveAndType(true, SubscriptionType.WEEKLY);
-        logger.debug("WeeklySubscriptionsLoader loaded " + subscriptions.size() + " subscriptions.");
+        this.subscriptions = noticeBoardSubscriptionRepository.findAllByActiveAndType(true, SubscriptionType.WEEKLY);
+        logger.debug("WeeklyNoticeSubscriptionsLoader loaded " + subscriptions.size() + " subscriptions.");
     }
 
     @Override
@@ -61,7 +61,7 @@ public class WeeklySubscriptionsLoader implements Tasklet, StepExecutionListener
             return null;
         }
 
-        EventsSubscription subscription = subscriptions.get(index);
+        NoticeBoardSubscription subscription = subscriptions.get(index);
 
         if (!subscription.isActive()) {
             logger.error("Subscription " + subscription.getId() + " is not active.");
@@ -73,31 +73,27 @@ public class WeeklySubscriptionsLoader implements Tasklet, StepExecutionListener
             return next();
         }
 
-        EventFilter filter = new EventFilter();
-        filter.setGenres(subscription.getGenres().stream().map(EventGenre::getId).toList());
-        filter.setRegions(subscription.getRegions().stream().map(EventRegion::getId).toList());
+        NoticeBoardFilter filter = new NoticeBoardFilter();
         filter.setSearchTerm(subscription.getSearchTerm());
-        List<EventLookup> events = eventLookupsDal.getEventsInDateRange(filter, startDate, endDate);
+        List<NoticeBoardItem> items = noticeBoardItemsDal.getNoticeBoardItemsInDateRange(filter, startDate, endDate);
 
-        if (events.isEmpty()) {
-            logger.debug("No events found for subscription " + subscription.getId());
+        if (items.isEmpty()) {
+            logger.debug("No notice board items found for subscription " + subscription.getId());
             return next();
         }
-        logger.error("Found " + events.size() + " events for subscription " + subscription.getId());
+        logger.error("Found " + items.size() + " notice board items for subscription " + subscription.getId());
 
         User user = userService.findUserByEmail(subscription.getUsername());
 
-        emailService.sendEventSubscriptionWeekly(user.getEmail(), user.getFirstName(), subscription.getName(), events, subscription.getId());
+        emailService.sendNoticesBoardSubscriptionWeekly(user.getEmail(), user.getFirstName(), subscription.getName(), items, subscription.getId());
 
-        index++;
-
-        return RepeatStatus.CONTINUABLE;
+        return next();
     }
 
     @Override
     public ExitStatus afterStep(StepExecution stepExecution) {
         this.index = 0;
-        logger.debug("WeeklySubscriptionsLoader finished.");
+        logger.debug("WeeklyNoticeSubscriptionsLoader finished.");
 
         return StepExecutionListener.super.afterStep(stepExecution);
     }

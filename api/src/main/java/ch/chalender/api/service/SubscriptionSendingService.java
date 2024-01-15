@@ -1,8 +1,11 @@
 package ch.chalender.api.service;
 
-import ch.chalender.api.batch.instant.InstantSubscriptionBatchConfiguration;
-import ch.chalender.api.batch.scheduled.WeeklySubscriptionBatchConfiguration;
+import ch.chalender.api.batch.events.instant.InstantEventSubscriptionBatchConfiguration;
+import ch.chalender.api.batch.events.scheduled.WeeklyEventSubscriptionBatchConfiguration;
+import ch.chalender.api.batch.notices.instant.InstantNoticesSubscriptionBatchConfiguration;
+import ch.chalender.api.batch.notices.scheduled.WeeklyNoticeSubscriptionBatchConfiguration;
 import ch.chalender.api.model.Event;
+import ch.chalender.api.model.NoticeBoardItem;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.JobParametersInvalidException;
@@ -19,10 +22,16 @@ import org.springframework.transaction.PlatformTransactionManager;
 public class SubscriptionSendingService {
 
     @Autowired
-    private WeeklySubscriptionBatchConfiguration weeklySubscriptionBatchConfiguration;
+    private WeeklyEventSubscriptionBatchConfiguration weeklyEventSubscriptionBatchConfiguration;
 
     @Autowired
-    private InstantSubscriptionBatchConfiguration instantSubscriptionBatchConfiguration;
+    private InstantEventSubscriptionBatchConfiguration instantEventSubscriptionBatchConfiguration;
+
+    @Autowired
+    private WeeklyNoticeSubscriptionBatchConfiguration weeklyNoticeSubscriptionBatchConfiguration;
+
+    @Autowired
+    private InstantNoticesSubscriptionBatchConfiguration instantNoticesSubscriptionBatchConfiguration;
 
     @Autowired
     private JobRepository jobRepository;
@@ -30,13 +39,12 @@ public class SubscriptionSendingService {
     @Autowired
     private PlatformTransactionManager transactionManager;
 
-    @Scheduled(cron = "${chalender.cronWeeklyEmails}")
-    public void sendSubscriptions() {
+    @Scheduled(cron = "${chalender.cronWeeklyEmailsEvents}")
+    public void sendEventSubscriptions() {
         JobParameters params = new JobParametersBuilder().addLong("jobId", System.currentTimeMillis())
                 .toJobParameters();
         try {
-            var job = weeklySubscriptionBatchConfiguration.weeklyJobLauncher(jobRepository).run(weeklySubscriptionBatchConfiguration.weeklyJob(jobRepository, transactionManager), params);
-
+            var job = weeklyEventSubscriptionBatchConfiguration.weeklyEventJobLauncher(jobRepository).run(weeklyEventSubscriptionBatchConfiguration.weeklyJob(jobRepository, transactionManager), params);
         } catch (JobExecutionAlreadyRunningException | JobParametersInvalidException |
                  JobInstanceAlreadyCompleteException | JobRestartException e) {
             e.printStackTrace();
@@ -48,8 +56,33 @@ public class SubscriptionSendingService {
     public void notifyUsersAboutNewEvent(Event event) {
         JobParameters params = new JobParametersBuilder().addString("jobId", event.getId()).toJobParameters();
         try {
-            var job = instantSubscriptionBatchConfiguration.instantJobLauncher(jobRepository).run(instantSubscriptionBatchConfiguration.instantJob(jobRepository, transactionManager), params);
+            var job = instantEventSubscriptionBatchConfiguration.instantEventJobLauncher(jobRepository).run(instantEventSubscriptionBatchConfiguration.instantJob(jobRepository, transactionManager), params);
+        } catch (JobExecutionAlreadyRunningException | JobParametersInvalidException |
+                 JobInstanceAlreadyCompleteException | JobRestartException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    @Scheduled(cron = "${chalender.cronWeeklyEmailsNoticeBoard}")
+    public void sendNoticeBoardSubscriptions() {
+        JobParameters params = new JobParametersBuilder().addLong("jobId", System.currentTimeMillis())
+                .toJobParameters();
+        try {
+            var job = weeklyNoticeSubscriptionBatchConfiguration.weeklyNoticeJobLauncher(jobRepository).run(weeklyNoticeSubscriptionBatchConfiguration.weeklyJob(jobRepository, transactionManager), params);
+        } catch (JobExecutionAlreadyRunningException | JobParametersInvalidException |
+                 JobInstanceAlreadyCompleteException | JobRestartException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void notifyUsersAboutNewNoticeBoardItem(NoticeBoardItem item) {
+        JobParameters params = new JobParametersBuilder().addString("jobId", item.getId()).toJobParameters();
+        try {
+            var job = instantNoticesSubscriptionBatchConfiguration.instantNoticeJobLauncher(jobRepository).run(instantNoticesSubscriptionBatchConfiguration.instantJob(jobRepository, transactionManager), params);
         } catch (JobExecutionAlreadyRunningException | JobParametersInvalidException |
                  JobInstanceAlreadyCompleteException | JobRestartException e) {
             e.printStackTrace();

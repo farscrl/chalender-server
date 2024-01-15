@@ -1,18 +1,18 @@
 package ch.chalender.api.service;
 
-import ch.chalender.api.model.NotificationsSubscription;
+import ch.chalender.api.model.NoticeBoardSubscription;
 
 import java.util.List;
 
 public interface NotificationsSubscriptionService {
 
-    List<NotificationsSubscription> findAllByUsername(String username);
+    List<NoticeBoardSubscription> findAllByUsername(String username);
 
-    NotificationsSubscription findById(String id);
+    NoticeBoardSubscription findById(String id);
 
-    NotificationsSubscription add(NotificationsSubscription subscription);
+    NoticeBoardSubscription add(NoticeBoardSubscription subscription);
 
-    NotificationsSubscription update(NotificationsSubscription subscription);
+    NoticeBoardSubscription update(NoticeBoardSubscription subscription);
 
     void delete(String id);
 }

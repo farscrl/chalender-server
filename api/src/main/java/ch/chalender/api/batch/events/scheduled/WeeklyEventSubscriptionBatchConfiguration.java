@@ -1,4 +1,4 @@
-package ch.chalender.api.batch.scheduled;
+package ch.chalender.api.batch.events.scheduled;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -15,13 +15,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @Component
-public class WeeklySubscriptionBatchConfiguration extends DefaultBatchConfiguration {
+public class WeeklyEventSubscriptionBatchConfiguration extends DefaultBatchConfiguration {
 
     @Autowired
-    private WeeklySubscriptionsLoader weeklySubscriptionsLoader;
+    private WeeklyEventSubscriptionsLoader weeklyEventSubscriptionsLoader;
 
     @Bean
-    public JobLauncher weeklyJobLauncher(JobRepository jobRepository) throws Exception {
+    public JobLauncher weeklyEventJobLauncher(JobRepository jobRepository) throws Exception {
         TaskExecutorJobLauncher jobLauncher = new TaskExecutorJobLauncher();
         jobLauncher.setJobRepository(jobRepository);
         jobLauncher.setTaskExecutor(new SimpleAsyncTaskExecutor());
@@ -34,16 +34,16 @@ public class WeeklySubscriptionBatchConfiguration extends DefaultBatchConfigurat
     }
 
     @Bean
-    protected Step loadWeeklySubscriptions(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+    protected Step loadWeeklyEventSubscriptions(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
         return new StepBuilder("loadSubscriptions", jobRepository)
-                .tasklet(weeklySubscriptionsLoader, transactionManager)
+                .tasklet(weeklyEventSubscriptionsLoader, transactionManager)
                 .build();
     }
 
     @Bean
     public Job weeklyJob(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
         return new JobBuilder("weeklySubscriptionsJob", jobRepository())
-                .start(loadWeeklySubscriptions(jobRepository, transactionManager))
+                .start(loadWeeklyEventSubscriptions(jobRepository, transactionManager))
                 .build();
     }
 }

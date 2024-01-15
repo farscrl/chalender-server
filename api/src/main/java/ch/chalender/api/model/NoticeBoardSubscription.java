@@ -12,9 +12,9 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-@Document("notification-subscriptions")
+@Document("notices-subscriptions")
 @Data
-public class NotificationsSubscription {
+public class NoticeBoardSubscription {
     private String id;
 
     private String name;
