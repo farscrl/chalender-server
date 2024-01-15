@@ -1,0 +1,7 @@
+[( ${subject} )]
+
+Chara moderaziun
+Insatgi ha endatà ina nova annunzia u modifitgà ina annunzia existenta.
+[( ${moderationLink} )]
+Cordials salids
+il server

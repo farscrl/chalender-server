@@ -183,7 +183,7 @@ public class EmailServiceImpl implements EmailService {
         final MimeMessageHelper email;
         email = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
-        String subject = "La moderaziun ha refusà la publicaziun da «" + event.getRejected().getTitle() + "»";
+        String subject = "La moderaziun ha refusà la publicaziun da l’occurrenza «" + event.getRejected().getTitle() + "»";
 
         email.setTo(emailAddress);
         email.setSubject("[chalender.ch] " + subject);
@@ -250,22 +250,142 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public void sendNoticeBoardPublishedEmail(String emailAddress, String name, NoticeBoardItem item, String comment) throws MessagingException, UnsupportedEncodingException {
-        // TODO: implement
+        final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
+        final MimeMessageHelper email;
+        email = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
+        String subject = "Annunzia publitgada: «" + item.getCurrentlyPublished().getTitle() + "»";
+
+        email.setTo(emailAddress);
+        email.setSubject("[chalender.ch] " + subject);
+        email.setFrom(new InternetAddress(mailFrom, mailFromName));
+
+        String noticeUrl = appUrl + "/notices/" + item.getId();
+
+        final Context ctx = new Context(LocaleContextHolder.getLocale());
+        ctx.setVariable("email", emailAddress);
+        ctx.setVariable("name", name);
+        ctx.setVariable("logo", LOGO_PATH);
+        ctx.setVariable("noticeUrl", noticeUrl);
+        ctx.setVariable("comment", comment);
+        ctx.setVariable("mainLink", appUrl);
+        ctx.setVariable("subject", subject);
+
+        final String textContent = this.templateEngine.process("email-moderation-notice/notice-published.txt", ctx);
+        final String htmlContent = this.templateEngine.process("email-moderation-notice/notice-published.html", ctx);
+
+        email.setText(textContent, htmlContent);
+
+        ClassPathResource clr = new ClassPathResource(LOGO_PATH);
+
+        email.addInline("logo", clr, PNG_MIME);
+
+        mailSender.send(mimeMessage);
     }
 
     @Override
     public void sendNoticeBoardUpdateAcceptedEmail(String emailAddress, String name, NoticeBoardItem item, String comment) throws MessagingException, UnsupportedEncodingException {
-        // TODO: implement
+        final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
+        final MimeMessageHelper email;
+        email = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
+        String subject = "Acceptà l’actualisaziun da l’annunzia «" + item.getCurrentlyPublished().getTitle() + "»";
+
+        email.setTo(emailAddress);
+        email.setSubject("[chalender.ch] " + subject);
+        email.setFrom(new InternetAddress(mailFrom, mailFromName));
+
+        String noticeUrl = appUrl + "/notices/" + item.getId();
+
+        final Context ctx = new Context(LocaleContextHolder.getLocale());
+        ctx.setVariable("email", emailAddress);
+        ctx.setVariable("name", name);
+        ctx.setVariable("logo", LOGO_PATH);
+        ctx.setVariable("noticeUrl", noticeUrl);
+        ctx.setVariable("comment", comment);
+        ctx.setVariable("mainLink", appUrl);
+        ctx.setVariable("subject", subject);
+
+        final String textContent = this.templateEngine.process("email-moderation-notice/notice-update-published.txt", ctx);
+        final String htmlContent = this.templateEngine.process("email-moderation-notice/notice-update-published.html", ctx);
+
+        email.setText(textContent, htmlContent);
+
+        ClassPathResource clr = new ClassPathResource(LOGO_PATH);
+
+        email.addInline("logo", clr, PNG_MIME);
+
+        mailSender.send(mimeMessage);
     }
 
     @Override
     public void sendNoticeBoardRefusedEmail(String emailAddress, String name, NoticeBoardItem item, String comment) throws MessagingException, UnsupportedEncodingException {
-        // TODO: implement
+        final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
+        final MimeMessageHelper email;
+        email = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
+        String subject = "La moderaziun ha refusà la publicaziun da l’annunzia «" + item.getRejected().getTitle() + "»";
+
+        email.setTo(emailAddress);
+        email.setSubject("[chalender.ch] " + subject);
+        email.setFrom(new InternetAddress(mailFrom, mailFromName));
+
+        String noticeUrl = appUrl + "/notices/" + item.getId();
+
+        final Context ctx = new Context(LocaleContextHolder.getLocale());
+        ctx.setVariable("email", emailAddress);
+        ctx.setVariable("name", name);
+        ctx.setVariable("logo", LOGO_PATH);
+        ctx.setVariable("noticeUrl", noticeUrl);
+        ctx.setVariable("comment", comment);
+        ctx.setVariable("mainLink", appUrl);
+        ctx.setVariable("subject", subject);
+
+        final String textContent = this.templateEngine.process("email-moderation-notice/notice-rejected.txt", ctx);
+        final String htmlContent = this.templateEngine.process("email-moderation-notice/notice-rejected.html", ctx);
+
+        email.setText(textContent, htmlContent);
+
+        ClassPathResource clr = new ClassPathResource(LOGO_PATH);
+
+        email.addInline("logo", clr, PNG_MIME);
+
+        mailSender.send(mimeMessage);
     }
 
     @Override
     public void sendNoticeBoardUpdateRefusedEmail(String emailAddress, String name, NoticeBoardItem item, String comment) throws MessagingException, UnsupportedEncodingException {
-        // TODO: implement
+        final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
+        final MimeMessageHelper email;
+        email = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
+        String subject = "La moderaziun ha refusà la midada da l’annunzia «" + item.getCurrentlyPublished().getTitle() + "»";
+
+        email.setTo(emailAddress);
+        email.setSubject("[chalender.ch] " + subject);
+        email.setFrom(new InternetAddress(mailFrom, mailFromName));
+
+        String noticeUrl = appUrl + "/notices/" + item.getId();
+
+        final Context ctx = new Context(LocaleContextHolder.getLocale());
+        ctx.setVariable("email", emailAddress);
+        ctx.setVariable("name", name);
+        ctx.setVariable("logo", LOGO_PATH);
+        ctx.setVariable("noticeUrl", noticeUrl);
+        ctx.setVariable("comment", comment);
+        ctx.setVariable("mainLink", appUrl);
+        ctx.setVariable("subject", subject);
+
+        final String textContent = this.templateEngine.process("email-moderation-notice/notice-update-rejected.txt", ctx);
+        final String htmlContent = this.templateEngine.process("email-moderation-notice/notice-update-rejected.html", ctx);
+
+        email.setText(textContent, htmlContent);
+
+        ClassPathResource clr = new ClassPathResource(LOGO_PATH);
+
+        email.addInline("logo", clr, PNG_MIME);
+
+        mailSender.send(mimeMessage);
     }
 
     @Override
@@ -361,7 +481,7 @@ public class EmailServiceImpl implements EmailService {
         final MimeMessageHelper email;
         email = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
-        String subject = "«" + event.getTitle() + "» spetga sin la moderaziun";
+        String subject = "Occurrenza «" + event.getTitle() + "» spetga sin la moderaziun";
 
         email.setTo(moderatorEmails);
         email.setSubject("[chalender.ch] " + subject);
@@ -388,7 +508,33 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public void sendNoticeBoardModeratorEmail(NoticeBoardItem item) throws MessagingException, UnsupportedEncodingException {
-        // TODO: implement
+        final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
+        final MimeMessageHelper email;
+        email = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
+        String subject = "Annunzia «" + item.getTitle() + "» spetga sin la moderaziun";
+
+        email.setTo(moderatorEmails);
+        email.setSubject("[chalender.ch] " + subject);
+        email.setFrom(new InternetAddress(mailFrom, mailFromName));
+
+        final Context ctx = new Context(LocaleContextHolder.getLocale());
+        ctx.setVariable("logo", LOGO_PATH);
+        ctx.setVariable("item", item);
+        ctx.setVariable("subject", subject);
+        ctx.setVariable("moderationLink", appUrl + "/moderator/notices");
+        ctx.setVariable("mainLink", appUrl);
+
+        final String textContent = this.templateEngine.process("email-moderation-notice/moderation-notice.txt", ctx);
+        final String htmlContent = this.templateEngine.process("email-moderation-notice/moderation-notice.html", ctx);
+
+        email.setText(textContent, htmlContent);
+
+        ClassPathResource clr = new ClassPathResource(LOGO_PATH);
+
+        email.addInline("logo", clr, PNG_MIME);
+
+        mailSender.send(mimeMessage);
     }
 
     private String getOccurrenceString(LocalDate date, LocalTime startTime, LocalTime endTime, boolean isAllDay) {

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:remove="all">La moderaziun ha refusà la publicaziun</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style type="text/css">
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            font-size: 20px;
+        }
+
+        h2 {
+            color: #3CBFA4;
+            font-size: 18px;
+            margin-bottom: 0;
+        }
+
+        a {
+            color: #3CBFA4;
+            text-decoration: none !important;
+        }
+
+        p.no-margin {
+            margin: 0;
+        }
+
+        a.link {
+            border: solid 1px #3CBFA4;
+            background-color: white;
+            text-decoration: none !important;
+            color: #3CBFA4;
+            font-weight: bold;
+            display: block;
+            width: 260px;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        .footer-text, .footer-text a {
+            font-size: 12px;
+            color: #999999;
+            text-align: center;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <table width="100%">
+        <tr>
+            <td></td>
+            <td width="600" bgcolor="white">
+
+                <table width="100%">
+                    <tr th:height="10">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td width="10"></td>
+                        <td>
+                            <p>
+                                <img src="images/logo.jpg" data-th-src="|cid:logo|" height="20" width="197" style="display: block; max-width: 197px; width: 197px;" />
+                            </p>
+
+                            <h1 th:text="${subject}">La moderaziun ha refusà la publicaziuna</h1>
+
+                            <p>
+                                L’annunzia na po deplorablamain betg vegnir publitgada en questa furma.
+                            </p>
+
+                            <p th:if="${not #strings.isEmpty(comment)}">
+                                <strong>Commentari da la moderaziun:</strong><br />
+                                <span th:text="${comment}"></span>
+                            </p>
+
+                            <p>
+                                Salids amicabels<br />
+                                la squadra da <a href="https://www.chalender.ch" th:href="${mainLink}" target="_blank">chalender.ch</a>
+                            </p>
+                        </td>
+                        <td width="10"></td>
+                    </tr>
+                    <tr th:height="10">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </table>
+
+            </td>
+            <td></td>
+        </tr>
+    </table>
+</body>
+</html>

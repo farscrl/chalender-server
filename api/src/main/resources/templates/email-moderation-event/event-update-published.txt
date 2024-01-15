@@ -9,7 +9,6 @@ Commentari da la moderaziun:
 [( ${comment} )]
 [/]
 
-En cas dad eventualas midadas pos ti actualisar l’occurrenza en tes conto.
 Sche l’occurrenza avess da vegnir annullada, suplitgain nus dad immediat inditgar quai cun agid da l’opziun correspundenta sper la data.
 
 Nus giavischain bun success!

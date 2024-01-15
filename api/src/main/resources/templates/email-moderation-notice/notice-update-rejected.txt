@@ -1,0 +1,11 @@
+[( ${subject} )]
+
+L’annunzia na po deplorablamain betg vegnir modifitgada en questa furma.
+
+[# th:if="${not #strings.isEmpty(comment)}"]
+Commentari da la moderaziun:
+[( ${comment} )]
+[/]
+
+Salids amicabels
+la squadra da chalender.ch
