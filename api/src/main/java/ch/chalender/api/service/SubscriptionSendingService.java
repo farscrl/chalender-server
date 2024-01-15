@@ -44,7 +44,7 @@ public class SubscriptionSendingService {
         JobParameters params = new JobParametersBuilder().addLong("jobId", System.currentTimeMillis())
                 .toJobParameters();
         try {
-            var job = weeklyEventSubscriptionBatchConfiguration.weeklyEventJobLauncher(jobRepository).run(weeklyEventSubscriptionBatchConfiguration.weeklyJob(jobRepository, transactionManager), params);
+            var job = weeklyEventSubscriptionBatchConfiguration.weeklyEventJobLauncher(jobRepository).run(weeklyEventSubscriptionBatchConfiguration.weeklyEventsJob(jobRepository, transactionManager), params);
         } catch (JobExecutionAlreadyRunningException | JobParametersInvalidException |
                  JobInstanceAlreadyCompleteException | JobRestartException e) {
             e.printStackTrace();
@@ -56,7 +56,7 @@ public class SubscriptionSendingService {
     public void notifyUsersAboutNewEvent(Event event) {
         JobParameters params = new JobParametersBuilder().addString("jobId", event.getId()).toJobParameters();
         try {
-            var job = instantEventSubscriptionBatchConfiguration.instantEventJobLauncher(jobRepository).run(instantEventSubscriptionBatchConfiguration.instantJob(jobRepository, transactionManager), params);
+            var job = instantEventSubscriptionBatchConfiguration.instantEventJobLauncher(jobRepository).run(instantEventSubscriptionBatchConfiguration.instantEventsJob(jobRepository, transactionManager), params);
         } catch (JobExecutionAlreadyRunningException | JobParametersInvalidException |
                  JobInstanceAlreadyCompleteException | JobRestartException e) {
             e.printStackTrace();
@@ -70,7 +70,7 @@ public class SubscriptionSendingService {
         JobParameters params = new JobParametersBuilder().addLong("jobId", System.currentTimeMillis())
                 .toJobParameters();
         try {
-            var job = weeklyNoticeSubscriptionBatchConfiguration.weeklyNoticeJobLauncher(jobRepository).run(weeklyNoticeSubscriptionBatchConfiguration.weeklyJob(jobRepository, transactionManager), params);
+            var job = weeklyNoticeSubscriptionBatchConfiguration.weeklyNoticeJobLauncher(jobRepository).run(weeklyNoticeSubscriptionBatchConfiguration.weeklyNoticeBoardJob(jobRepository, transactionManager), params);
         } catch (JobExecutionAlreadyRunningException | JobParametersInvalidException |
                  JobInstanceAlreadyCompleteException | JobRestartException e) {
             e.printStackTrace();
@@ -82,7 +82,7 @@ public class SubscriptionSendingService {
     public void notifyUsersAboutNewNoticeBoardItem(NoticeBoardItem item) {
         JobParameters params = new JobParametersBuilder().addString("jobId", item.getId()).toJobParameters();
         try {
-            var job = instantNoticesSubscriptionBatchConfiguration.instantNoticeJobLauncher(jobRepository).run(instantNoticesSubscriptionBatchConfiguration.instantJob(jobRepository, transactionManager), params);
+            var job = instantNoticesSubscriptionBatchConfiguration.instantNoticeJobLauncher(jobRepository).run(instantNoticesSubscriptionBatchConfiguration.instantNoticeBoardJob(jobRepository, transactionManager), params);
         } catch (JobExecutionAlreadyRunningException | JobParametersInvalidException |
                  JobInstanceAlreadyCompleteException | JobRestartException e) {
             e.printStackTrace();

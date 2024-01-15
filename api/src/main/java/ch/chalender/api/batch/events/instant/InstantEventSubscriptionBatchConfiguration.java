@@ -42,7 +42,7 @@ public class InstantEventSubscriptionBatchConfiguration extends DefaultBatchConf
     }
 
     @Bean
-    public Job instantJob(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+    public Job instantEventsJob(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
         return new JobBuilder("instantSubscriptionsJob", jobRepository)
                 .start(loadInstantEventSubscriptions(jobRepository, transactionManager))
                 .build();
