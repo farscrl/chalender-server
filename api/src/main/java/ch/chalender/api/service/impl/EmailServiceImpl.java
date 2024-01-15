@@ -130,8 +130,8 @@ public class EmailServiceImpl implements EmailService {
         ctx.setVariable("mainLink", appUrl);
         ctx.setVariable("subject", subject);
 
-        final String textContent = this.templateEngine.process("email-user/event-published.txt", ctx);
-        final String htmlContent = this.templateEngine.process("email-user/event-published.html", ctx);
+        final String textContent = this.templateEngine.process("email-moderation-event/event-published.txt", ctx);
+        final String htmlContent = this.templateEngine.process("email-moderation-event/event-published.html", ctx);
 
         email.setText(textContent, htmlContent);
 
@@ -165,8 +165,8 @@ public class EmailServiceImpl implements EmailService {
         ctx.setVariable("mainLink", appUrl);
         ctx.setVariable("subject", subject);
 
-        final String textContent = this.templateEngine.process("email-user/event-update-published.txt", ctx);
-        final String htmlContent = this.templateEngine.process("email-user/event-update-published.html", ctx);
+        final String textContent = this.templateEngine.process("email-moderation-event/event-update-published.txt", ctx);
+        final String htmlContent = this.templateEngine.process("email-moderation-event/event-update-published.html", ctx);
 
         email.setText(textContent, htmlContent);
 
@@ -200,8 +200,8 @@ public class EmailServiceImpl implements EmailService {
         ctx.setVariable("mainLink", appUrl);
         ctx.setVariable("subject", subject);
 
-        final String textContent = this.templateEngine.process("email-user/event-rejected.txt", ctx);
-        final String htmlContent = this.templateEngine.process("email-user/event-rejected.html", ctx);
+        final String textContent = this.templateEngine.process("email-moderation-event/event-rejected.txt", ctx);
+        final String htmlContent = this.templateEngine.process("email-moderation-event/event-rejected.html", ctx);
 
         email.setText(textContent, htmlContent);
 
@@ -235,8 +235,8 @@ public class EmailServiceImpl implements EmailService {
         ctx.setVariable("mainLink", appUrl);
         ctx.setVariable("subject", subject);
 
-        final String textContent = this.templateEngine.process("email-user/event-update-rejected.txt", ctx);
-        final String htmlContent = this.templateEngine.process("email-user/event-update-rejected.html", ctx);
+        final String textContent = this.templateEngine.process("email-moderation-event/event-update-rejected.txt", ctx);
+        final String htmlContent = this.templateEngine.process("email-moderation-event/event-update-rejected.html", ctx);
 
         email.setText(textContent, htmlContent);
 
@@ -298,8 +298,8 @@ public class EmailServiceImpl implements EmailService {
         ctx.setVariable("unsubscribeLink", appUrl + "/user/subscriptions/events/disable/" + subscriptionId);
         ctx.setVariable("mainLink", appUrl);
 
-        final String textContent = this.templateEngine.process("email-user/subscription-instant.txt", ctx);
-        final String htmlContent = this.templateEngine.process("email-user/subscription-instant.html", ctx);
+        final String textContent = this.templateEngine.process("email-subscription-events/subscription-instant.txt", ctx);
+        final String htmlContent = this.templateEngine.process("email-subscription-events/subscription-instant.html", ctx);
 
         email.setText(textContent, htmlContent);
 
@@ -343,8 +343,8 @@ public class EmailServiceImpl implements EmailService {
         ctx.setVariable("unsubscribeLink", appUrl + "/user/subscriptions/events/disable/" + subscriptionId);
         ctx.setVariable("mainLink", appUrl);
 
-        final String textContent = this.templateEngine.process("email-user/subscription-weekly.txt", ctx);
-        final String htmlContent = this.templateEngine.process("email-user/subscription-weekly.html", ctx);
+        final String textContent = this.templateEngine.process("email-subscription-events/subscription-weekly.txt", ctx);
+        final String htmlContent = this.templateEngine.process("email-subscription-events/subscription-weekly.html", ctx);
 
         email.setText(textContent, htmlContent);
 
@@ -374,8 +374,8 @@ public class EmailServiceImpl implements EmailService {
         ctx.setVariable("moderationLink", appUrl + "/moderator/events");
         ctx.setVariable("mainLink", appUrl);
 
-        final String textContent = this.templateEngine.process("email-user/moderation-event.txt", ctx);
-        final String htmlContent = this.templateEngine.process("email-user/moderation-event.html", ctx);
+        final String textContent = this.templateEngine.process("email-moderation-event/moderation-event.txt", ctx);
+        final String htmlContent = this.templateEngine.process("email-moderation-event/moderation-event.html", ctx);
 
         email.setText(textContent, htmlContent);
 
