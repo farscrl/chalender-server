@@ -12,7 +12,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-@Document("notices-subscriptions")
+@Document("notice-board-subscriptions")
 @Data
 public class NoticeBoardSubscription {
     private String id;
