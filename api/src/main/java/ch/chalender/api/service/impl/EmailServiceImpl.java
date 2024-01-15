@@ -1,5 +1,6 @@
 package ch.chalender.api.service.impl;
 
+import ch.chalender.api.dto.NoticeBoardItemDto;
 import ch.chalender.api.model.Event;
 import ch.chalender.api.model.EventLookup;
 import ch.chalender.api.model.EventOccurrence;
@@ -389,7 +390,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void sendEmailSubscriptionInstant(String emailAddress, String userName, String subscriptionName, Event event, String subscriptionId) throws MessagingException, UnsupportedEncodingException {
+    public void sendEventSubscriptionInstant(String emailAddress, String userName, String subscriptionName, Event event, String subscriptionId) throws MessagingException, UnsupportedEncodingException {
         final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
         final MimeMessageHelper email;
         email = new MimeMessageHelper(mimeMessage, true, "UTF-8");
@@ -431,7 +432,7 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void sendEmailSubscriptionWeekly(String emailAddress, String userName, String subscriptionName, List<EventLookup> events, String subscriptionId) throws MessagingException, UnsupportedEncodingException {
+    public void sendEventSubscriptionWeekly(String emailAddress, String userName, String subscriptionName, List<EventLookup> events, String subscriptionId) throws MessagingException, UnsupportedEncodingException {
         final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
         final MimeMessageHelper email;
         email = new MimeMessageHelper(mimeMessage, true, "UTF-8");
@@ -465,6 +466,79 @@ public class EmailServiceImpl implements EmailService {
 
         final String textContent = this.templateEngine.process("email-subscription-events/subscription-weekly.txt", ctx);
         final String htmlContent = this.templateEngine.process("email-subscription-events/subscription-weekly.html", ctx);
+
+        email.setText(textContent, htmlContent);
+
+        ClassPathResource clr = new ClassPathResource(LOGO_PATH);
+
+        email.addInline("logo", clr, PNG_MIME);
+
+        mailSender.send(mimeMessage);
+    }
+
+    @Override
+    public void sendNoticesBoardSubscriptionInstant(String emailAddress, String userName, String subscriptionName, NoticeBoardItem item, String subscriptionId) throws MessagingException, UnsupportedEncodingException {
+        final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
+        final MimeMessageHelper email;
+        email = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
+        String subject = "Ina annunzia per tes abo «" + subscriptionName + "»";
+
+        email.setTo(emailAddress);
+        email.setSubject("[chalender.ch] " + subject);
+        email.setFrom(new InternetAddress(mailFrom, mailFromName));
+
+        final Context ctx = new Context(LocaleContextHolder.getLocale());
+        ctx.setVariable("email", emailAddress);
+        ctx.setVariable("name", userName);
+        ctx.setVariable("logo", LOGO_PATH);
+        ctx.setVariable("subscriptionName", subscriptionName);
+        ctx.setVariable("item", item);
+        ctx.setVariable("subject", subject);
+        ctx.setVariable("accountLink", appUrl + "/user/subscriptions/notices/" + subscriptionId);
+        ctx.setVariable("unsubscribeLink", appUrl + "/user/subscriptions/notices/disable/" + subscriptionId);
+        ctx.setVariable("mainLink", appUrl);
+
+        final String textContent = this.templateEngine.process("email-subscription-notices/subscription-instant.txt", ctx);
+        final String htmlContent = this.templateEngine.process("email-subscription-notices/subscription-instant.html", ctx);
+
+        email.setText(textContent, htmlContent);
+
+        ClassPathResource clr = new ClassPathResource(LOGO_PATH);
+
+        email.addInline("logo", clr, PNG_MIME);
+
+        mailSender.send(mimeMessage);
+    }
+
+    @Override
+    public void sendNoticesBoardSubscriptionWeekly(String emailAddress, String userName, String subscriptionName, List<NoticeBoardItemDto> items, String subscriptionId) throws MessagingException, UnsupportedEncodingException {
+        final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
+        final MimeMessageHelper email;
+        email = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
+        String subject = items.size() + " annunzias per tes abo «" + subscriptionName + "»";
+        if (items.size() == 1) {
+            subject = "Ina annunzia per tes abo «" + subscriptionName + "»";
+        }
+
+        email.setTo(emailAddress);
+        email.setSubject("[chalender.ch] " + subject);
+        email.setFrom(new InternetAddress(mailFrom, mailFromName));
+
+        final Context ctx = new Context(LocaleContextHolder.getLocale());
+        ctx.setVariable("email", emailAddress);
+        ctx.setVariable("name", userName);
+        ctx.setVariable("logo", LOGO_PATH);
+        ctx.setVariable("subscriptionName", subscriptionName);
+        ctx.setVariable("items", items);
+        ctx.setVariable("subject", subject);
+        ctx.setVariable("accountLink", appUrl + "/user/subscriptions/notices/" + subscriptionId);
+        ctx.setVariable("unsubscribeLink", appUrl + "/user/subscriptions/notices/disable/" + subscriptionId);
+        ctx.setVariable("mainLink", appUrl);
+
+        final String textContent = this.templateEngine.process("email-subscription-notices/subscription-weekly.txt", ctx);
+        final String htmlContent = this.templateEngine.process("email-subscription-notices/subscription-weekly.html", ctx);
 
         email.setText(textContent, htmlContent);
 

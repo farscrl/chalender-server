@@ -1,5 +1,6 @@
 package ch.chalender.api.service;
 
+import ch.chalender.api.dto.NoticeBoardItemDto;
 import ch.chalender.api.model.Event;
 import ch.chalender.api.model.EventLookup;
 import ch.chalender.api.model.NoticeBoardItem;
@@ -19,8 +20,10 @@ public interface EmailService {
     void sendNoticeBoardUpdateAcceptedEmail(String emailAddress, String name, NoticeBoardItem item, String comment) throws MessagingException, UnsupportedEncodingException;
     void sendNoticeBoardRefusedEmail(String emailAddress, String name, NoticeBoardItem item, String comment) throws MessagingException, UnsupportedEncodingException;
     void sendNoticeBoardUpdateRefusedEmail(String emailAddress, String name, NoticeBoardItem item, String comment) throws MessagingException, UnsupportedEncodingException;
-    void sendEmailSubscriptionInstant(String emailAddress, String userName, String subscriptionName, Event event, String subscriptionId) throws MessagingException, UnsupportedEncodingException;
-    void sendEmailSubscriptionWeekly(String emailAddress, String userName, String subscriptionName, List<EventLookup> events, String subscriptionId) throws MessagingException, UnsupportedEncodingException;
+    void sendEventSubscriptionInstant(String emailAddress, String userName, String subscriptionName, Event event, String subscriptionId) throws MessagingException, UnsupportedEncodingException;
+    void sendEventSubscriptionWeekly(String emailAddress, String userName, String subscriptionName, List<EventLookup> events, String subscriptionId) throws MessagingException, UnsupportedEncodingException;
+    void sendNoticesBoardSubscriptionInstant(String emailAddress, String userName, String subscriptionName, NoticeBoardItem item, String subscriptionId) throws MessagingException, UnsupportedEncodingException;
+    void sendNoticesBoardSubscriptionWeekly(String emailAddress, String userName, String subscriptionName, List<NoticeBoardItemDto> items, String subscriptionId) throws MessagingException, UnsupportedEncodingException;
     void sendEventModeratorEmail(Event event) throws MessagingException, UnsupportedEncodingException;
     void sendNoticeBoardModeratorEmail(NoticeBoardItem item) throws MessagingException, UnsupportedEncodingException;
 }

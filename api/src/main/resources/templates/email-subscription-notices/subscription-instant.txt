@@ -1,0 +1,19 @@
+[( ${subject} )]
+
+[${item.currentlyPublished.title}]
+  [( ${mainLink} + '/notices/' + ${item.id} )]
+
+L’annunzia survart correspunda als criteris da tes abunament da chalender.ch.
+Midar ils criteris da l’abunament pos ti en tes conto:
+[( ${accountLink} )]
+
+Nus avain plaschair che ti dovras noss chalender.
+
+
+
+Cun ils megliers salids
+il server e la squadra da chalender.ch
+
+
+Betg pli retschaiver quests e-mails:
+[( ${unsubscribeLink} )]

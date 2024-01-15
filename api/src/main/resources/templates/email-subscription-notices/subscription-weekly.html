@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title th:remove="all">Nova occurrenza</title>
+    <title th:remove="all">Novas annunzias</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <style type="text/css">
         body {
@@ -76,26 +76,20 @@
                                 <img src="images/logo.jpg" data-th-src="|cid:logo|" height="20" width="197" style="display: block; max-width: 197px; width: 197px;" />
                             </p>
 
-                            <h1 th:text="${subject}">Occurrenza per tai</h1>
+                            <h1 th:text="${subject}">[dumber] annunzias per tai</h1>
 
                             <table>
 
                                 <tbody>
-                                <tr>
+                                <tr th:each="item,iter : ${items}">
                                     <td>
-                                        <h2><a href="https://www.chalender.ch" th:href="${mainLink} + '/' + ${event.id}" th:text="${event.currentlyPublished.title}"></a></h2>
-                                        <p class="no-margin" th:text="${event.currentlyPublished.location}"></p>
-                                        <p th:each="occur,iter : ${event.currentlyPublished.occurrences}" th:text="${datesList[iter.index]}">
-                                        </p>
-                                        <p class="no-margin" style="margin-top: 6px;">
-                                            <a class="tag" th:each="genre: ${event.currentlyPublished.getGenres()}" th:text="${genre.name}" th:href="${mainLink} + '?genres=' + ${genre.id}"></a>
-                                        </p>
-                                    </td>
+                                        <h2><a href="https://www.chalender.ch" th:href="${mainLink} + '/notices/' + ${item.id}" th:text="${item.title}"></a></h2>
                                 </tr>
                                 </tbody>
                             </table>
+
                             <p>
-                                L’occurrenza survart correspunda als criteris da tes abunament da <a href="https://www.chalender.ch" th:href="${mainLink}" target="_blank">chalender.ch</a>.
+                                Las annunzias survart correspundan als criteris da tes abunament da <a href="https://www.chalender.ch" th:href="${mainLink}" target="_blank">chalender.ch</a>.
                                 Midar ils criteris da l’abunament pos ti <a href="https://www.chalender.ch" th:href="${accountLink}" target="_blank">en tes conto</a>.
                                 Nus avain plaschair che ti dovras noss chalender.
                             </p>
