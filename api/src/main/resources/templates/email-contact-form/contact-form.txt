@@ -1,0 +1,13 @@
+[( ${subject} )]
+
+num: [( ${contactForm.name} )]
+e-mail: [( ${contactForm.email} )]
+telefon: [( ${contactForm.phone} )]
+tip: [( ${contactForm.type} )]
+
+messadi:
+[( ${contactForm.message} )]
+
+
+Cordials salids
+il server

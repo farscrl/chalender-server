@@ -1,5 +1,6 @@
 package ch.chalender.api.service.impl;
 
+import ch.chalender.api.dto.ContactFormDto;
 import ch.chalender.api.model.Event;
 import ch.chalender.api.model.EventLookup;
 import ch.chalender.api.model.EventOccurrence;
@@ -36,8 +37,14 @@ public class EmailServiceImpl implements EmailService {
     @Value("${chalender.appUrl}")
     private String appUrl;
 
-    @Value("${chalender.moderatorEmail}")
+    @Value("${chalender.moderatorEmails}")
     private String[] moderatorEmails;
+
+    @Value("${chalender.technicalEmails}")
+    private String[] technicalEmails;
+
+    @Value("${chalender.otherEmails}")
+    private String[] otherEmails;
 
     String mailFrom = "no-reply@chalender.ch";
     String mailFromName = "chalender.ch";
@@ -600,6 +607,42 @@ public class EmailServiceImpl implements EmailService {
 
         final String textContent = this.templateEngine.process("email-moderation-notice/moderation-notice.txt", ctx);
         final String htmlContent = this.templateEngine.process("email-moderation-notice/moderation-notice.html", ctx);
+
+        email.setText(textContent, htmlContent);
+
+        ClassPathResource clr = new ClassPathResource(LOGO_PATH);
+
+        email.addInline("logo", clr, PNG_MIME);
+
+        mailSender.send(mimeMessage);
+    }
+
+    @Override
+    public void sendContactForm(ContactFormDto contactFormDto) throws MessagingException, UnsupportedEncodingException {
+        final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
+        final MimeMessageHelper email;
+        email = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
+        String subject = "Formular da contact: " + contactFormDto.getType();
+
+        email.setSubject("[chalender.ch] " + subject);
+        email.setFrom(new InternetAddress(contactFormDto.getEmail(), contactFormDto.getName()));
+        email.setTo(new InternetAddress(mailFrom, mailFromName));
+        email.setBcc(otherEmails);
+        if (contactFormDto.getType().equals("content")) {
+            email.setBcc(moderatorEmails);
+        } else if (contactFormDto.getType().equals("technical")) {
+            email.setBcc(technicalEmails);
+        }
+
+        final Context ctx = new Context(LocaleContextHolder.getLocale());
+        ctx.setVariable("logo", LOGO_PATH);
+        ctx.setVariable("contactForm", contactFormDto);
+        ctx.setVariable("subject", subject);
+        ctx.setVariable("mainLink", appUrl);
+
+        final String textContent = this.templateEngine.process("email-contact-form/contact-form.txt", ctx);
+        final String htmlContent = this.templateEngine.process("email-contact-form/contact-form.html", ctx);
 
         email.setText(textContent, htmlContent);
 

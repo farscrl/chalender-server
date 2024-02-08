@@ -1,5 +1,6 @@
 package ch.chalender.api.service;
 
+import ch.chalender.api.dto.ContactFormDto;
 import ch.chalender.api.model.Event;
 import ch.chalender.api.model.EventLookup;
 import ch.chalender.api.model.NoticeBoardItem;
@@ -25,4 +26,5 @@ public interface EmailService {
     void sendNoticesBoardSubscriptionWeekly(String emailAddress, String userName, String subscriptionName, List<NoticeBoardItem> items, String subscriptionId) throws MessagingException, UnsupportedEncodingException;
     void sendEventModeratorEmail(Event event) throws MessagingException, UnsupportedEncodingException;
     void sendNoticeBoardModeratorEmail(NoticeBoardItem item) throws MessagingException, UnsupportedEncodingException;
+    void sendContactForm(ContactFormDto contactFormDto) throws MessagingException, UnsupportedEncodingException;
 }
