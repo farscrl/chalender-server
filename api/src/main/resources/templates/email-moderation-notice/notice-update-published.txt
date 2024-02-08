@@ -1,6 +1,6 @@
 [( ${subject} )]
 
-Grazia per annunziar tia annunzia sin chalender.ch.
+Grazia per actualisar tia annunzia sin chalender.ch.
 Nossa squadra ha controllà ils criteris formals. L’annunzia è ussa publitgada qua:
 [( ${noticeUrl} )]
 
