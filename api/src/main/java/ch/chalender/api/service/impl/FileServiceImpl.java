@@ -4,7 +4,7 @@ import ch.chalender.api.model.Document;
 import ch.chalender.api.model.Image;
 import ch.chalender.api.repository.DocumentsRepository;
 import ch.chalender.api.repository.ImagesRepository;
-import ch.chalender.api.service.AmazonService;
+import ch.chalender.api.service.BunnyService;
 import ch.chalender.api.service.FileService;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.tika.Tika;
@@ -30,7 +30,7 @@ public class FileServiceImpl implements FileService {
     private static final Pattern WHITESPACE = Pattern.compile("[\\s]");
 
     @Autowired
-    private AmazonService amazonService;
+    private BunnyService bunnyService;
 
     @Autowired
     private ImagesRepository imagesRepository;
@@ -64,7 +64,7 @@ public class FileServiceImpl implements FileService {
             img = imagesRepository.save(img);
             String path = activeProfile + "/" + img.getId() + "." + fileExtension;
 
-            amazonService.uploadFile(path, file, mimeType);
+            bunnyService.uploadFile(path, file);
             img.setPath(path);
             img = imagesRepository.save(img);
             boolean result = file.delete();
@@ -97,7 +97,7 @@ public class FileServiceImpl implements FileService {
             doc = documentsRepository.save(doc);
             String path = activeProfile + "/" + doc.getId() + "." + fileExtension;
 
-            amazonService.uploadFile(path, file, mimeType);
+            bunnyService.uploadFile(path, file);
             doc.setPath(path);
             doc = documentsRepository.save(doc);
             boolean result = file.delete();
