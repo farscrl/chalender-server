@@ -49,7 +49,7 @@ public class WeeklyEventSubscriptionsLoader implements Tasklet, StepExecutionLis
         logger.debug("WeeklyEventSubscriptionsLoader initialized.");
 
         this.startDate = LocalDate.now();
-        this.endDate = startDate.plusDays(50); // TODO: change to 15
+        this.endDate = startDate.plusDays(15);
 
         this.subscriptions = eventsSubscriptionRepository.findAllByActiveAndType(true, SubscriptionType.WEEKLY);
         logger.debug("WeeklyEventSubscriptionsLoader loaded " + subscriptions.size() + " subscriptions.");

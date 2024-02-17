@@ -39,7 +39,7 @@ public class StaticDataController {
     public ResponseEntity<List<EventGenre>> listGenres() {
         List<EventGenre> genres = eventGenresRepository.findByIsHiddenIsFalse(false);
         return ResponseEntity.ok()
-                .cacheControl(CacheControl.maxAge(60, TimeUnit.SECONDS)) // TODO: set to 1 day
+                .cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS))
                 .body(genres);
     }
 
@@ -48,7 +48,7 @@ public class StaticDataController {
     public ResponseEntity<List<EventRegion>> listRegions() {
         List<EventRegion> regions = eventRegionsRepository.findByIsHiddenIsFalse(false);
         return ResponseEntity.ok()
-                .cacheControl(CacheControl.maxAge(60, TimeUnit.SECONDS)) // TODO: set to 1 day
+                .cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS))
                 .body(regions);
     }
 
@@ -57,7 +57,7 @@ public class StaticDataController {
     public ResponseEntity<List<EventLanguage>> listLanguages() {
         List<EventLanguage> regions = eventLanguagesRepository.findByIsHiddenIsFalse(false);
         return ResponseEntity.ok()
-                .cacheControl(CacheControl.maxAge(60, TimeUnit.SECONDS)) // TODO: set to 1 day
+                .cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS))
                 .body(regions);
     }
 }
