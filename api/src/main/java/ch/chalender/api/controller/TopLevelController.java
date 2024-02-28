@@ -10,7 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/")
 @Tag(name = "Contact form", description = "Contact form API")
-public class RobotsTxtController {
+public class TopLevelController {
+    @RequestMapping("/")
+    public String home(){
+        return "chalender.ch API";
+    }
+
     @RequestMapping(value={"/robots.txt", "/robot.txt"})
     @ResponseBody
     public String getRobotsTxt() {
