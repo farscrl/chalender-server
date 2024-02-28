@@ -68,7 +68,7 @@ public class SecurityConfiguration {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(new RestAuthenticationEntryPoint()))
                 .authorizeHttpRequests(aut-> {
-                    aut.requestMatchers(mvc.pattern("/"), mvc.pattern("/error"),mvc.pattern("/api/**"), mvc.pattern("/oauth2/**")).permitAll();
+                    aut.requestMatchers(mvc.pattern("/"), mvc.pattern("/robot.txt"), mvc.pattern("/robots.txt"), mvc.pattern("/error"),mvc.pattern("/api/**"), mvc.pattern("/oauth2/**")).permitAll();
                     aut.requestMatchers(mvc.pattern("/v3/api-docs/**"), mvc.pattern("/swagger-ui/**"), mvc.pattern("/swagger-ui.html")).permitAll();
                     aut.requestMatchers(toH2Console()).permitAll();
                     aut.anyRequest().authenticated();
