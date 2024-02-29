@@ -67,13 +67,21 @@ public class EventsController {
             return ResponseEntity.notFound().build();
         }
 
+        boolean forbiddenToSeeDetails = false;
+        if (
+                localUser == null  ||
+                (!localUser.getUser().getEmail().equals(event.getOwnerEmail()) && !localUser.getUser().getRoles().contains(Role.ROLE_MODERATOR)  && !localUser.getUser().getRoles().contains(Role.ROLE_ADMIN))
+        ) {
+            forbiddenToSeeDetails = true;
+        }
+
         if (event.getPublicationStatus() != PublicationStatus.PUBLISHED && event.getPublicationStatus() != PublicationStatus.NEW_MODIFICATION) {
-            if (!localUser.getUser().getEmail().equals(event.getOwnerEmail()) && !localUser.getUser().getRoles().contains(Role.ROLE_MODERATOR)  && !localUser.getUser().getRoles().contains(Role.ROLE_ADMIN)) {
+            if (forbiddenToSeeDetails) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
         }
 
-        return ResponseEntity.ok(EventConverter.toEventDto(modelMapper, event));
+        return ResponseEntity.ok(EventConverter.toEventDto(modelMapper, event, !forbiddenToSeeDetails));
     }
 
     @GetMapping("/{id}/ics/{uid}")
@@ -119,7 +127,7 @@ public class EventsController {
         }
 
         event = eventsService.createEvent(event);
-        return ResponseEntity.ok(EventConverter.toEventDto(modelMapper, event));
+        return ResponseEntity.ok(EventConverter.toEventDto(modelMapper, event, true));
     }
 
     @PostMapping("/{id}")
@@ -145,7 +153,7 @@ public class EventsController {
 
         eventToModify = eventsService.updateEvent(eventToModify);
 
-        return ResponseEntity.ok(EventConverter.toEventDto(modelMapper, eventToModify));
+        return ResponseEntity.ok(EventConverter.toEventDto(modelMapper, eventToModify, true));
     }
 
     private void validateStateAndUpdateEventVersion(PublicationStatus currentEventState, PublicationStatus nextState, Event event, EventVersion version) throws InvalidStateRequestedException {

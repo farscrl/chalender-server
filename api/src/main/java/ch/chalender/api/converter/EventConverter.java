@@ -5,13 +5,9 @@ import ch.chalender.api.model.Event;
 import ch.chalender.api.model.EventVersion;
 import org.modelmapper.ModelMapper;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
 public class EventConverter {
 
-    public static EventDto toEventDto(ModelMapper modelMapper, Event event) {
+    public static EventDto toEventDto(ModelMapper modelMapper, Event event, boolean showContactEmail) {
         if (event == null) {
             return null;
         }
@@ -43,16 +39,11 @@ public class EventConverter {
         EventDto eventDto = modelMapper.map(eventVersion, EventDto.class);
         eventDto.setId(event.getId());
         eventDto.setStatus(event.getPublicationStatus());
-        eventDto.setContactEmail(event.getOwnerEmail());
+        if (showContactEmail) {
+            eventDto.setContactEmail(event.getOwnerEmail());
+        }
 
         return eventDto;
-    }
-
-    public static List<EventDto> toEventDtoList(ModelMapper modelMapper, List<Event> events) {
-        return events.stream()
-                .map(event -> toEventDto(modelMapper, event))
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
     }
 
     public static EventVersion toEventVersion(ModelMapper modelMapper, EventDto eventDto) {
