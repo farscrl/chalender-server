@@ -37,14 +37,6 @@ The API is now up and running and can be accessed at `http://localhost:8082`.
 
 ## Usage
 
-To use the chalender.ch API, make HTTP requests to the available endpoints. Below are some examples of commonly used endpoints:
-
-- `POST /api/events` - Create a new calendar event.
-- `GET /api/events` - Retrieve all calendar events.
-- `GET /api/events/{id}` - Retrieve a specific calendar event by its ID.
-- `PUT /api/events/{id}` - Update an existing calendar event.
-- `DELETE /api/events/{id}` - Delete a calendar event.
-
 For detailed API documentation, including all endpoints and their descriptions, refer to the API documentation available at `http://localhost:8082/swagger-ui/index.html`.
 
 ## Contributing
