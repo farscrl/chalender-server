@@ -43,7 +43,7 @@ public class InstantNoticesSubscriptionBatchConfiguration extends DefaultBatchCo
 
     @Bean
     public Job instantNoticeBoardJob(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
-        return new JobBuilder("instantSubscriptionsJob", jobRepository)
+        return new JobBuilder("instantNoticesSubscriptionsJob", jobRepository)
                 .start(loadInstantNoticeSubscriptions(jobRepository, transactionManager))
                 .build();
     }
