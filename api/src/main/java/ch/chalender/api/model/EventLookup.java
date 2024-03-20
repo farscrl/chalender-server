@@ -29,6 +29,7 @@ public class EventLookup {
     private List<EventLanguage> eventLanguages = new ArrayList<>();
     private String address;
     private String organiser;
+    private boolean onlineOnly;
 
     @JsonFormat(pattern="dd-MM-yyyy")
     private LocalDate date;

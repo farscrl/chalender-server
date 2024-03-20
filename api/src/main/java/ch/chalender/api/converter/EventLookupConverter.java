@@ -49,6 +49,7 @@ public class EventLookupConverter {
             eventLookup.setEventId(event.getId());
             eventLookup.setAddress(version.getAddress());
             eventLookup.setOrganiser(version.getOrganiser());
+            eventLookup.setOnlineOnly(version.isOnlineOnly());
 
             if (!event.getCurrentlyPublished().getImages().isEmpty()) {
                 eventLookup.setImageUrl(event.getCurrentlyPublished().getImages().get(0).getUrl());
