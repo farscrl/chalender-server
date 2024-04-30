@@ -4,6 +4,8 @@ import ch.chalender.api.model.Event;
 import ch.chalender.api.model.EventLookup;
 import ch.chalender.api.model.EventVersion;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,8 +44,8 @@ public class EventLookupConverter {
             eventLookup.setRegions(version.getRegions());
             eventLookup.setEventLanguages(version.getEventLanguages());
             eventLookup.setDate(occurrence.getDate());
-            eventLookup.setStart(occurrence.getStart());
-            eventLookup.setEnd(occurrence.getEnd());
+            eventLookup.setStart(formatLocalTime(occurrence.getStart()));
+            eventLookup.setEnd(formatLocalTime(occurrence.getEnd()));
             eventLookup.setAllDay(occurrence.isAllDay());
             eventLookup.setCancelled(occurrence.isCancelled());
             eventLookup.setEventId(event.getId());
@@ -57,5 +59,14 @@ public class EventLookupConverter {
 
             list.add(eventLookup);
         });
+    }
+
+    private static String formatLocalTime(LocalTime time) {
+        if (time == null) {
+            return null;
+        }
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        return time.format(formatter);
     }
 }

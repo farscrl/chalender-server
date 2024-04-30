@@ -22,6 +22,7 @@ import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -454,7 +455,7 @@ public class EmailServiceImpl implements EmailService {
 
         List<String> datesList = new ArrayList<>();
         for (EventLookup event : events) {
-            String date = getOccurrenceString(event.getDate(), event.getStart(), event.getEnd(), event.isAllDay());
+            String date = getOccurrenceString(event.getDate(), convertStringToLocalTime(event.getStart()), convertStringToLocalTime(event.getEnd()), event.isAllDay());
             datesList.add(date);
         }
 
@@ -666,5 +667,18 @@ public class EmailServiceImpl implements EmailService {
         }
 
         return result;
+    }
+
+    private static LocalTime convertStringToLocalTime(String timeString) {
+        if (timeString == null || timeString.trim().isEmpty()) {
+            return null;
+        }
+
+        try {
+            return LocalTime.parse(timeString, DateTimeFormatter.ofPattern("HH:mm"));
+        } catch (DateTimeParseException e) {
+            System.err.println("Error parsing time: " + e.getMessage());
+            return null;
+        }
     }
 }

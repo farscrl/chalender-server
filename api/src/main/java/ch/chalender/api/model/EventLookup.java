@@ -8,7 +8,6 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,11 +33,9 @@ public class EventLookup {
     @JsonFormat(pattern="dd-MM-yyyy")
     private LocalDate date;
 
-    @JsonFormat(pattern="HH:mm")
-    private LocalTime start;
+    private String start;
 
-    @JsonFormat(pattern="HH:mm")
-    private LocalTime end;
+    private String end;
 
     @JsonProperty(value="isAllDay")
     private boolean isAllDay = false;
