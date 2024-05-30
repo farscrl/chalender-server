@@ -118,6 +118,27 @@ public class NoticeBoardController {
         return ResponseEntity.ok(NoticeBoardItemConverter.toNoticeBoardItemDto(modelMapper, itemToModify));
     }
 
+    @DeleteMapping("/{id}")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<NoticeBoardItemDto> deleteNoticeBoardItem(@PathVariable String id, @CurrentUser LocalUser localUser) {
+        NoticeBoardItem itemToModify = noticeBoardService.getNoticeBoardItem(id);
+
+        if (itemToModify == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        if (localUser == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
+        if (!localUser.getUser().getEmail().equals(itemToModify.getOwnerEmail()) && !localUser.getUser().getRoles().contains(Role.ROLE_MODERATOR)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+
+        noticeBoardService.deleteNoticeBoardItem(itemToModify.getId());
+
+        return ResponseEntity.ok().build();
+    }
+
     private void validateStateAndUpdateNoticeBoardVersionVersion(PublicationStatus currentPublicationState, PublicationStatus nextState, NoticeBoardItem item, NoticeBoardItemVersion version) throws InvalidStateRequestedException {
         item.getVersions().add(version);
 
