@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -40,6 +41,11 @@ public class EventLookupServiceImpl implements EventLookupService {
     @Override
     public Page<EventLookup> getAllEvents(EventFilter filter, Pageable pageable) {
         return eventLookupsDal.getAllEvents(filter, pageable);
+    }
+
+    @Override
+    public List<EventLookup> getEventsInDateRange(EventFilter filter, LocalDate start, LocalDate end) {
+        return eventLookupsDal.getEventsInDateRange(filter, start, end);
     }
 
     @Override
