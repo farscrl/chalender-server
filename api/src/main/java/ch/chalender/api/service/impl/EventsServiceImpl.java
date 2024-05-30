@@ -8,12 +8,11 @@ import ch.chalender.api.service.EmailService;
 import ch.chalender.api.service.EventsService;
 import ch.chalender.api.service.SubscriptionSendingService;
 import ch.chalender.api.service.UserService;
+import ch.chalender.api.util.IcsUtil;
 import jakarta.mail.MessagingException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.component.VEvent;
-import net.fortuna.ical4j.model.property.Location;
 import net.fortuna.ical4j.model.property.ProdId;
-import net.fortuna.ical4j.model.property.Uid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -22,7 +21,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
-import java.time.LocalDateTime;
 
 @Service
 public class EventsServiceImpl implements EventsService {
@@ -109,7 +107,7 @@ public class EventsServiceImpl implements EventsService {
             throw new RuntimeException("Event occurrence not found");
         }
 
-        return generateIcs(event, version, occurrence);
+        return generateIcs(version, occurrence);
     }
 
     @Override
@@ -221,35 +219,11 @@ public class EventsServiceImpl implements EventsService {
         }
     }
 
-    private Resource generateIcs(Event chalenderEvent, EventVersion version, EventOccurrence occurrence) {
-        String eventSummary = version.getTitle();
-        if (occurrence.isCancelled()) {
-            eventSummary = "[ANNULLÀ] " + eventSummary;
-        }
-
-        VEvent event = null;
-        if (occurrence.isAllDay()) {
-            event = new VEvent(occurrence.getDate(), eventSummary);
-        } else if (occurrence.getEnd() == null) {
-            LocalDateTime start = LocalDateTime.of(occurrence.getDate(), occurrence.getStart());
-            LocalDateTime end = start.plusHours(2);
-            event = new VEvent(start, end, eventSummary);
-        } else {
-            LocalDateTime start = LocalDateTime.of(occurrence.getDate(), occurrence.getStart());
-            LocalDateTime end = LocalDateTime.of(occurrence.getDate(), occurrence.getEnd());
-            if (end.isBefore(start)) {
-                end = end.plusDays(1);
-            }
-            event = new VEvent(start, end, eventSummary);
-
-        }
-        event.add(new Uid(occurrence.getOccurrenceUid()));
+    private Resource generateIcs(EventVersion version, EventOccurrence occurrence) {
+        VEvent event = IcsUtil.generateVEventFromOccurrence(version, occurrence);
 
         Calendar icsCalendar = new Calendar();
         icsCalendar.add(new ProdId("-//chalender.ch//iCal4j 1.0//EN"));
-
-        Location location = new Location(version.getLocation());
-        event.add(location);
 
         icsCalendar.add(event);
 
