@@ -37,6 +37,7 @@ public class EventLookupConverter {
     private static void addEventLookupsForAllOccurrences(List<EventLookup> list, Event event, EventVersion version) {
         version.getOccurrences().forEach(occurrence -> {
             EventLookup eventLookup = new EventLookup();
+            eventLookup.setOccurrenceId(occurrence.getOccurrenceUid());
             eventLookup.setTitle(version.getTitle());
             eventLookup.setDescription(version.getDescription());
             eventLookup.setGenres(version.getGenres());

@@ -6,6 +6,7 @@ import ch.chalender.api.model.EventLookup;
 import ch.chalender.api.model.EventOccurrence;
 import ch.chalender.api.model.NoticeBoardItem;
 import ch.chalender.api.service.EmailService;
+import ch.chalender.api.util.DataUtil;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
@@ -22,7 +23,6 @@ import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -455,7 +455,7 @@ public class EmailServiceImpl implements EmailService {
 
         List<String> datesList = new ArrayList<>();
         for (EventLookup event : events) {
-            String date = getOccurrenceString(event.getDate(), convertStringToLocalTime(event.getStart()), convertStringToLocalTime(event.getEnd()), event.isAllDay());
+            String date = getOccurrenceString(event.getDate(), DataUtil.convertStringToLocalTime(event.getStart()), DataUtil.convertStringToLocalTime(event.getEnd()), event.isAllDay());
             datesList.add(date);
         }
 
@@ -667,18 +667,5 @@ public class EmailServiceImpl implements EmailService {
         }
 
         return result;
-    }
-
-    private static LocalTime convertStringToLocalTime(String timeString) {
-        if (timeString == null || timeString.trim().isEmpty()) {
-            return null;
-        }
-
-        try {
-            return LocalTime.parse(timeString, DateTimeFormatter.ofPattern("HH:mm"));
-        } catch (DateTimeParseException e) {
-            System.err.println("Error parsing time: " + e.getMessage());
-            return null;
-        }
     }
 }

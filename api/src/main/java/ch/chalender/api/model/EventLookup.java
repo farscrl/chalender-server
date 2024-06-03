@@ -20,6 +20,8 @@ public class EventLookup {
     @Indexed
     private String eventId;
 
+    private String occurrenceId;
+
     private String title;
     private String description;
     private List<EventGenre> genres = new ArrayList<>();

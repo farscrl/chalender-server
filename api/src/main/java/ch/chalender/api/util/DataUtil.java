@@ -5,6 +5,9 @@ import ch.chalender.api.model.Image;
 import ch.chalender.api.repository.DocumentsRepository;
 import ch.chalender.api.repository.ImagesRepository;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,4 +53,16 @@ public class DataUtil {
         return documentsFound;
     }
 
+    public static LocalTime convertStringToLocalTime(String timeString) {
+        if (timeString == null || timeString.trim().isEmpty()) {
+            return null;
+        }
+
+        try {
+            return LocalTime.parse(timeString, DateTimeFormatter.ofPattern("HH:mm"));
+        } catch (DateTimeParseException e) {
+            System.err.println("Error parsing time: " + e.getMessage());
+            return null;
+        }
+    }
 }
