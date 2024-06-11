@@ -13,6 +13,7 @@ import jakarta.mail.MessagingException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.ProdId;
+import net.fortuna.ical4j.model.property.immutable.ImmutableVersion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -107,7 +108,7 @@ public class EventsServiceImpl implements EventsService {
             throw new RuntimeException("Event occurrence not found");
         }
 
-        return generateIcs(version, occurrence);
+        return generateIcs(id, version, occurrence);
     }
 
     @Override
@@ -219,11 +220,12 @@ public class EventsServiceImpl implements EventsService {
         }
     }
 
-    private Resource generateIcs(EventVersion version, EventOccurrence occurrence) {
-        VEvent event = IcsUtil.generateVEventFromOccurrence(version, occurrence);
+    private Resource generateIcs(String id, EventVersion version, EventOccurrence occurrence) {
+        VEvent event = IcsUtil.generateVEventFromOccurrence(id, version, occurrence);
 
         Calendar icsCalendar = new Calendar();
         icsCalendar.add(new ProdId("-//chalender.ch//iCal4j 1.0//EN"));
+        icsCalendar.add(ImmutableVersion.VERSION_2_0);
 
         icsCalendar.add(event);
 
