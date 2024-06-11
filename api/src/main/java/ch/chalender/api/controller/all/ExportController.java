@@ -65,7 +65,7 @@ public class ExportController {
                     title,
                     event.getLocation(),
                     event.getImageUrl(),
-                    "https://chalender.ch/" + event.getId()
+                    "https://chalender.ch/" + event.getEventId()
             });
         }
 
