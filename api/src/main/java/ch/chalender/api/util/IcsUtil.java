@@ -61,7 +61,7 @@ public class IcsUtil {
         if (occurrence.isCancelled()) {
             event.add(new Status(Status.VALUE_CANCELLED));
         } else {
-            event.add(new Status(Status.VALUE_FINAL));
+            event.add(new Status(Status.VALUE_CONFIRMED));
         }
         if (version.getOrganiser() != null && !version.getOrganiser().isBlank()) {
             event.add(new Contact(version.getOrganiser()));
@@ -105,7 +105,7 @@ public class IcsUtil {
         if (eventLookup.isCancelled()) {
             event.add(new Status(Status.VALUE_CANCELLED));
         } else {
-            event.add(new Status(Status.VALUE_FINAL));
+            event.add(new Status(Status.VALUE_CONFIRMED));
         }
         if (eventLookup.getOrganiser() != null && !eventLookup.getOrganiser().isBlank()) {
             event.add(new Contact(eventLookup.getOrganiser()));
