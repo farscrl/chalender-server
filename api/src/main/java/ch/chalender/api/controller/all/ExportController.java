@@ -54,10 +54,15 @@ public class ExportController {
             if (!event.isAllDay()) {
                 time = formatTimeWithDot(event.getStart());
             }
+
+            String title = event.getTitle();
+            if (event.isCancelled()) {
+                title = "[ANNULLÀ] " + title;
+            }
             data.add(new String[]{
                     formatDate(event.getDate()),
                     time,
-                    event.getTitle(),
+                    title,
                     event.getLocation(),
                     event.getImageUrl(),
                     "https://chalender.ch/" + event.getId()
