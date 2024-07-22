@@ -79,7 +79,7 @@ public class IcsUtil {
 
         String eventSummary = eventLookup.getTitle();
         if (eventLookup.isCancelled()) {
-            eventSummary = "[ANNULLÀ] " + eventSummary;
+            eventSummary = "(ANNULLÀ) " + eventSummary;
         }
 
         if (eventLookup.isAllDay()) {
