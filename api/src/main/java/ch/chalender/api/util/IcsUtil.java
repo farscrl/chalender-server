@@ -5,14 +5,19 @@ import ch.chalender.api.model.EventOccurrence;
 import ch.chalender.api.model.EventVersion;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.TimeZoneRegistry;
+import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.model.property.immutable.ImmutableVersion;
 
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 public class IcsUtil {
     public static Calendar exportAllEventLookupsAsCalendar(List<EventLookup> eventsLookup) {
@@ -26,11 +31,27 @@ public class IcsUtil {
         Calendar icsCalendar = new Calendar(new ComponentList<>(events));
         icsCalendar.add(new ProdId("-//chalender.ch//iCal4j 1.0//EN"));
         icsCalendar.add(ImmutableVersion.VERSION_2_0);
+        icsCalendar.add(getTimeZone());
 
         return icsCalendar;
     }
 
-    public static VEvent generateVEventFromOccurrence(String id, EventVersion version, EventOccurrence occurrence) {
+    public static Calendar generateIcs(String id, EventVersion version, EventOccurrence occurrence) {
+        VEvent event = IcsUtil.generateVEventFromOccurrence(id, version, occurrence);
+
+        Calendar icsCalendar = new Calendar();
+        icsCalendar.add(new ProdId("-//chalender.ch//iCal4j 1.0//EN"));
+        icsCalendar.add(ImmutableVersion.VERSION_2_0);
+        icsCalendar.add(getTimeZone());
+
+        icsCalendar.add(event);
+
+        return icsCalendar;
+    }
+
+    private static VEvent generateVEventFromOccurrence(String id, EventVersion version, EventOccurrence occurrence) {
+        TimeZone timeZone = TimeZone.getTimeZone("Europe/Zurich");
+
         VEvent event = null;
 
         String eventSummary = version.getTitle();
@@ -41,12 +62,12 @@ public class IcsUtil {
         if (occurrence.isAllDay()) {
             event = new VEvent(occurrence.getDate(), eventSummary);
         } else if (occurrence.getEnd() == null) {
-            LocalDateTime start = LocalDateTime.of(occurrence.getDate(), occurrence.getStart());
-            LocalDateTime end = start.plusHours(2);
+            ZonedDateTime start = LocalDateTime.of(occurrence.getDate(), occurrence.getStart()).atZone(timeZone.toZoneId());
+            ZonedDateTime end = start.plusHours(2);
             event = new VEvent(start, end, eventSummary);
         } else {
-            LocalDateTime start = LocalDateTime.of(occurrence.getDate(), occurrence.getStart());
-            LocalDateTime end = LocalDateTime.of(occurrence.getDate(), occurrence.getEnd());
+            ZonedDateTime start = LocalDateTime.of(occurrence.getDate(), occurrence.getStart()).atZone(timeZone.toZoneId());
+            ZonedDateTime end = LocalDateTime.of(occurrence.getDate(), occurrence.getEnd()).atZone(timeZone.toZoneId());
             if (end.isBefore(start)) {
                 end = end.plusDays(1);
             }
@@ -54,6 +75,7 @@ public class IcsUtil {
 
         }
         event.add(new Uid(occurrence.getOccurrenceUid()));
+        event.add(getTimeZone());
         if (version.getDescription() != null && !version.getDescription().isBlank()) {
             event.add(new Description(version.getDescription()));
         }
@@ -74,7 +96,9 @@ public class IcsUtil {
         return event;
     }
 
-    public static VEvent generateVEventFromEventLookup(EventLookup eventLookup) {
+    private static VEvent generateVEventFromEventLookup(EventLookup eventLookup) {
+        TimeZone timeZone = TimeZone.getTimeZone("Europe/Zurich");
+
         VEvent event = null;
 
         String eventSummary = eventLookup.getTitle();
@@ -85,12 +109,12 @@ public class IcsUtil {
         if (eventLookup.isAllDay()) {
             event = new VEvent(eventLookup.getDate(), eventSummary);
         } else if (eventLookup.getEnd() == null) {
-            LocalDateTime start = LocalDateTime.of(eventLookup.getDate(), DataUtil.convertStringToLocalTime(eventLookup.getStart()));
-            LocalDateTime end = start.plusHours(2);
+            ZonedDateTime start = LocalDateTime.of(eventLookup.getDate(), DataUtil.convertStringToLocalTime(eventLookup.getStart())).atZone(timeZone.toZoneId());
+            ZonedDateTime end = start.plusHours(2);
             event = new VEvent(start, end, eventSummary);
         } else {
-            LocalDateTime start = LocalDateTime.of(eventLookup.getDate(), DataUtil.convertStringToLocalTime(eventLookup.getStart()));
-            LocalDateTime end = LocalDateTime.of(eventLookup.getDate(), DataUtil.convertStringToLocalTime(eventLookup.getEnd()));
+            ZonedDateTime start = LocalDateTime.of(eventLookup.getDate(), DataUtil.convertStringToLocalTime(eventLookup.getStart())).atZone(timeZone.toZoneId());
+            ZonedDateTime end = LocalDateTime.of(eventLookup.getDate(), DataUtil.convertStringToLocalTime(eventLookup.getEnd())).atZone(timeZone.toZoneId());
             if (end.isBefore(start)) {
                 end = end.plusDays(1);
             }
@@ -98,6 +122,7 @@ public class IcsUtil {
 
         }
         event.add(new Uid(eventLookup.getOccurrenceId()));
+        event.add(getTimeZone());
         if (eventLookup.getDescription() != null && !eventLookup.getDescription().isBlank()) {
             event.add(new Description(eventLookup.getDescription()));
         }
@@ -115,5 +140,11 @@ public class IcsUtil {
         }
 
         return event;
+    }
+
+    public static VTimeZone getTimeZone() {
+        TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();
+        net.fortuna.ical4j.model.TimeZone timezone = registry.getTimeZone("Europe/Zurich");
+        return timezone.getVTimeZone();
     }
 }
