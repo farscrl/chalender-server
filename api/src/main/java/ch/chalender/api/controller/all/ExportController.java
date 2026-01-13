@@ -69,7 +69,8 @@ public class ExportController {
             });
         }
 
-        response.setContentType("text/csv");
+        response.setContentType("text/csv; charset=UTF-8");
+        response.setCharacterEncoding("UTF-8");
         response.setHeader("Content-Disposition", "attachment; filename=\"occurrenzas-chalender.csv\"");
 
         try (CSVWriter writer = new CSVWriter(response.getWriter())) {
