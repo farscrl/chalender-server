@@ -627,7 +627,8 @@ public class EmailServiceImpl implements EmailService {
         String subject = "Formular da contact: " + contactFormDto.getType();
 
         email.setSubject("[chalender.ch] " + subject);
-        email.setFrom(new InternetAddress(contactFormDto.getEmail(), contactFormDto.getName()));
+        email.setFrom(new InternetAddress(mailFrom, mailFromName));
+        email.setReplyTo(new InternetAddress(contactFormDto.getEmail(), contactFormDto.getName()));
         email.setTo(new InternetAddress(mailFrom, mailFromName));
         email.setBcc(otherEmails);
         if (contactFormDto.getType().equals("content")) {
