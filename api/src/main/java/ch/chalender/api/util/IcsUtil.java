@@ -61,13 +61,13 @@ public class IcsUtil {
 
         if (occurrence.isAllDay()) {
             event = new VEvent(occurrence.getDate(), eventSummary);
-        } else if (occurrence.getEnd() == null) {
-            ZonedDateTime start = LocalDateTime.of(occurrence.getDate(), occurrence.getStart()).atZone(timeZone.toZoneId());
+        } else if (occurrence.getEnd() == null || occurrence.getEnd().isBlank()) {
+            ZonedDateTime start = LocalDateTime.of(occurrence.getDate(), DataUtil.convertStringToLocalTime(occurrence.getStart())).atZone(timeZone.toZoneId());
             ZonedDateTime end = start.plusHours(2);
             event = new VEvent(start, end, eventSummary);
         } else {
-            ZonedDateTime start = LocalDateTime.of(occurrence.getDate(), occurrence.getStart()).atZone(timeZone.toZoneId());
-            ZonedDateTime end = LocalDateTime.of(occurrence.getDate(), occurrence.getEnd()).atZone(timeZone.toZoneId());
+            ZonedDateTime start = LocalDateTime.of(occurrence.getDate(), DataUtil.convertStringToLocalTime(occurrence.getStart())).atZone(timeZone.toZoneId());
+            ZonedDateTime end = LocalDateTime.of(occurrence.getDate(), DataUtil.convertStringToLocalTime(occurrence.getEnd())).atZone(timeZone.toZoneId());
             if (end.isBefore(start)) {
                 end = end.plusDays(1);
             }

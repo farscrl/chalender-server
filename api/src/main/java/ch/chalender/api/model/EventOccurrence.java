@@ -7,18 +7,15 @@ import net.fortuna.ical4j.util.RandomUidGenerator;
 import net.fortuna.ical4j.util.UidGenerator;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Data
 public class EventOccurrence {
     @JsonFormat(pattern="dd-MM-yyyy")
     private LocalDate date;
 
-    @JsonFormat(pattern="HH:mm")
-    private LocalTime start;
+    private String start;
 
-    @JsonFormat(pattern="HH:mm")
-    private LocalTime end;
+    private String end;
 
     @JsonProperty(value="isAllDay")
     private boolean isAllDay = false;

@@ -6,7 +6,6 @@ import ch.chalender.api.model.EventLookup;
 import ch.chalender.api.model.EventOccurrence;
 import ch.chalender.api.model.NoticeBoardItem;
 import ch.chalender.api.service.EmailService;
-import ch.chalender.api.util.DataUtil;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
@@ -21,7 +20,6 @@ import org.thymeleaf.context.Context;
 
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -455,7 +453,7 @@ public class EmailServiceImpl implements EmailService {
 
         List<String> datesList = new ArrayList<>();
         for (EventLookup event : events) {
-            String date = getOccurrenceString(event.getDate(), DataUtil.convertStringToLocalTime(event.getStart()), DataUtil.convertStringToLocalTime(event.getEnd()), event.isAllDay());
+            String date = getOccurrenceString(event.getDate(), event.getStart(), event.getEnd(), event.isAllDay());
             datesList.add(date);
         }
 
@@ -655,16 +653,16 @@ public class EmailServiceImpl implements EmailService {
         mailSender.send(mimeMessage);
     }
 
-    private String getOccurrenceString(LocalDate date, LocalTime startTime, LocalTime endTime, boolean isAllDay) {
+    private String getOccurrenceString(LocalDate date, String startTime, String endTime, boolean isAllDay) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         String result = formatter.format(date);
         if (isAllDay) {
             return result + ", tuttadi";
         }
 
-        result = result + ", " + startTime.toString();
-        if (endTime != null) {
-            result = result + " - " + endTime.toString();
+        result = result + ", " + startTime;
+        if (endTime != null && !endTime.isBlank()) {
+            result = result + " - " + endTime;
         }
 
         return result;

@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -332,9 +331,9 @@ public class EventFixtures {
         eventOccurrence.setAllDay(allDay);
         eventOccurrence.setDate(LocalDate.parse(date, dateFormatter));
         if (!allDay) {
-            eventOccurrence.setStart(LocalTime.parse(start, timeFormatter));
+            eventOccurrence.setStart(start);
             if (end != null) {
-                eventOccurrence.setEnd(LocalTime.parse(end, timeFormatter));
+                eventOccurrence.setEnd(end);
             }
         }
         eventOccurrence.setCancelled(cancelled);

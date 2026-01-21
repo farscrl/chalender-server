@@ -1,5 +1,6 @@
 package ch.chalender.api;
 
+import io.mongock.runner.springboot.EnableMongock;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,6 +12,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication(scanBasePackages = "ch.chalender.api", exclude = { ThymeleafAutoConfiguration.class })
 @EnableScheduling
+@EnableMongock
 public class ApiApplication extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
